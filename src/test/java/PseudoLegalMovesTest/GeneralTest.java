@@ -32,7 +32,7 @@ public class GeneralTest {
 
     @Test
     public void gameTest() {
-        /* Testing pseudo legal moves in real games.
+        /* Testing legal moves in real games.
          * Format of file is as following:
          * Line 0: possible moves in uci format separated by space
          * Line 1: move made in uci format
@@ -55,8 +55,7 @@ public class GeneralTest {
                 } else {
                     // System.out.println("Line: " + line);
                     if (counter % 2 == 0) {
-                        /* get correct pseudo legal moves from file (pseudo legal move = legal move that may leave king
-                         * in check. */
+                        /* get correct  legal moves from file */
                         List<String> legalMoves = Arrays.asList(line.split(" "));
                         /* get legal moves from board */
                         List<String> boardMoves = board.getLegalMoves().stream().map(Move::toString).collect(Collectors.toList());
@@ -73,9 +72,6 @@ public class GeneralTest {
                             System.out.println("Pieces: " + new FENParser().getPiecePlacement(board));
                             System.out.println("Actual: " + boardMoves.stream().map(x -> "\"" + x + "\"").collect(Collectors.toList()));
                             System.out.println("Legal: " + legalMoves.stream().map(x -> "\"" + x + "\"").collect(Collectors.toList()));
-                            System.out.println(board.getCells()[3][2]);
-                            System.out.println(board.getCells()[3][2].getPiece());
-                            //game.makeMove("d3d2");
                         }
                         Assert.assertTrue(condition);
                         counter++;
