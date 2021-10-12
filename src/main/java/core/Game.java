@@ -3,6 +3,7 @@ package core;
 import core.move.Move;
 import core.move.MoveConverter;
 import core.move.MoveValidator;
+import core.pieces.Pawn;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.context.annotation.Scope;
@@ -41,16 +42,11 @@ public final class Game {
 
     public void makeMove(String move) {
         if(gameStatus == GameStatus.IN_PROGRESS) {
-           // board.displayBoard();
-            Move currentMove = MoveConverter.linkMove(MoveConverter.convert(move), board);
-            //System.out.println("in make move: " + currentMove.toString2());
+            Move currentMove = MoveConverter.convert(move, board);
             if (MoveValidator.isValid(currentMove, board)) {
-                board.updatePawnsStatus();
-                //System.out.println("Make move: " + currentMove.getInfo());
                 board.executeMove(currentMove);
                 updateGameStatus();
             } else {
-                //System.out.println(MoveValidator.isValid(currentMove, board));
                 throw new IllegalArgumentException("Wrong move");
             }
         }

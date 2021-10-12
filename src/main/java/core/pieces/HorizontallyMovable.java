@@ -2,6 +2,7 @@ package core.pieces;
 
 import core.Board;
 import core.Cell;
+import core.GameUtilities;
 import core.move.Move;
 
 import java.util.ArrayList;
@@ -22,9 +23,9 @@ interface HorizontallyMovable {
         for(int dx = x + 1; dx <= 7; dx++){
             if(!fitInBoard(dx, y)) break;
             if(isEmpty(cells[dx][y])) {
-                moves.add(new Move(start, cells[dx][y]));
+                moves.add(new Move(start, cells[dx][y], GameUtilities.MoveInfo.STANDARD));
             } else if(!isEmpty(cells[dx][y]) && isOppositeColor(cells[dx][y], start.getPiece().isWhite())){
-                moves.add(new Move(start, cells[dx][y]));
+                moves.add(new Move(start, cells[dx][y], GameUtilities.MoveInfo.CAPTURE));
                 break;
             } else {
                 break;
@@ -35,9 +36,9 @@ interface HorizontallyMovable {
         for(int dx = x - 1; dx >= 0; dx--){
             if(!fitInBoard(dx, y)) break;
             if(isEmpty(cells[dx][y])) {
-                moves.add(new Move(start, cells[dx][y]));
+                moves.add(new Move(start, cells[dx][y], GameUtilities.MoveInfo.STANDARD));
             } else if(!isEmpty(cells[dx][y]) && isOppositeColor(cells[dx][y], start.getPiece().isWhite())){
-                moves.add(new Move(start, cells[dx][y]));
+                moves.add(new Move(start, cells[dx][y], GameUtilities.MoveInfo.CAPTURE));
                 break;
             } else {
                 break;

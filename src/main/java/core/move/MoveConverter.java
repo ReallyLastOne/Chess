@@ -8,13 +8,15 @@ import static core.Cell.*;
 
 public class MoveConverter {
 
-    /* Converts String of type "a2a4" to Move without Pieces placed. */
-    public static Move convert(String move) {
+    /**
+     * Converts String of type "a2a4", "a7b8q" to Move able to be validated.
+     */
+    public static Move convert(String move, Board board) {
         move = move.toLowerCase();
         String[] tiles = {"" + move.charAt(0) + move.charAt(1),
                 "" + move.charAt(2) + move.charAt(3)};
         GameUtilities.MoveInfo info = null;
-        if(move.length() == 5) {
+        if (move.length() == 5) {
             switch (move.charAt(4)) {
                 case 'n' -> info = GameUtilities.MoveInfo.KNIGHT_PROMOTION;
                 case 'b' -> info = GameUtilities.MoveInfo.BISHOP_PROMOTION;
@@ -24,27 +26,29 @@ public class MoveConverter {
         }
         Cell start = Cell.extractCellFromString(tiles[0]);
         Cell end = Cell.extractCellFromString(tiles[1]);
-        return new Move(start, end, info);
+
+        return linkMove(new Move(start, end, info), board);
     }
 
-    /** Returns Move linked to given Board. */
-    public static Move linkMove(Move move, Board board) {
+    /**
+     * Returns Move linked to given Board.
+     */
+    private static Move linkMove(Move move, Board board) {
         Cell startFromBoard = move.getStart().findCell(board.getCells());
 
-        if(!isEmpty(startFromBoard)) {
+        if (!isEmpty(startFromBoard)) {
             move.getStart().setPiece(startFromBoard.getPiece().copy());
         } else {
             move.getStart().clear();
         }
 
         Cell endFromBoard = move.getEnd().findCell(board.getCells());
-        if(!isEmpty(endFromBoard)) {
+        if (!isEmpty(endFromBoard)) {
             move.getEnd().setPiece(endFromBoard.getPiece().copy());
         } else {
             move.getEnd().clear();
         }
-
-
         return move;
     }
 }
+

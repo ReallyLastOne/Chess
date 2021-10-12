@@ -36,7 +36,7 @@ public class Move {
     }
 
     public String toString2() {
-        return "Move={start=" + start + ", end=" + end + "}";
+        return "Move={start=" + start + ", end=" + end + ", info=" + info + "}";
     }
 
     @Override

@@ -11,6 +11,10 @@ public class Bishop extends Piece implements DiagonallyMovable {
         super(white);
     }
 
+    public Bishop(boolean white, int moves) {
+        super(white, moves);
+    }
+
     @Override
     public Bishop copy() {
         return new Bishop(white);
@@ -23,8 +27,8 @@ public class Bishop extends Piece implements DiagonallyMovable {
 
     @Override
     public boolean equals(Object o) {
-        if(o == this) return true;
-        if(!(o instanceof Bishop)) return false;
+        if (o == this) return true;
+        if (!(o instanceof Bishop)) return false;
         Bishop bishop = (Bishop) o;
         return white == bishop.isWhite();
     }

@@ -17,7 +17,7 @@ public class PromotionExecutor implements Executor {
 
         if(move.getInfo() == KNIGHT_PROMOTION) {
             /* move */
-            cells[end.getX()][end.getY()].setPiece(new Knight(start.getPiece().isWhite()));
+            cells[end.getX()][end.getY()].setPiece(new Knight(start.getPiece().isWhite(), cells[start.getX()][start.getY()].getPiece().getMoves()));
             /* set starting Cell as empty */
             cells[start.getX()][start.getY()].clear();
         } else if(move.getInfo() == BISHOP_PROMOTION) {
@@ -27,7 +27,8 @@ public class PromotionExecutor implements Executor {
             cells[start.getX()][start.getY()].clear();
         } else if(move.getInfo() == ROOK_PROMOTION) {
             /* move */
-            cells[end.getX()][end.getY()].setPiece(new Rook(start.getPiece().isWhite()));
+            cells[end.getX()][end.getY()].setPiece(new Rook(start.getPiece().isWhite(), cells[start.getX()][start.getY()].getPiece().getMoves()));
+            cells[end.getX()][end.getY()].getPiece().increaseMoves();
             /* set starting Cell as empty */
             cells[start.getX()][start.getY()].clear();
         } else if(move.getInfo() == QUEEN_PROMOTION) {

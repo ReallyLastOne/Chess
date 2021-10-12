@@ -2,6 +2,7 @@ package core.pieces;
 
 import core.Board;
 import core.Cell;
+import core.GameUtilities;
 import core.move.Move;
 
 import java.util.ArrayList;
@@ -34,9 +35,9 @@ interface DiagonallyMovable {
 
             if(fitInBoard(newX, newY)) {
                 if(isEmpty(cells[newX][newY])) {
-                    moves.add(new Move(start, cells[newX][newY]));
+                    moves.add(new Move(start, cells[newX][newY], GameUtilities.MoveInfo.STANDARD));
                 } else if (!isEmpty(cells[newX][newY]) && isOppositeColor(cells[newX][newY], start.getPiece().isWhite())) {
-                    moves.add(new Move(start, cells[newX][newY]));
+                    moves.add(new Move(start, cells[newX][newY], GameUtilities.MoveInfo.CAPTURE));
                     break;
                 } else {
                     break;

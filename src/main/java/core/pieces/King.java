@@ -14,26 +14,27 @@ import static core.move.MoveValidator.*;
 import static core.GameUtilities.MoveInfo;
 
 public class King extends Piece {
+
     public King(boolean white) {
         super(white);
     }
 
-    public King(boolean white, boolean moved) {
+    public King(boolean white, int moves) {
         this(white);
-        this.moved = moved;
+        this.moves = moves;
     }
 
     public boolean isWhiteShortCastlingPossible(Board board, Cell start) {
         Cell[][] cells = board.getCells();
         /* short castle, white*/
-        if (white && start.getX() == KING_COLUMN && start.getY() == WHITE_PIECES_ROW && !moved && !isKingInCheck(board, true) &&
+        if (white && start.getX() == KING_COLUMN && start.getY() == WHITE_PIECES_ROW && !hasMoved() && !isKingInCheck(board, true) &&
                 cells[ROOK_KINGSIDE_COLUMN][WHITE_PIECES_ROW].getPiece() instanceof Rook &&
                 !cells[ROOK_KINGSIDE_COLUMN][WHITE_PIECES_ROW].getPiece().hasMoved()) {
             for (int i = 5; i <= 6; i++) {
                 if (!isEmpty(cells[i][WHITE_PIECES_ROW])) {
                     return false;
                 } else {
-                    Move move = new Move(start, cells[i][WHITE_PIECES_ROW]);
+                    Move move = new Move(start, cells[i][WHITE_PIECES_ROW], MoveInfo.STANDARD);
                     if (isKingInCheckAfterMove(move, board, true)) return false;
                 }
             }
@@ -45,14 +46,15 @@ public class King extends Piece {
     public boolean isWhiteLongCastlingPossible(Board board, Cell start) {
         Cell[][] cells = board.getCells();
         /* long castle, white */
-        if (white && start.getX() == KING_COLUMN && start.getY() == WHITE_PIECES_ROW && !moved && !isKingInCheck(board, true) &&
+        if (white && start.getX() == KING_COLUMN && start.getY() == WHITE_PIECES_ROW && !hasMoved() && !isKingInCheck(board, true) &&
                 cells[ROOK_QUEENSIDE_COLUMN][WHITE_PIECES_ROW].getPiece() instanceof Rook &&
                 !cells[ROOK_QUEENSIDE_COLUMN][WHITE_PIECES_ROW].getPiece().hasMoved()) {
+            if(!isEmpty(cells[1][WHITE_PIECES_ROW])) return false;
             for (int i = 3; i >= 2; i--) {
                 if (!isEmpty(cells[i][WHITE_PIECES_ROW])) {
                     return false;
                 } else {
-                    Move move = new Move(start, cells[i][WHITE_PIECES_ROW]);
+                    Move move = new Move(start, cells[i][WHITE_PIECES_ROW], MoveInfo.STANDARD);
                     if (isKingInCheckAfterMove(move, board, true)) return false;
                 }
             }
@@ -64,14 +66,14 @@ public class King extends Piece {
     public boolean isBlackShortCastlingPossible(Board board, Cell start) {
         Cell[][] cells = board.getCells();
         /* short castle, black */
-        if (!white && start.getX() == KING_COLUMN && start.getY() == BLACK_PIECES_ROW && !moved && !isKingInCheck(board, false) &&
+        if (!white && start.getX() == KING_COLUMN && start.getY() == BLACK_PIECES_ROW && !hasMoved() && !isKingInCheck(board, false) &&
                 cells[ROOK_KINGSIDE_COLUMN][BLACK_PIECES_ROW].getPiece() instanceof Rook &&
                 !cells[ROOK_KINGSIDE_COLUMN][BLACK_PIECES_ROW].getPiece().hasMoved()) {
             for (int i = 5; i <= 6; i++) {
                 if (!isEmpty(cells[i][BLACK_PIECES_ROW])) {
                     return false;
                 } else {
-                    Move move = new Move(start, cells[i][BLACK_PIECES_ROW]);
+                    Move move = new Move(start, cells[i][BLACK_PIECES_ROW], MoveInfo.STANDARD);
                     if (isKingInCheckAfterMove(move, board, false)) return false;
                 }
             }
@@ -83,14 +85,15 @@ public class King extends Piece {
     public boolean isBlackLongCastlingPossible(Board board, Cell start) {
         Cell[][] cells = board.getCells();
         /* long castle, white */
-        if (!white && start.getX() == KING_COLUMN && start.getY() == BLACK_PIECES_ROW && !moved && !isKingInCheck(board, false) &&
+        if (!white && start.getX() == KING_COLUMN && start.getY() == BLACK_PIECES_ROW && !hasMoved() && !isKingInCheck(board, false) &&
                 cells[ROOK_QUEENSIDE_COLUMN][BLACK_PIECES_ROW].getPiece() instanceof Rook &&
                 !cells[ROOK_QUEENSIDE_COLUMN][BLACK_PIECES_ROW].getPiece().hasMoved()) {
+            if(!isEmpty(cells[1][BLACK_PIECES_ROW])) return false;
             for (int i = 3; i >= 2; i--) {
                 if (!isEmpty(cells[i][BLACK_PIECES_ROW])) {
                     return false;
                 } else {
-                    Move move = new Move(start, cells[i][BLACK_PIECES_ROW]);
+                    Move move = new Move(start, cells[i][BLACK_PIECES_ROW], MoveInfo.STANDARD);
                     if (isKingInCheckAfterMove(move, board, false)) return false;
                 }
             }
@@ -120,65 +123,65 @@ public class King extends Piece {
         // refactor
         if (fitInBoard(x + 1, y)) {
             if (isEmpty(cells[x + 1][y])) {
-                moves.add(new Move(start, cells[x + 1][y]));
+                moves.add(new Move(start, cells[x + 1][y], MoveInfo.STANDARD));
             } else if (!isEmpty(cells[x + 1][y]) && isOppositeColor(cells[x + 1][y], start.getPiece().isWhite())) {
-                moves.add(new Move(start, cells[x + 1][y]));
+                moves.add(new Move(start, cells[x + 1][y], MoveInfo.CAPTURE));
             }
         }
 
         if (fitInBoard(x - 1, y)) {
             if (isEmpty(cells[x - 1][y])) {
-                moves.add(new Move(start, cells[x - 1][y]));
+                moves.add(new Move(start, cells[x - 1][y], MoveInfo.STANDARD));
             } else if (!isEmpty(cells[x - 1][y]) && isOppositeColor(cells[x - 1][y], start.getPiece().isWhite())) {
-                moves.add(new Move(start, cells[x - 1][y]));
+                moves.add(new Move(start, cells[x - 1][y], MoveInfo.CAPTURE));
             }
         }
 
         if (fitInBoard(x + 1, y + 1)) {
             if (isEmpty(cells[x + 1][y + 1])) {
-                moves.add(new Move(start, cells[x + 1][y + 1]));
+                moves.add(new Move(start, cells[x + 1][y + 1], MoveInfo.STANDARD));
             } else if (!isEmpty(cells[x + 1][y + 1]) && isOppositeColor(cells[x + 1][y + 1], start.getPiece().isWhite())) {
-                moves.add(new Move(start, cells[x + 1][y + 1]));
+                moves.add(new Move(start, cells[x + 1][y + 1], MoveInfo.CAPTURE));
             }
         }
 
         if (fitInBoard(x - 1, y + 1)) {
             if (isEmpty(cells[x - 1][y + 1])) {
-                moves.add(new Move(start, cells[x - 1][y + 1]));
+                moves.add(new Move(start, cells[x - 1][y + 1], MoveInfo.STANDARD));
             } else if (!isEmpty(cells[x - 1][y + 1]) && isOppositeColor(cells[x - 1][y + 1], start.getPiece().isWhite())) {
-                moves.add(new Move(start, cells[x - 1][y + 1]));
+                moves.add(new Move(start, cells[x - 1][y + 1], MoveInfo.CAPTURE));
             }
         }
 
         if (fitInBoard(x, y + 1)) {
             if (isEmpty(cells[x][y + 1])) {
-                moves.add(new Move(start, cells[x][y + 1]));
+                moves.add(new Move(start, cells[x][y + 1], MoveInfo.STANDARD));
             } else if (!isEmpty(cells[x][y + 1]) && isOppositeColor(cells[x][y + 1], start.getPiece().isWhite())) {
-                moves.add(new Move(start, cells[x][y + 1]));
+                moves.add(new Move(start, cells[x][y + 1], MoveInfo.CAPTURE));
             }
         }
 
         if (fitInBoard(x + 1, y - 1)) {
             if (isEmpty(cells[x + 1][y - 1])) {
-                moves.add(new Move(start, cells[x + 1][y - 1]));
+                moves.add(new Move(start, cells[x + 1][y - 1], MoveInfo.STANDARD));
             } else if (!isEmpty(cells[x + 1][y - 1]) && isOppositeColor(cells[x + 1][y - 1], start.getPiece().isWhite())) {
-                moves.add(new Move(start, cells[x + 1][y - 1]));
+                moves.add(new Move(start, cells[x + 1][y - 1], MoveInfo.CAPTURE));
             }
         }
 
         if (fitInBoard(x - 1, y - 1)) {
             if (isEmpty(cells[x - 1][y - 1])) {
-                moves.add(new Move(start, cells[x - 1][y - 1]));
+                moves.add(new Move(start, cells[x - 1][y - 1], MoveInfo.STANDARD));
             } else if (!isEmpty(cells[x - 1][y - 1]) && isOppositeColor(cells[x - 1][y - 1], start.getPiece().isWhite())) {
-                moves.add(new Move(start, cells[x - 1][y - 1]));
+                moves.add(new Move(start, cells[x - 1][y - 1], MoveInfo.CAPTURE));
             }
         }
 
         if (fitInBoard(x, y - 1)) {
             if (isEmpty(cells[x][y - 1])) {
-                moves.add(new Move(start, cells[x][y - 1]));
+                moves.add(new Move(start, cells[x][y - 1], MoveInfo.STANDARD));
             } else if (!isEmpty(cells[x][y - 1]) && isOppositeColor(cells[x][y - 1], start.getPiece().isWhite())) {
-                moves.add(new Move(start, cells[x][y - 1]));
+                moves.add(new Move(start, cells[x][y - 1], MoveInfo.CAPTURE));
             }
         }
 
@@ -187,7 +190,7 @@ public class King extends Piece {
 
     @Override
     public King copy() {
-        return new King(white, moved);
+        return new King(white, moves);
     }
 
     @Override
@@ -195,6 +198,6 @@ public class King extends Piece {
         if (o == this) return true;
         if (!(o instanceof King)) return false;
         King king = (King) o;
-        return white == king.isWhite() && moved == king.hasMoved();
+        return white == king.isWhite() && hasMoved() == king.hasMoved();
     }
 }

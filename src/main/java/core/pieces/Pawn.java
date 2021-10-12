@@ -3,6 +3,7 @@ package core.pieces;
 import core.Board;
 import core.Cell;
 import core.move.Move;
+import lombok.Getter;
 import lombok.Setter;
 
 import java.util.ArrayList;
@@ -11,14 +12,21 @@ import java.util.List;
 import static core.GameUtilities.MoveInfo;
 
 import static core.Cell.*;
+import static core.PositionConstants.*;
 
 public class Pawn extends Piece {
     @Setter
     private boolean enPassant;
+    @Getter
     private final int forwardCount;
 
     public Pawn(boolean white) {
         super(white);
+        forwardCount = white ? 1 : -1;
+    }
+
+    public Pawn(boolean white, int moves) {
+        super(white, moves);
         forwardCount = white ? 1 : -1;
     }
 
@@ -34,7 +42,7 @@ public class Pawn extends Piece {
 
         if (white) {
             /* if pawn is white and at 2nd rank, 2 cells forward */
-            if (y == 1) {
+            if (y == WHITE_PAWN_ROW) {
                 if (isEmpty(cells[x][y + forwardCount]) && isEmpty(cells[x][y + 2 * forwardCount])) {
                     moves.add(new Move(start, cells[x][y + 2 * forwardCount], MoveInfo.TWO_FORWARD));
                 }
@@ -43,7 +51,7 @@ public class Pawn extends Piece {
 
         if (!white) {
             /* if pawn is black and is at 6th rank, 2 cell forward */
-            if (y == 6) {
+            if (y == BLACK_PAWN_ROW) {
                 if (isEmpty(cells[x][y + forwardCount]) && isEmpty(cells[x][y + 2 * forwardCount])) {
                     moves.add(new Move(start, cells[x][y + 2 * forwardCount], MoveInfo.TWO_FORWARD));
                 }
@@ -54,13 +62,13 @@ public class Pawn extends Piece {
         if (x == 0) {
             if (!isEmpty(cells[x + 1][y + forwardCount]) && isOppositeColor(cells[x + 1][y + forwardCount], start.getPiece().isWhite())) {
                 /* add promotion to legal moves */
-                if ((white && y + forwardCount == 7) || (!white && y + forwardCount == 0)) {
+                if ((white && y + forwardCount == BLACK_PIECES_ROW) || (!white && y + forwardCount == WHITE_PIECES_ROW)) {
                     moves.add(new Move(start, cells[x + 1][y + forwardCount], MoveInfo.KNIGHT_PROMOTION));
                     moves.add(new Move(start, cells[x + 1][y + forwardCount], MoveInfo.BISHOP_PROMOTION));
                     moves.add(new Move(start, cells[x + 1][y + forwardCount], MoveInfo.ROOK_PROMOTION));
                     moves.add(new Move(start, cells[x + 1][y + forwardCount], MoveInfo.QUEEN_PROMOTION));
-                } else { /* simply one forward */
-                    moves.add(new Move(start, cells[x + 1][y + forwardCount]));
+                } else { /* simply capture */
+                    moves.add(new Move(start, cells[x + 1][y + forwardCount], MoveInfo.CAPTURE));
                 }
             }
             /* en passant */
@@ -74,13 +82,13 @@ public class Pawn extends Piece {
         /* if stands at H rank then can only capture towards A rank */
         else if (x == 7) {
             if (!isEmpty(cells[x - 1][y + forwardCount]) && isOppositeColor(cells[x - 1][y + forwardCount], start.getPiece().isWhite())) {
-                if ((white && y + forwardCount == 7) || (!white && y + forwardCount == 0)) {
+                if ((white && y + forwardCount == BLACK_PIECES_ROW) || (!white && y + forwardCount == WHITE_PIECES_ROW)) {
                     moves.add(new Move(start, cells[x + 1][y + forwardCount], MoveInfo.KNIGHT_PROMOTION));
                     moves.add(new Move(start, cells[x + 1][y + forwardCount], MoveInfo.BISHOP_PROMOTION));
                     moves.add(new Move(start, cells[x + 1][y + forwardCount], MoveInfo.ROOK_PROMOTION));
                     moves.add(new Move(start, cells[x + 1][y + forwardCount], MoveInfo.QUEEN_PROMOTION));
-                } else { /* simply one forward */
-                    moves.add(new Move(start, cells[x - 1][y + forwardCount], MoveInfo.PAWN_MOVE));
+                } else { /* simply capture */
+                    moves.add(new Move(start, cells[x - 1][y + forwardCount], MoveInfo.CAPTURE));
                 }
             }
             /* en passant */
@@ -95,24 +103,24 @@ public class Pawn extends Piece {
         else {
             /* capture to the right */
             if (!isEmpty(cells[x + 1][y + forwardCount]) && isOppositeColor(cells[x + 1][y + forwardCount], start.getPiece().isWhite())) {
-                if ((white && y + forwardCount == 7) || (!white && y + forwardCount == 0)) {
+                if ((white && y + forwardCount == BLACK_PIECES_ROW) || (!white && y + forwardCount == WHITE_PIECES_ROW)) {
                     moves.add(new Move(start, cells[x + 1][y + forwardCount], MoveInfo.KNIGHT_PROMOTION));
                     moves.add(new Move(start, cells[x + 1][y + forwardCount], MoveInfo.BISHOP_PROMOTION));
                     moves.add(new Move(start, cells[x + 1][y + forwardCount], MoveInfo.ROOK_PROMOTION));
                     moves.add(new Move(start, cells[x + 1][y + forwardCount], MoveInfo.QUEEN_PROMOTION));
-                } else { /* simply one forward */
-                    moves.add(new Move(start, cells[x + 1][y + forwardCount]));
+                } else { /* simply capture */
+                    moves.add(new Move(start, cells[x + 1][y + forwardCount], MoveInfo.CAPTURE));
                 }
             }
             /* capture to the left */
             if (!isEmpty(cells[x - 1][y + forwardCount]) && isOppositeColor(cells[x - 1][y + forwardCount], start.getPiece().isWhite())) {
-                if ((white && y + forwardCount == 7) || (!white && y + forwardCount == 0)) {
+                if ((white && y + forwardCount == BLACK_PIECES_ROW) || (!white && y + forwardCount == WHITE_PIECES_ROW)) {
                     moves.add(new Move(start, cells[x - 1][y + forwardCount], MoveInfo.KNIGHT_PROMOTION));
                     moves.add(new Move(start, cells[x - 1][y + forwardCount], MoveInfo.BISHOP_PROMOTION));
                     moves.add(new Move(start, cells[x - 1][y + forwardCount], MoveInfo.ROOK_PROMOTION));
                     moves.add(new Move(start, cells[x - 1][y + forwardCount], MoveInfo.QUEEN_PROMOTION));
-                } else { /* simply one forward */
-                    moves.add(new Move(start, cells[x - 1][y + forwardCount]));
+                } else { /* simply capture */
+                    moves.add(new Move(start, cells[x - 1][y + forwardCount], MoveInfo.CAPTURE));
                 }
             }
             /* en passant to left */
@@ -133,13 +141,13 @@ public class Pawn extends Piece {
 
         /* one cell forward */
         if (isEmpty(cells[x][y + forwardCount])) {
-            if ((white && y + forwardCount == 7) || (!white && y + forwardCount == 0)) {
+            if ((white && y + forwardCount == BLACK_PIECES_ROW) || (!white && y + forwardCount == WHITE_PIECES_ROW)) {
                 moves.add(new Move(start, cells[x][y + forwardCount], MoveInfo.KNIGHT_PROMOTION));
                 moves.add(new Move(start, cells[x][y + forwardCount], MoveInfo.BISHOP_PROMOTION));
                 moves.add(new Move(start, cells[x][y + forwardCount], MoveInfo.ROOK_PROMOTION));
                 moves.add(new Move(start, cells[x][y + forwardCount], MoveInfo.QUEEN_PROMOTION));
             } else { /* simply one forward */
-                moves.add(new Move(start, cells[x][y + forwardCount]));
+                moves.add(new Move(start, cells[x][y + forwardCount], MoveInfo.PAWN_MOVE));
             }
         }
 
@@ -157,7 +165,7 @@ public class Pawn extends Piece {
 
     @Override
     public String toString() {
-        return "Pawn{whte=" + white + ", canBeEnpassanted=" + enPassant + "}";
+        return "Pawn{white=" + white + ", canBeEnpassanted=" + enPassant + "}";
     }
 
     @Override
@@ -165,6 +173,6 @@ public class Pawn extends Piece {
         if (o == this) return true;
         if (!(o instanceof Pawn)) return false;
         Pawn pawn = (Pawn) o;
-        return white == pawn.isWhite() && moved == pawn.hasMoved();
+        return white == pawn.isWhite() && hasMoved() == pawn.hasMoved();
     }
 }

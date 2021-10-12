@@ -17,12 +17,14 @@ import java.util.stream.Stream;
 import static core.PositionConstants.*;
 import static utilities.Constants.*;
 import static utilities.Display.convertPieceToSymbol;
+import static core.GameUtilities.MoveInfo;
 
 @Component
 @Scope("prototype")
 @Getter
-/** Class that is a representation of chess board.
- * */
+/**
+ *  Class that is a representation of chess board.
+ */
 public final class Board {
     public static final String STARTING_FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 ";
     public static int nr = 0;
@@ -54,25 +56,44 @@ public final class Board {
      * Method responsible for executing valid move on board.
      */
     public void executeMove(Move move) {
-        //System.out.println("Execute move: " + move + ", info: " + move.getInfo());
         moves.add(move);
         lastMove = move.copy();
         Executor executor = ExecutorCalculator.calculate(move);
         executor.executeMove(this, move);
         updateAliveCells();
         turn = !turn;
+        updatePawnsStatus();
     }
 
     /**
      * Method responsible for undo last move.
      */
     public void undoMove() {
-        //System.out.println("Undo move: " + lastMove + ", info: " + lastMove.getInfo());
+        lastMove = moves.getLast();
         Executor executor = ExecutorCalculator.calculate(lastMove);
         executor.undoMove(this);
         moves.pollLast();
         updateAliveCells();
         turn = !turn;
+        updatePawnsStatus();
+    }
+
+    public void updatePawnsStatus() {
+        for (Cell x : aliveWhitePiecesCells) {
+            if (x.getPiece() != null && x.getPiece() instanceof Pawn) {
+                ((Pawn) x.getPiece()).setEnPassant(false);
+            }
+        }
+        for (Cell x : aliveBlackPiecesCells) {
+            if (x.getPiece() != null && x.getPiece() instanceof Pawn) {
+                ((Pawn) x.getPiece()).setEnPassant(false);
+            }
+        }
+        if(moves.size() > 0) {
+            if (moves.getLast().getInfo() == MoveInfo.TWO_FORWARD) {
+                ((Pawn) cells[moves.getLast().getEnd().getX()][moves.getLast().getEnd().getY()].getPiece()).setEnPassant(true);
+            }
+        }
     }
 
     private void initializeCells() { // extract to another class/ method?
@@ -180,19 +201,6 @@ public final class Board {
     }
 
 
-    public void updatePawnsStatus() {
-        for (Cell cell : aliveWhitePiecesCells) {
-            if (cell.getPiece() instanceof Pawn) {
-                ((Pawn) cell.getPiece()).setEnPassant(false);
-            }
-        }
-        for (Cell cell : aliveBlackPiecesCells) {
-            if (cell.getPiece() instanceof Pawn) {
-                ((Pawn) cell.getPiece()).setEnPassant(false);
-            }
-        }
-    }
-
     public String getFEN() {
         throw new UnsupportedOperationException();
     }
@@ -221,7 +229,7 @@ public final class Board {
         for (Cell x : cells) {
             moves = x.getPiece().calculatePseudoLegalMoves(this, x);
             for (Move move : moves) {
-                if (MoveValidator.isValid(move, this)) legal.add(move);
+                if (!MoveValidator.isKingInCheckAfterMove(move, this, move.getStart().getPiece().isWhite())) legal.add(move);
             }
         }
 

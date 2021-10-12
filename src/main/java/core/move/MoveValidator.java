@@ -4,40 +4,35 @@ import core.Board;
 import core.Cell;
 import core.pieces.King;
 import core.GameUtilities;
+import core.pieces.Pawn;
 
 import java.util.List;
+import java.util.Optional;
 
 public class MoveValidator {
 
     public static boolean isValid(Move move, Board board) {
-        // System.out.println(move);
-        //  System.out.println(move.toString2());
-        /*if(move.toString().equals("d3d2")) {
-            System.out.println(move);
-            System.out.println(board);
-        }*/
-
         Cell start = move.getStart();
-        List<Move> legalMoves = start.getPiece().calculatePseudoLegalMoves(board, start);
-        boolean legal = legalMoves.contains(move);
-        // System.out.println("legal? " + legal);
-        if (legal) { // link move to move with description
-            Move correspondingMove = legalMoves.get(legalMoves.indexOf(move));
-            if (correspondingMove.getInfo() != null) {
+        Optional<List<Move>> pseudoLegalMoves = Optional.ofNullable(start.getPiece().calculatePseudoLegalMoves(board, start));
+
+        if (pseudoLegalMoves.isPresent()) {
+            List<Move> moves = pseudoLegalMoves.get();
+            boolean legal = moves.contains(move);
+
+            if (legal) { // link move to move with description
+                Move correspondingMove = moves.get(moves.indexOf(move));
                 if (((correspondingMove.getInfo() != GameUtilities.MoveInfo.ROOK_PROMOTION)
                         && (correspondingMove.getInfo() != GameUtilities.MoveInfo.BISHOP_PROMOTION) && (correspondingMove.getInfo() != GameUtilities.MoveInfo.QUEEN_PROMOTION)
                         && (correspondingMove.getInfo() != GameUtilities.MoveInfo.KNIGHT_PROMOTION))) {
-                    move.setInfo(legalMoves.get(legalMoves.indexOf(move)).getInfo());
+                    move.setInfo(moves.get(moves.indexOf(move)).getInfo());
                 }
+                // checking if move is in legal moves and if own king is not in check after move
+                boolean kingNotCheck = !isKingInCheckAfterMove(move, board, start.getPiece().isWhite());
+                return kingNotCheck;
             }
+            return false;
         }
-
-        // checking if move is in legal moves and if own king is not in check after move
-        boolean kingNotCheck = !isKingInCheckAfterMove(move, board, start.getPiece().isWhite());
-        //board.displayBoard();
-        // System.out.println(move.toString2());
-
-        return legal && kingNotCheck;
+        return false;
     }
 
     public static boolean isKingInCheckAfterMove(Move move, Board board, boolean turn) {
@@ -67,8 +62,8 @@ public class MoveValidator {
         List<Cell> piecesCell = turn ? board.getAliveWhitePiecesCells() : board.getAliveBlackPiecesCells();
 
         if (!isKingInCheck(board, turn)) return false;
-        /* If king can't move, but is not in check: return false */
-        if (kingMoves.isEmpty() && isKingInCheck(board, turn)) return true;
+        /* If king can't move and is in check: return true */
+        // if (kingMoves.isEmpty() && isKingInCheck(board, turn)) return true; what if king cant move, is in check but some piece can block?
         /* Check if king can move away from check */
         for (Move x : kingMoves) {
             if (!isKingInCheckAfterMove(x, board, board.isTurn())) return false;

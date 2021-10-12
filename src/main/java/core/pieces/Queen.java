@@ -14,6 +14,10 @@ public class Queen extends Piece implements HorizontallyMovable, VerticallyMovab
         super(white);
     }
 
+    public Queen(boolean white, int moves) {
+        super(white, moves);
+    }
+
     @Override
     public List<Move> calculatePseudoLegalMoves(Board board, Cell cell) {
         List<Move> vertical = calculateVerticalMoves(board, cell);
@@ -24,6 +28,7 @@ public class Queen extends Piece implements HorizontallyMovable, VerticallyMovab
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());
     }
+
     @Override
     public Queen copy() {
         return new Queen(white);
@@ -31,8 +36,8 @@ public class Queen extends Piece implements HorizontallyMovable, VerticallyMovab
 
     @Override
     public boolean equals(Object o) {
-        if(o == this) return true;
-        if(!(o instanceof Queen)) return false;
+        if (o == this) return true;
+        if (!(o instanceof Queen)) return false;
         Queen queen = (Queen) o;
         return white == queen.isWhite();
     }

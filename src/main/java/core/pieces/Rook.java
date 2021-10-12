@@ -15,9 +15,8 @@ public class Rook extends Piece implements HorizontallyMovable, VerticallyMovabl
         super(white);
     }
 
-    public Rook(boolean white, boolean moved) {
-        this(white);
-        this.moved = moved;
+    public Rook(boolean white, int moves) {
+        super(white, moves);
     }
 
     @Override
@@ -29,16 +28,17 @@ public class Rook extends Piece implements HorizontallyMovable, VerticallyMovabl
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());
     }
+
     @Override
     public Rook copy() {
-        return new Rook(white, moved);
+        return new Rook(white, moves);
     }
 
     @Override
     public boolean equals(Object o) {
-        if(o == this) return true;
-        if(!(o instanceof Rook)) return false;
+        if (o == this) return true;
+        if (!(o instanceof Rook)) return false;
         Rook rook = (Rook) o;
-        return white == rook.isWhite() && moved == rook.hasMoved();
+        return white == rook.isWhite() && hasMoved() == rook.hasMoved();
     }
 }
