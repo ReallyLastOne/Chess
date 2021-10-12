@@ -26,6 +26,7 @@ public class GeneralTest {
     @Before
     public void initialize() {
         ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
+        game = null;
         game = context.getBean(Game.class);
         board = game.getBoard();
     }
@@ -60,23 +61,22 @@ public class GeneralTest {
                         /* get legal moves from board */
                         List<String> boardMoves = board.getLegalMoves().stream().map(Move::toString).collect(Collectors.toList());
                         /* check if they are same */
-                        System.out.println("Legal: " + legalMoves);
-                        System.out.println("Actual: " + boardMoves);
-
                         boolean condition = legalMoves.containsAll(boardMoves) && boardMoves.containsAll(legalMoves);
                         if (!condition) {
                             System.out.println("------------------------");
-                            System.out.println("Actual pseudo legal moves: " + board.getPseudoLegalMoves().stream().map(x -> "\"" + x + "\"").collect(Collectors.toList()));
-                            System.out.println("Moves made: " + movesMade.stream().map(x -> "\"" + x + "\"").
+                            System.out.println("pseudoLegal = " + board.getPseudoLegalMoves().stream().map(x -> "\"" + x + "\"").collect(Collectors.toList()));
+                            System.out.println("movesMade = " + movesMade.stream().map(x -> "\"" + x + "\"").
                                     collect(Collectors.toList()));
-                            System.out.println("Pieces: " + new FENParser().getPiecePlacement(board));
-                            System.out.println("Actual: " + boardMoves.stream().map(x -> "\"" + x + "\"").collect(Collectors.toList()));
-                            System.out.println("Legal: " + legalMoves.stream().map(x -> "\"" + x + "\"").collect(Collectors.toList()));
+                            System.out.println("actual_fen = " +"\""+ new FENParser().getPiecePlacement(board)+"\"");
+                            System.out.println("actual = " + boardMoves.stream().map(x -> "\"" + x + "\"").collect(Collectors.toList()));
+                            System.out.println("legal = " + legalMoves.stream().map(x -> "\"" + x + "\"").collect(Collectors.toList()));
+                            System.out.println(board);
                         }
                         Assert.assertTrue(condition);
                         counter++;
                     } else if (counter % 2 == 1) {
                         /* make move (it is provided that it is legal) */
+                        System.out.println("_____________________");
                         System.out.println(board);
                         System.out.println("Move: " + line.trim());
                         game.makeMove(line);
