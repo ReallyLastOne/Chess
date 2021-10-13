@@ -83,10 +83,10 @@ public class Pawn extends Piece {
         else if (x == 7) {
             if (!isEmpty(cells[x - 1][y + forwardCount]) && isOppositeColor(cells[x - 1][y + forwardCount], start.getPiece().isWhite())) {
                 if ((white && y + forwardCount == BLACK_PIECES_ROW) || (!white && y + forwardCount == WHITE_PIECES_ROW)) {
-                    moves.add(new Move(start, cells[x + 1][y + forwardCount], MoveInfo.KNIGHT_PROMOTION));
-                    moves.add(new Move(start, cells[x + 1][y + forwardCount], MoveInfo.BISHOP_PROMOTION));
-                    moves.add(new Move(start, cells[x + 1][y + forwardCount], MoveInfo.ROOK_PROMOTION));
-                    moves.add(new Move(start, cells[x + 1][y + forwardCount], MoveInfo.QUEEN_PROMOTION));
+                    moves.add(new Move(start, cells[x - 1][y + forwardCount], MoveInfo.KNIGHT_PROMOTION));
+                    moves.add(new Move(start, cells[x - 1][y + forwardCount], MoveInfo.BISHOP_PROMOTION));
+                    moves.add(new Move(start, cells[x - 1][y + forwardCount], MoveInfo.ROOK_PROMOTION));
+                    moves.add(new Move(start, cells[x - 1][y + forwardCount], MoveInfo.QUEEN_PROMOTION));
                 } else { /* simply capture */
                     moves.add(new Move(start, cells[x - 1][y + forwardCount], MoveInfo.CAPTURE));
                 }

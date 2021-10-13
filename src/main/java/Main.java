@@ -34,7 +34,8 @@ public class Main {
         Game game = context.getBean(Game.class);
         System.out.println("Initial moves: " + Arrays.asList(moves));
         play(game, true);
-        System.out.println(new FENParser().getPiecePlacement(game.getBoard()));
+        //System.out.println(new FENParser().getPiecePlacement(game.getBoard()));
+        System.out.println(new FENParser().calculateFEN(game.getBoard()));
     }
 
     private static void play(Game game, boolean display) {

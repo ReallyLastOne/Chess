@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 import utilities.Display;
 
 import java.util.*;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static core.PositionConstants.*;
@@ -31,7 +30,8 @@ public final class Board {
     private Cell[][] cells;
     private Move lastMove;
     private final Deque<Move> moves = new ArrayDeque<>();
-
+    private int halfmoves = 0;
+    private int fullmoves = 1;
     private List<Cell> aliveWhitePiecesCells = new ArrayList<>();
     private List<Cell> aliveBlackPiecesCells = new ArrayList<>();
 
@@ -56,6 +56,7 @@ public final class Board {
      * Method responsible for executing valid move on board.
      */
     public void executeMove(Move move) {
+        if(!turn) fullmoves++;
         moves.add(move);
         lastMove = move.copy();
         Executor executor = ExecutorCalculator.calculate(move);
@@ -69,6 +70,7 @@ public final class Board {
      * Method responsible for undo last move.
      */
     public void undoMove() {
+        if(turn) fullmoves--;
         lastMove = moves.getLast();
         Executor executor = ExecutorCalculator.calculate(lastMove);
         executor.undoMove(this);
@@ -76,6 +78,26 @@ public final class Board {
         updateAliveCells();
         turn = !turn;
         updatePawnsStatus();
+    }
+
+    public int getHalfmoves() {
+        Iterator<Move> itr = moves.descendingIterator();
+
+        halfmoves = 0;
+        while (itr.hasNext()) {
+            Move move = itr.next();
+            MoveInfo info = move.getInfo();
+            if(info == MoveInfo.CAPTURE || info == MoveInfo.PAWN_MOVE || info == MoveInfo.EN_PASSANT || info == MoveInfo.TWO_FORWARD) {
+                return halfmoves;
+            } else {
+                halfmoves++;
+            }
+        }
+        return halfmoves;
+    }
+
+    public Move getLastMove() {
+        return moves.getLast();
     }
 
     public void updatePawnsStatus() {
@@ -185,6 +207,8 @@ public final class Board {
             System.out.println(cell.getPiece().getClass() + " " + cell.getPiece().calculatePseudoLegalMoves(this, cell));
     }
 
+    /** Checks if specified coordinates fit inside chess board.
+     * */
     public static boolean fitInBoard(int x, int y) {
         return x >= 0 && x <= GRID_SIZE - 1 && y >= 0 && y <= GRID_SIZE - 1;
     }

@@ -48,6 +48,10 @@ public class Cell {
         return this.getX() == cell.getX() && this.getY() == cell.getY();
     }
 
+    public String toAlgebraicNotation() {
+        return INT_TO_COLUMN.get(this.getX()) + "" + (this.getY() + 1);
+    }
+
     @Override
     public String toString() {
         return "Cell{x=" + x + ", y=" + y + ", piece=" + piece + "}";
