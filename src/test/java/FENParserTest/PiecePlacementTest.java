@@ -9,24 +9,22 @@ import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import spring.AppConfig;
-import utilities.FENParser;
+import utilities.FEN;
 
 public class PiecePlacementTest {
     Game game;
     Board board;
-    FENParser parser;
 
     @Before
     public void initialize() {
         ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
         game = context.getBean(Game.class);
         board = game.getBoard();
-        parser = new FENParser();
     }
 
     @Test
     public void basicPiecePlacementTest() {
-        Assert.assertEquals(parser.getPiecePlacement(board), "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
+        Assert.assertEquals(FEN.getPiecePlacement(board), "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
     }
 
     @After

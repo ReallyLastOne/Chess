@@ -2,15 +2,13 @@ package FENParserTest;
 
 import core.Board;
 import core.Game;
-import core.move.Move;
-import core.pieces.Pawn;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import spring.AppConfig;
-import utilities.FENParser;
+import utilities.FEN;
 
 import java.io.*;
 
@@ -52,7 +50,7 @@ public class GeneralFEN {
                         game.makeMove(line);
                         counter++;
                     } else if (counter % 2 == 1) {
-                        String result = new FENParser().calculateFEN(board);
+                        String result = FEN.of(board);
                         Assert.assertEquals(line, result);
                         counter++;
                     }

@@ -6,7 +6,7 @@ import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import spring.AppConfig;
-import utilities.FENParser;
+import utilities.FEN;
 
 public class CastlingTest {
     ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
@@ -27,9 +27,9 @@ public class CastlingTest {
         for(String move : moves) {
             game.makeMove(move);
         }
-        Assert.assertEquals("r3k2r/pppq1ppp/2nbbn2/3pp3/3PP3/2NBBN2/PPPQ1PPP/R3K2R", new FENParser().getPiecePlacement(board));
+        Assert.assertEquals("r3k2r/pppq1ppp/2nbbn2/3pp3/3PP3/2NBBN2/PPPQ1PPP/R3K2R", FEN.getPiecePlacement(board));
         game.makeMove("e1g1");
-        Assert.assertEquals("r3k2r/pppq1ppp/2nbbn2/3pp3/3PP3/2NBBN2/PPPQ1PPP/R4RK1", new FENParser().getPiecePlacement(board));
+        Assert.assertEquals("r3k2r/pppq1ppp/2nbbn2/3pp3/3PP3/2NBBN2/PPPQ1PPP/R4RK1", FEN.getPiecePlacement(board));
     }
 
     @Test
@@ -39,9 +39,9 @@ public class CastlingTest {
         for(String move : moves) {
             game.makeMove(move);
         }
-        Assert.assertEquals("r3k2r/pppq1ppp/2nbbn2/3pp3/3PP3/2NBBN2/PPPQ1PPP/R3K2R", new FENParser().getPiecePlacement(board));
+        Assert.assertEquals("r3k2r/pppq1ppp/2nbbn2/3pp3/3PP3/2NBBN2/PPPQ1PPP/R3K2R", FEN.getPiecePlacement(board));
         game.makeMove("e1c1");
-        Assert.assertEquals("r3k2r/pppq1ppp/2nbbn2/3pp3/3PP3/2NBBN2/PPPQ1PPP/2KR3R", new FENParser().getPiecePlacement(board));
+        Assert.assertEquals("r3k2r/pppq1ppp/2nbbn2/3pp3/3PP3/2NBBN2/PPPQ1PPP/2KR3R", FEN.getPiecePlacement(board));
     }
 
     @Test
@@ -51,9 +51,9 @@ public class CastlingTest {
         for(String move : moves) {
             game.makeMove(move);
         }
-        Assert.assertEquals("r3k2r/pppq1ppp/2nbbn2/3pp3/3PP3/2NBBN2/PPPQ1PPP/2KR3R", new FENParser().getPiecePlacement(board));
+        Assert.assertEquals("r3k2r/pppq1ppp/2nbbn2/3pp3/3PP3/2NBBN2/PPPQ1PPP/2KR3R", FEN.getPiecePlacement(board));
         game.makeMove("e8g8");
-        Assert.assertEquals("r4rk1/pppq1ppp/2nbbn2/3pp3/3PP3/2NBBN2/PPPQ1PPP/2KR3R", new FENParser().getPiecePlacement(board));
+        Assert.assertEquals("r4rk1/pppq1ppp/2nbbn2/3pp3/3PP3/2NBBN2/PPPQ1PPP/2KR3R", FEN.getPiecePlacement(board));
     }
 
     @Test
@@ -63,9 +63,9 @@ public class CastlingTest {
         for(String move : moves) {
             game.makeMove(move);
         }
-        Assert.assertEquals("r3k2r/pppq1ppp/2nbbn2/3pp3/3PP3/2NBBN2/PPPQ1PPP/2KR3R", new FENParser().getPiecePlacement(board));
+        Assert.assertEquals("r3k2r/pppq1ppp/2nbbn2/3pp3/3PP3/2NBBN2/PPPQ1PPP/2KR3R", FEN.getPiecePlacement(board));
         game.makeMove("e8c8");
-        Assert.assertEquals("2kr3r/pppq1ppp/2nbbn2/3pp3/3PP3/2NBBN2/PPPQ1PPP/2KR3R", new FENParser().getPiecePlacement(board));
+        Assert.assertEquals("2kr3r/pppq1ppp/2nbbn2/3pp3/3PP3/2NBBN2/PPPQ1PPP/2KR3R", FEN.getPiecePlacement(board));
     }
 
 }

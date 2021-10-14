@@ -3,14 +3,13 @@ package PseudoLegalMovesTest;
 import core.Board;
 import core.Game;
 import core.move.Move;
-import core.pieces.Pawn;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import spring.AppConfig;
-import utilities.FENParser;
+import utilities.FEN;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -67,7 +66,7 @@ public class GeneralTest {
                             System.out.println("pseudoLegal = " + board.getPseudoLegalMoves().stream().map(x -> "\"" + x + "\"").collect(Collectors.toList()));
                             System.out.println("movesMade = " + movesMade.stream().map(x -> "\"" + x + "\"").
                                     collect(Collectors.toList()));
-                            System.out.println("actual_fen = " +"\""+ new FENParser().getPiecePlacement(board)+"\"");
+                            System.out.println("actual_fen = " +"\""+ FEN.getPiecePlacement(board)+"\"");
                             System.out.println("actual = " + boardMoves.stream().map(x -> "\"" + x + "\"").collect(Collectors.toList()));
                             System.out.println("legal = " + legalMoves.stream().map(x -> "\"" + x + "\"").collect(Collectors.toList()));
                             System.out.println(board);
@@ -81,7 +80,7 @@ public class GeneralTest {
                         System.out.println("Move: " + line.trim());
                         game.makeMove(line);
                         System.out.println(board);
-                        piecesPlacements.add(new FENParser().getPiecePlacement(board));
+                        piecesPlacements.add(new FEN().getPiecePlacement(board));
                         movesMade.add(line);
                         counter++;
                     }

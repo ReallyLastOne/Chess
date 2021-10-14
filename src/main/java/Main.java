@@ -2,7 +2,7 @@ import core.Game;
 import spring.AppConfig;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import utilities.FENParser;
+import utilities.FEN;
 
 import java.util.Arrays;
 
@@ -35,7 +35,7 @@ public class Main {
         System.out.println("Initial moves: " + Arrays.asList(moves));
         play(game, true);
         //System.out.println(new FENParser().getPiecePlacement(game.getBoard()));
-        System.out.println(new FENParser().calculateFEN(game.getBoard()));
+        System.out.println(new FEN().of(game.getBoard()));
     }
 
     private static void play(Game game, boolean display) {
