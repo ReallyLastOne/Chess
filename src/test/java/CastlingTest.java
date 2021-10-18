@@ -27,9 +27,9 @@ public class CastlingTest {
         for(String move : moves) {
             game.makeMove(move);
         }
-        Assert.assertEquals("r3k2r/pppq1ppp/2nbbn2/3pp3/3PP3/2NBBN2/PPPQ1PPP/R3K2R", FEN.getPiecePlacement(board));
+        Assert.assertEquals("r3k2r/pppq1ppp/2nbbn2/3pp3/3PP3/2NBBN2/PPPQ1PPP/R3K2R", FEN.calculatePiecePlacement(board));
         game.makeMove("e1g1");
-        Assert.assertEquals("r3k2r/pppq1ppp/2nbbn2/3pp3/3PP3/2NBBN2/PPPQ1PPP/R4RK1", FEN.getPiecePlacement(board));
+        Assert.assertEquals("r3k2r/pppq1ppp/2nbbn2/3pp3/3PP3/2NBBN2/PPPQ1PPP/R4RK1", FEN.calculatePiecePlacement(board));
     }
 
     @Test
@@ -39,9 +39,9 @@ public class CastlingTest {
         for(String move : moves) {
             game.makeMove(move);
         }
-        Assert.assertEquals("r3k2r/pppq1ppp/2nbbn2/3pp3/3PP3/2NBBN2/PPPQ1PPP/R3K2R", FEN.getPiecePlacement(board));
+        Assert.assertEquals("r3k2r/pppq1ppp/2nbbn2/3pp3/3PP3/2NBBN2/PPPQ1PPP/R3K2R", FEN.calculatePiecePlacement(board));
         game.makeMove("e1c1");
-        Assert.assertEquals("r3k2r/pppq1ppp/2nbbn2/3pp3/3PP3/2NBBN2/PPPQ1PPP/2KR3R", FEN.getPiecePlacement(board));
+        Assert.assertEquals("r3k2r/pppq1ppp/2nbbn2/3pp3/3PP3/2NBBN2/PPPQ1PPP/2KR3R", FEN.calculatePiecePlacement(board));
     }
 
     @Test
@@ -51,9 +51,9 @@ public class CastlingTest {
         for(String move : moves) {
             game.makeMove(move);
         }
-        Assert.assertEquals("r3k2r/pppq1ppp/2nbbn2/3pp3/3PP3/2NBBN2/PPPQ1PPP/2KR3R", FEN.getPiecePlacement(board));
+        Assert.assertEquals("r3k2r/pppq1ppp/2nbbn2/3pp3/3PP3/2NBBN2/PPPQ1PPP/2KR3R", FEN.calculatePiecePlacement(board));
         game.makeMove("e8g8");
-        Assert.assertEquals("r4rk1/pppq1ppp/2nbbn2/3pp3/3PP3/2NBBN2/PPPQ1PPP/2KR3R", FEN.getPiecePlacement(board));
+        Assert.assertEquals("r4rk1/pppq1ppp/2nbbn2/3pp3/3PP3/2NBBN2/PPPQ1PPP/2KR3R", FEN.calculatePiecePlacement(board));
     }
 
     @Test
@@ -63,9 +63,9 @@ public class CastlingTest {
         for(String move : moves) {
             game.makeMove(move);
         }
-        Assert.assertEquals("r3k2r/pppq1ppp/2nbbn2/3pp3/3PP3/2NBBN2/PPPQ1PPP/2KR3R", FEN.getPiecePlacement(board));
+        Assert.assertEquals("r3k2r/pppq1ppp/2nbbn2/3pp3/3PP3/2NBBN2/PPPQ1PPP/2KR3R", FEN.calculatePiecePlacement(board));
         game.makeMove("e8c8");
-        Assert.assertEquals("2kr3r/pppq1ppp/2nbbn2/3pp3/3PP3/2NBBN2/PPPQ1PPP/2KR3R", FEN.getPiecePlacement(board));
+        Assert.assertEquals("2kr3r/pppq1ppp/2nbbn2/3pp3/3PP3/2NBBN2/PPPQ1PPP/2KR3R", FEN.calculatePiecePlacement(board));
     }
 
 }

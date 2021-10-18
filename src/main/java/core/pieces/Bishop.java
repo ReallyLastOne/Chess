@@ -21,6 +21,11 @@ public class Bishop extends Piece implements DiagonallyMovable {
     }
 
     @Override
+    public String toSymbol() {
+        return white ? "B" : "b";
+    }
+
+    @Override
     public List<Move> calculatePseudoLegalMoves(Board board, Cell cell) {
         return calculateDiagonalMoves(board, cell);
     }

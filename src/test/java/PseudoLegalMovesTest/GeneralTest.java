@@ -66,7 +66,7 @@ public class GeneralTest {
                             System.out.println("pseudoLegal = " + board.getPseudoLegalMoves().stream().map(x -> "\"" + x + "\"").collect(Collectors.toList()));
                             System.out.println("movesMade = " + movesMade.stream().map(x -> "\"" + x + "\"").
                                     collect(Collectors.toList()));
-                            System.out.println("actual_fen = " +"\""+ FEN.getPiecePlacement(board)+"\"");
+                            System.out.println("actual_fen = " +"\""+ FEN.calculatePiecePlacement(board)+"\"");
                             System.out.println("actual = " + boardMoves.stream().map(x -> "\"" + x + "\"").collect(Collectors.toList()));
                             System.out.println("legal = " + legalMoves.stream().map(x -> "\"" + x + "\"").collect(Collectors.toList()));
                             System.out.println(board);
@@ -80,7 +80,7 @@ public class GeneralTest {
                         System.out.println("Move: " + line.trim());
                         game.makeMove(line);
                         System.out.println(board);
-                        piecesPlacements.add(new FEN().getPiecePlacement(board));
+                        piecesPlacements.add(new FEN().calculatePiecePlacement(board));
                         movesMade.add(line);
                         counter++;
                     }

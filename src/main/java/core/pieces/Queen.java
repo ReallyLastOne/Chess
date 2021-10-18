@@ -35,6 +35,11 @@ public class Queen extends Piece implements HorizontallyMovable, VerticallyMovab
     }
 
     @Override
+    public String toSymbol() {
+        return white ? "Q" : "q";
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (o == this) return true;
         if (!(o instanceof Queen)) return false;

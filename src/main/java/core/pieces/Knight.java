@@ -54,6 +54,7 @@ public class Knight extends Piece {
                 moves.add(new Move(start, cells[x + LEFT_SHORT][y + UP_LONG], MoveInfo.CAPTURE));
             }
         }
+
         if (fitInBoard(x + LEFT_LONG, y + DOWN_SHORT)) {
             if (isEmpty(cells[x + LEFT_LONG][y + DOWN_SHORT])) {
                 moves.add(new Move(start, cells[x + LEFT_LONG][y + DOWN_SHORT], MoveInfo.STANDARD));
@@ -103,6 +104,11 @@ public class Knight extends Piece {
     @Override
     public Knight copy() {
         return new Knight(white);
+    }
+
+    @Override
+    public String toSymbol() {
+        return white ? "N" : "n";
     }
 
     @Override

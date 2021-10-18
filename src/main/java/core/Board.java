@@ -9,6 +9,7 @@ import lombok.Getter;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import utilities.Display;
+import utilities.FEN;
 
 import java.util.*;
 import java.util.stream.Stream;
@@ -26,7 +27,6 @@ import static core.GameUtilities.MoveInfo;
  */
 public final class Board {
     public static final String STARTING_FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 ";
-    public static int nr = 0;
     private Cell[][] cells;
     private Move lastMove;
     private final Deque<Move> moves = new ArrayDeque<>();
@@ -43,20 +43,34 @@ public final class Board {
     private Cell blackKingCell;
 
     public Board() {
-        initializeCells();
-        nr++;
+        this(STARTING_FEN);
     }
 
     public Board(String FEN) {
-        // TODO: fen handler
-        initializeCells();
+        this.cells = utilities.FEN.calculatePiecePlacement(FEN);
+        this.turn = utilities.FEN.calculateTurn(FEN);
+        this.halfmoves = utilities.FEN.calculateHalfmoves(FEN);
+        this.fullmoves = utilities.FEN.calculateFullmoves(FEN);
+        updateAliveCells();
+        assignKingCells();
+    }
+
+    private void assignKingCells() {
+        for(Cell[] row : cells) {
+            for(Cell x : row) {
+                if(x.isOccupied() && x.getPiece() instanceof King) {
+                    if(x.getPiece().isWhite()) whiteKingCell = x;
+                    else if(!x.getPiece().isWhite()) blackKingCell = x;
+                }
+            }
+        }
     }
 
     /**
      * Method responsible for executing valid move on board.
      */
     public void executeMove(Move move) {
-        if(!turn) fullmoves++;
+        if (!turn) fullmoves++;
         moves.add(move);
         lastMove = move.copy();
         Executor executor = ExecutorCalculator.calculate(move);
@@ -70,7 +84,7 @@ public final class Board {
      * Method responsible for undo last move.
      */
     public void undoMove() {
-        if(turn) fullmoves--;
+        if (turn) fullmoves--;
         lastMove = moves.getLast();
         Executor executor = ExecutorCalculator.calculate(lastMove);
         executor.undoMove(this);
@@ -87,7 +101,7 @@ public final class Board {
         while (itr.hasNext()) {
             Move move = itr.next();
             MoveInfo info = move.getInfo();
-            if(info == MoveInfo.CAPTURE || info == MoveInfo.PAWN_MOVE || info == MoveInfo.EN_PASSANT || info == MoveInfo.TWO_FORWARD) {
+            if (info == MoveInfo.CAPTURE || info == MoveInfo.PAWN_MOVE || info == MoveInfo.EN_PASSANT || info == MoveInfo.TWO_FORWARD) {
                 return halfmoves;
             } else {
                 halfmoves++;
@@ -111,25 +125,13 @@ public final class Board {
                 ((Pawn) x.getPiece()).setEnPassant(false);
             }
         }
-        if(moves.size() > 0) {
+        if (moves.size() > 0) {
             if (moves.getLast().getInfo() == MoveInfo.TWO_FORWARD) {
                 ((Pawn) cells[moves.getLast().getEnd().getX()][moves.getLast().getEnd().getY()].getPiece()).setEnPassant(true);
             }
         }
     }
 
-    private void initializeCells() { // extract to another class/ method?
-        cells = new Cell[GRID_SIZE][GRID_SIZE];
-        initializePieces();
-        initializeEmptyCells();
-        updateAliveCells();
-    }
-
-    private void initializePieces() {
-        initializePawns();
-        initializeWhitePieces();
-        initializeBlackPieces();
-    }
 
     public void updateAliveCells() {
         aliveWhitePiecesCells = new ArrayList<>();
@@ -147,57 +149,6 @@ public final class Board {
         });
     }
 
-    private void initializePawns() {
-        for (int i = 0; i < GRID_SIZE; i++) {
-            /* creating white pawns */
-            cells[i][WHITE_PAWN_ROW] = new Cell(i, WHITE_PAWN_ROW, new Pawn(true));
-            /* creating black pawns */
-            cells[i][BLACK_PAWN_ROW] = new Cell(i, BLACK_PAWN_ROW, new Pawn(false));
-        }
-    }
-
-    private void initializeWhitePieces() {
-        /* create white rooks */
-        cells[0][0] = new Cell(0, WHITE_PIECES_ROW, new Rook(true));
-        cells[7][0] = new Cell(7, WHITE_PIECES_ROW, new Rook(true));
-        /* create white knights */
-        cells[1][0] = new Cell(1, WHITE_PIECES_ROW, new Knight(true));
-        cells[6][0] = new Cell(6, WHITE_PIECES_ROW, new Knight(true));
-        /* create white bishops */
-        cells[2][0] = new Cell(2, WHITE_PIECES_ROW, new Bishop(true));
-        cells[5][0] = new Cell(5, WHITE_PIECES_ROW, new Bishop(true));
-        /* create white queen */
-        cells[3][0] = new Cell(3, WHITE_PIECES_ROW, new Queen(true));
-        /* create white king */
-        whiteKing = new King(true);
-        cells[4][0] = new Cell(4, WHITE_PIECES_ROW, whiteKing);
-    }
-
-    private void initializeBlackPieces() {
-        /* create black rooks */
-        cells[0][7] = new Cell(0, BLACK_PIECES_ROW, new Rook(false));
-        cells[7][7] = new Cell(7, BLACK_PIECES_ROW, new Rook(false));
-        /* create black knights */
-        cells[1][7] = new Cell(1, BLACK_PIECES_ROW, new Knight(false));
-        cells[6][7] = new Cell(6, BLACK_PIECES_ROW, new Knight(false));
-        /* create black bishops */
-        cells[2][7] = new Cell(2, BLACK_PIECES_ROW, new Bishop(false));
-        cells[5][7] = new Cell(5, BLACK_PIECES_ROW, new Bishop(false));
-        /* create black queen */
-        cells[3][7] = new Cell(3, BLACK_PIECES_ROW, new Queen(false));
-        /* create black king */
-        blackKing = new King(false);
-        cells[4][7] = new Cell(4, BLACK_PIECES_ROW, blackKing);
-    }
-
-    private void initializeEmptyCells() {
-        for (int i = 2; i <= 5; i++) {
-            for (int j = 0; j <= 7; j++) {
-                cells[j][i] = new Cell(j, i, null);
-            }
-        }
-    }
-
     void printAllPossibleMoves() {
         System.out.println("white");
         for (Cell cell : aliveWhitePiecesCells)
@@ -207,8 +158,9 @@ public final class Board {
             System.out.println(cell.getPiece().getClass() + " " + cell.getPiece().calculatePseudoLegalMoves(this, cell));
     }
 
-    /** Checks if specified coordinates fit inside chess board.
-     * */
+    /**
+     * Checks if specified coordinates fit inside chess board.
+     */
     public static boolean fitInBoard(int x, int y) {
         return x >= 0 && x <= GRID_SIZE - 1 && y >= 0 && y <= GRID_SIZE - 1;
     }
@@ -220,13 +172,8 @@ public final class Board {
         return cells[COLUMN_TO_INT.get(column)][row];
     }
 
-    public void displayBoard() {
-        Display.displayBoard(this);
-    }
-
-
     public String getFEN() {
-        throw new UnsupportedOperationException();
+        return FEN.from(this);
     }
 
     @Override
@@ -253,7 +200,8 @@ public final class Board {
         for (Cell x : cells) {
             moves = x.getPiece().calculatePseudoLegalMoves(this, x);
             for (Move move : moves) {
-                if (!MoveValidator.isKingInCheckAfterMove(move, this, move.getStart().getPiece().isWhite())) legal.add(move);
+                if (!MoveValidator.isKingInCheckAfterMove(move, this, move.getStart().getPiece().isWhite()))
+                    legal.add(move);
             }
         }
 

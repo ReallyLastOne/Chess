@@ -6,11 +6,11 @@ import core.pieces.*;
 
 public class Display {
 
-    public static void displayBoard(Board board){
-        Cell[][] cells = board.getCells();
+    public static void display(Cell[][] cells) {
         for(int i = 7; i >= 0; i--){
             System.out.print("| ");
             for(int j = 0; j < 8; j++){
+                if(cells[j][i] == null) System.out.println("(i=" + i +",j="+j+")" );
                 System.out.print(convertPieceToSymbol(cells[j][i].getPiece()));
                 System.out.print(" | ");
             }
@@ -20,20 +20,15 @@ public class Display {
         printBlankLines(5);
     }
 
-
     public static void printBlankLines(int n){
         for(int i = 0; i < n; i++){
             System.out.println("");
         }
     }
 
+    /** Returns 1-char String representation of given Piece. */
     public static String convertPieceToSymbol(Piece piece){
-        if(piece instanceof Pawn) return piece.isWhite() ? "P" : "p";
-        if(piece instanceof Rook) return piece.isWhite() ? "R" : "r";
-        if(piece instanceof Queen) return piece.isWhite() ? "Q" : "q";
-        if(piece instanceof Knight) return piece.isWhite() ? "N" : "n";
-        if(piece instanceof Bishop) return piece.isWhite() ? "B" : "b";
-        if(piece instanceof King) return piece.isWhite() ? "K" : "k";
-        return " ";
+        if(piece == null) return " ";
+        return piece.toSymbol();
     }
 }

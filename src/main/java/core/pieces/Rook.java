@@ -35,6 +35,11 @@ public class Rook extends Piece implements HorizontallyMovable, VerticallyMovabl
     }
 
     @Override
+    public String toSymbol() {
+        return white ? "R" : "r";
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (o == this) return true;
         if (!(o instanceof Rook)) return false;

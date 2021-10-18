@@ -26,10 +26,10 @@ public class EnPassantTest {
         for(String move : moves) {
             game.makeMove(move);
         }
-        Assert.assertEquals("rnbqkbnr/ppp1p1pp/8/3pPp2/8/8/PPPP1PPP/RNBQKBNR", new FEN().getPiecePlacement(board));
+        Assert.assertEquals("rnbqkbnr/ppp1p1pp/8/3pPp2/8/8/PPPP1PPP/RNBQKBNR", new FEN().calculatePiecePlacement(board));
         // en passant
         game.makeMove("e5f6");
-        Assert.assertEquals("rnbqkbnr/ppp1p1pp/5P2/3p4/8/8/PPPP1PPP/RNBQKBNR", new FEN().getPiecePlacement(board));
+        Assert.assertEquals("rnbqkbnr/ppp1p1pp/5P2/3p4/8/8/PPPP1PPP/RNBQKBNR", new FEN().calculatePiecePlacement(board));
     }
 
     @Test
@@ -38,10 +38,10 @@ public class EnPassantTest {
         for(String move : moves) {
             game.makeMove(move);
         }
-        Assert.assertEquals("rnbqkbnr/ppp1p1pp/5P2/8/2Pp4/8/PP1P1PPP/RNBQKBNR", new FEN().getPiecePlacement(board));
+        Assert.assertEquals("rnbqkbnr/ppp1p1pp/5P2/8/2Pp4/8/PP1P1PPP/RNBQKBNR", new FEN().calculatePiecePlacement(board));
         // en passant
         game.makeMove("d4c3");
-        Assert.assertEquals("rnbqkbnr/ppp1p1pp/5P2/8/8/2p5/PP1P1PPP/RNBQKBNR", new FEN().getPiecePlacement(board));
+        Assert.assertEquals("rnbqkbnr/ppp1p1pp/5P2/8/8/2p5/PP1P1PPP/RNBQKBNR", new FEN().calculatePiecePlacement(board));
     }
 
 }

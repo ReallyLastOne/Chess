@@ -49,7 +49,7 @@ public class King extends Piece {
         if (white && start.getX() == KING_COLUMN && start.getY() == WHITE_PIECES_ROW && !hasMoved() && !isKingInCheck(board, true) &&
                 cells[ROOK_QUEENSIDE_COLUMN][WHITE_PIECES_ROW].getPiece() instanceof Rook &&
                 !cells[ROOK_QUEENSIDE_COLUMN][WHITE_PIECES_ROW].getPiece().hasMoved()) {
-            if(!isEmpty(cells[1][WHITE_PIECES_ROW])) return false;
+            if (!isEmpty(cells[1][WHITE_PIECES_ROW])) return false;
             for (int i = 3; i >= 2; i--) {
                 if (!isEmpty(cells[i][WHITE_PIECES_ROW])) {
                     return false;
@@ -88,7 +88,7 @@ public class King extends Piece {
         if (!white && start.getX() == KING_COLUMN && start.getY() == BLACK_PIECES_ROW && !hasMoved() && !isKingInCheck(board, false) &&
                 cells[ROOK_QUEENSIDE_COLUMN][BLACK_PIECES_ROW].getPiece() instanceof Rook &&
                 !cells[ROOK_QUEENSIDE_COLUMN][BLACK_PIECES_ROW].getPiece().hasMoved()) {
-            if(!isEmpty(cells[1][BLACK_PIECES_ROW])) return false;
+            if (!isEmpty(cells[1][BLACK_PIECES_ROW])) return false;
             for (int i = 3; i >= 2; i--) {
                 if (!isEmpty(cells[i][BLACK_PIECES_ROW])) {
                     return false;
@@ -191,6 +191,11 @@ public class King extends Piece {
     @Override
     public King copy() {
         return new King(white, moves);
+    }
+
+    @Override
+    public String toSymbol() {
+        return white ? "K" : "k";
     }
 
     @Override

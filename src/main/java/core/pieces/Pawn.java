@@ -159,6 +159,11 @@ public class Pawn extends Piece {
         return new Pawn(white);
     }
 
+    @Override
+    public String toSymbol() {
+        return white ? "P" : "p";
+    }
+
     public boolean canBeEnPassanted() {
         return enPassant;
     }

@@ -24,7 +24,7 @@ public class PiecePlacementTest {
 
     @Test
     public void basicPiecePlacementTest() {
-        Assert.assertEquals(FEN.getPiecePlacement(board), "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
+        Assert.assertEquals(FEN.calculatePiecePlacement(board), "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
     }
 
     @After
