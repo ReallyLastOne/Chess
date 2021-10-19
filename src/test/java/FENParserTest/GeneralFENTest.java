@@ -47,12 +47,12 @@ public class GeneralFENTest {
                 } else {
                     if (counter % 2 == 0) {
                         game.makeMove(line);
-                        counter++;
+                        counter += 1;
                     } else if (counter % 2 == 1) {
                         // line is correct fen now
                         String realFEN = FEN.from(board);
                         Assert.assertEquals(line, realFEN);
-                        counter++;
+                        counter += 1;
                     }
                 }
             }

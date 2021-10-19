@@ -103,4 +103,11 @@ public class Cell {
     public boolean isOccupied() {
         return piece != null;
     }
+
+    /**
+     * Returns true if Cell is white.
+     */
+    public boolean isWhite() {
+        return (x + 1) % 2 == (y + 1) % 2;
+    }
 }

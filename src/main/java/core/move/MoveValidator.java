@@ -4,7 +4,6 @@ import core.Board;
 import core.Cell;
 import core.pieces.King;
 import core.GameUtilities;
-import core.pieces.Pawn;
 
 import java.util.List;
 import java.util.Optional;

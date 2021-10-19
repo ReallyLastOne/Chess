@@ -47,13 +47,13 @@ public class FENCreatorTest {
                 } else {
                     if (counter % 2 == 0) {
                         game.makeMove(line);
-                        counter++;
+                        counter += 1;
                     } else if (counter % 2 == 1) {
                         String realFEN = FEN.from(board);
                         Board calculatedBoard = FEN.boardFrom(realFEN);
 
                         Assert.assertEquals(calculatedBoard.toString(), board.toString());
-                        counter++;
+                        counter += 1;
                     }
                 }
             }

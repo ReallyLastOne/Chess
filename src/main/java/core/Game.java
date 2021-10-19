@@ -18,7 +18,6 @@ import org.springframework.stereotype.Component;
 @Scope("prototype")
 @NoArgsConstructor
 public final class Game {
-    public static int nr = 0;
 
     @Getter
     private Board board;
@@ -29,7 +28,6 @@ public final class Game {
     @Autowired
     public Game(Board board) {
         this.board = board;
-        nr++;
     }
 
     public Game(String FEN) {
@@ -56,6 +54,9 @@ public final class Game {
         if (MoveValidator.isKingInCheckmate(board, board.isTurn())) {
             gameStatus = board.isTurn() ? GameStatus.BLACK_WIN : GameStatus.WHITE_WIN;
             System.out.println("CHECKMATED, status: " + gameStatus);
+        } else if(board.isDraw()) {
+            gameStatus = GameStatus.DRAW;
+            System.out.println("Game drawn.");
         }
     }
 

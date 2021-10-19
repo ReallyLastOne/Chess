@@ -8,13 +8,12 @@ import core.pieces.*;
 import lombok.Getter;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-import utilities.Display;
 import utilities.FEN;
 
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static core.PositionConstants.*;
 import static utilities.Constants.*;
 import static utilities.Display.convertPieceToSymbol;
 import static core.GameUtilities.MoveInfo;
@@ -34,11 +33,9 @@ public final class Board {
     private int fullmoves = 1;
     private List<Cell> aliveWhitePiecesCells = new ArrayList<>();
     private List<Cell> aliveBlackPiecesCells = new ArrayList<>();
-
+    private Map<String, Integer> positionsOccurred = new HashMap<>();
     private boolean turn = true;
-    private King whiteKing;
-    private King blackKing;
-
+    private List<Move> legalMoves;
     private Cell whiteKingCell;
     private Cell blackKingCell;
 
@@ -56,11 +53,11 @@ public final class Board {
     }
 
     private void assignKingCells() {
-        for(Cell[] row : cells) {
-            for(Cell x : row) {
-                if(x.isOccupied() && x.getPiece() instanceof King) {
-                    if(x.getPiece().isWhite()) whiteKingCell = x;
-                    else if(!x.getPiece().isWhite()) blackKingCell = x;
+        for (Cell[] row : cells) {
+            for (Cell x : row) {
+                if (x.isOccupied() && x.getPiece() instanceof King) {
+                    if (x.getPiece().isWhite()) whiteKingCell = x;
+                    else if (!x.getPiece().isWhite()) blackKingCell = x;
                 }
             }
         }
@@ -78,12 +75,14 @@ public final class Board {
         updateAliveCells();
         turn = !turn;
         updatePawnsStatus();
+        addPosition();
     }
 
     /**
      * Method responsible for undo last move.
      */
     public void undoMove() {
+        removePosition();
         if (turn) fullmoves--;
         lastMove = moves.getLast();
         Executor executor = ExecutorCalculator.calculate(lastMove);
@@ -92,6 +91,34 @@ public final class Board {
         updateAliveCells();
         turn = !turn;
         updatePawnsStatus();
+    }
+
+    /**
+     * Add current position. Position is defined as all parts of FEN except two last ones.
+     */
+    private void addPosition() {
+        String FEN = utilities.FEN.from(this);
+        String[] fenCalculated = FEN.split(" ");
+        String current = fenCalculated[0] + " " + fenCalculated[1] + " " + fenCalculated[2] + " " + fenCalculated[3];
+
+        if (positionsOccurred.containsKey(current)) {
+            positionsOccurred.put(current, positionsOccurred.get(current) + 1);
+        } else {
+            positionsOccurred.put(current, 1);
+        }
+    }
+
+    private void removePosition() {
+        String FEN = utilities.FEN.from(this);
+        String[] fenCalculated = FEN.split(" ");
+        String current = fenCalculated[0] + " " + fenCalculated[1] + " " + fenCalculated[2] + " " + fenCalculated[3];
+
+        if (positionsOccurred.containsKey(current)) {
+            if (positionsOccurred.get(current) == 0) positionsOccurred.remove(current);
+            else {
+                positionsOccurred.put(current, positionsOccurred.get(current) - 1);
+            }
+        }
     }
 
     public int getHalfmoves() {
@@ -104,14 +131,14 @@ public final class Board {
             if (info == MoveInfo.CAPTURE || info == MoveInfo.PAWN_MOVE || info == MoveInfo.EN_PASSANT || info == MoveInfo.TWO_FORWARD) {
                 return halfmoves;
             } else {
-                halfmoves++;
+                halfmoves += 1;
             }
         }
         return halfmoves;
     }
 
     public Move getLastMove() {
-        if(moves.size() == 0) return null;
+        if (moves.size() == 0) return null;
         return moves.getLast();
     }
 
@@ -132,7 +159,6 @@ public final class Board {
             }
         }
     }
-
 
     public void updateAliveCells() {
         aliveWhitePiecesCells = new ArrayList<>();
@@ -193,6 +219,9 @@ public final class Board {
         return board.toString();
     }
 
+    /**
+     * Get List of legal Moves for current state.
+     */
     public List<Move> getLegalMoves() {
         List<Move> moves;
         List<Move> legal = new ArrayList<>();
@@ -209,6 +238,9 @@ public final class Board {
         return legal;
     }
 
+    /**
+     * Get List of pseudo legal Moves for current state. (pseudo legal move = move that can leave King in check.
+     */
     public List<Move> getPseudoLegalMoves() {
         List<Move> pseudoLegal = new ArrayList<>();
         List<Cell> cells = turn ? aliveWhitePiecesCells : aliveBlackPiecesCells;
@@ -217,5 +249,89 @@ public final class Board {
             pseudoLegal.addAll(x.getPiece().calculatePseudoLegalMoves(this, x));
         }
         return pseudoLegal;
+    }
+
+    public boolean canBeClaimedDraw() {
+        return isThreefoldRepetition() || is50MovesRule();
+    }
+
+    /**
+     * Checks if there was no pawn move, capture or promotion in last 50 moves.
+     */
+    private boolean is50MovesRule() {
+        if (fullmoves >= 50) {
+            Iterator<Move> it = moves.iterator();
+            int checkedMoves = 0;
+            while (it.hasNext() || checkedMoves == 100) {
+                MoveInfo info = it.next().getInfo();
+                if (info == MoveInfo.CAPTURE || info == MoveInfo.PAWN_MOVE || info == MoveInfo.EN_PASSANT ||
+                        info == MoveInfo.TWO_FORWARD || info == MoveInfo.BISHOP_PROMOTION || info == MoveInfo.KNIGHT_PROMOTION
+                        || info == MoveInfo.QUEEN_PROMOTION || info == MoveInfo.ROOK_PROMOTION) return false;
+                checkedMoves += 1;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Checks if the same position (with same legal moves) occurred three times during the game.
+     */
+    private boolean isThreefoldRepetition() {
+        return positionsOccurred.values().stream().anyMatch(x -> x >= 3);
+    }
+
+    private boolean isFivefoldRepetition() {
+        return positionsOccurred.values().stream().anyMatch(x -> x >= 5);
+    }
+
+    public boolean isDraw() {
+        return isInsufficientMaterial() || isFivefoldRepetition();
+    }
+
+    /**
+     * Checks if there is following combination of pieces in board:
+     * king vs king,
+     * king and bishop vs king,
+     * king and knight vs king,
+     * king and bishop vs. king and bishop of the same color as the opponent's bishop.
+     */
+    private boolean isInsufficientMaterial() {
+        return isKingVsKing() || isBishopAndKingVsKing() || isKnightAndKingVsKing() || isKingAndBishopVsKingAndBishop();
+    }
+
+    private boolean isKingAndBishopVsKingAndBishop() {
+        boolean isKingAndBishopVsKingAndBishop = (aliveBlackPiecesCells.size() == 2 && (aliveBlackPiecesCells.stream().anyMatch(x -> x.getPiece() instanceof King)
+                && aliveBlackPiecesCells.stream().anyMatch(x -> x.getPiece() instanceof Knight)) &&
+                aliveWhitePiecesCells.size() == 2 && (aliveWhitePiecesCells.stream().anyMatch(x -> x.getPiece() instanceof King)
+                && aliveWhitePiecesCells.stream().anyMatch(x -> x.getPiece() instanceof Knight)));
+        if (!isKingAndBishopVsKingAndBishop) return false;
+
+        Optional<Cell> whiteBishopCell = aliveWhitePiecesCells.stream().filter(x -> x.getPiece() instanceof Bishop).findFirst();
+        Optional<Cell> blackBishopCell = aliveBlackPiecesCells.stream().filter(x -> x.getPiece() instanceof Bishop).findFirst();
+        if (whiteBishopCell.isPresent() && blackBishopCell.isPresent()) {
+            return whiteBishopCell.get().isWhite() == blackBishopCell.get().isWhite();
+        }
+
+        return false;
+    }
+
+    private boolean isKnightAndKingVsKing() {
+        return (aliveBlackPiecesCells.size() == 2 && (aliveBlackPiecesCells.stream().anyMatch(x -> x.getPiece() instanceof King)
+                && aliveBlackPiecesCells.stream().anyMatch(x -> x.getPiece() instanceof Knight)) ||
+                aliveWhitePiecesCells.size() == 2 && (aliveWhitePiecesCells.stream().anyMatch(x -> x.getPiece() instanceof King)
+                        && aliveWhitePiecesCells.stream().anyMatch(x -> x.getPiece() instanceof Knight)));
+    }
+
+    private boolean isBishopAndKingVsKing() {
+        return (aliveBlackPiecesCells.size() == 2 && (aliveBlackPiecesCells.stream().anyMatch(x -> x.getPiece() instanceof King)
+                && aliveBlackPiecesCells.stream().anyMatch(x -> x.getPiece() instanceof Bishop)) ||
+                aliveWhitePiecesCells.size() == 2 && (aliveWhitePiecesCells.stream().anyMatch(x -> x.getPiece() instanceof King)
+                        && aliveWhitePiecesCells.stream().anyMatch(x -> x.getPiece() instanceof Bishop)));
+    }
+
+    private boolean isKingVsKing() {
+        return aliveBlackPiecesCells.size() == 1 && aliveBlackPiecesCells.get(0).getPiece() instanceof King
+                && aliveWhitePiecesCells.size() == 1 && aliveWhitePiecesCells.get(0).getPiece() instanceof King;
     }
 }

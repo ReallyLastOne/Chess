@@ -72,7 +72,7 @@ public class GeneralTest {
                             System.out.println(board);
                         }
                         Assert.assertTrue(condition);
-                        counter++;
+                        counter += 1;
                     } else if (counter % 2 == 1) {
                         /* make move (it is provided that it is legal) */
                         System.out.println("_____________________");
@@ -82,7 +82,7 @@ public class GeneralTest {
                         System.out.println(board);
                         piecesPlacements.add(new FEN().calculatePiecePlacement(board));
                         movesMade.add(line);
-                        counter++;
+                        counter += 1;
                     }
                 }
             }

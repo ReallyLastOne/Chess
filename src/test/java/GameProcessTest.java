@@ -10,6 +10,7 @@ import core.GameUtilities;
 
 public class GameProcessTest {
     Game game;
+
     @Before
     public void initialize() {
         ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
@@ -18,16 +19,16 @@ public class GameProcessTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void shouldThrowIllegalArgumentException() {
-        String[] moves = new String[] {"d2d4", "c7c5", "d4c5", "d8a5", "b1c3", "h7h5", "e1d2", "a5c5", "d2d3", "c5c4", "d3d4"}; // illegal move, white king is in check after C5 C4
-        for(String move : moves) {
+        String[] moves = new String[]{"d2d4", "c7c5", "d4c5", "d8a5", "b1c3", "h7h5", "e1d2", "a5c5", "d2d3", "c5c4", "d3d4"}; // illegal move, white king is in check after C5 C4
+        for (String move : moves) {
             game.makeMove(move);
         }
     }
 
     @Test
     public void shouldBeWinForWhite() {
-        String[] moves = new String[] {"e2e4", "e7e5", "d1f3", "b8a6", "f1c4", "b7b6", "f3f7"};
-        for(String move : moves) {
+        String[] moves = new String[]{"e2e4", "e7e5", "d1f3", "b8a6", "f1c4", "b7b6", "f3f7"};
+        for (String move : moves) {
             Assert.assertNotEquals(game.getGameStatus(), GameUtilities.GameStatus.WHITE_WIN);
             Assert.assertNotEquals(game.getGameStatus(), GameUtilities.GameStatus.BLACK_WIN);
             game.makeMove(move);
@@ -37,17 +38,31 @@ public class GameProcessTest {
 
     @Test
     public void shouldBeWinForBlack() {
-        String[] moves = new String[] {"f2f4", "e7e5", "g2g4", "d8h4"};
-        for(String move : moves) {
+        String[] moves = new String[]{"f2f4", "e7e5", "g2g4", "d8h4"};
+        for (String move : moves) {
+            Assert.assertNotEquals(game.getGameStatus(), GameUtilities.GameStatus.WHITE_WIN);
+            Assert.assertNotEquals(game.getGameStatus(), GameUtilities.GameStatus.BLACK_WIN);
             game.makeMove(move);
         }
         Assert.assertEquals(game.getGameStatus(), GameUtilities.GameStatus.BLACK_WIN);
     }
 
     @Test
+    public void shouldBeDraw() { //fivefold repetition
+        String[] moves = {"g1f3", "g8f6", "f3g1", "f6g8", "g1f3", "g8f6", "f3g1", "f6g8", "g1f3", "g8f6", "f3g1",
+                "f6g8", "g1f3", "g8f6", "f3g1", "f6g8", "g1f3"};
+        for (String move : moves) {
+            game.makeMove(move);
+            Assert.assertNotEquals(game.getGameStatus(), GameUtilities.GameStatus.WHITE_WIN);
+            Assert.assertNotEquals(game.getGameStatus(), GameUtilities.GameStatus.BLACK_WIN);
+        }
+        Assert.assertEquals(game.getGameStatus(), GameUtilities.GameStatus.DRAW);
+    }
+
+    @Test
     public void shouldBeInProgress() {
-        String [] moves = new String[] {"f2f3", "e7e5", "g2g4"};
-        for(String move : moves) {
+        String[] moves = new String[]{"f2f3", "e7e5", "g2g4"};
+        for (String move : moves) {
             game.makeMove(move);
         }
         Assert.assertEquals(game.getGameStatus(), GameUtilities.GameStatus.IN_PROGRESS);
@@ -61,7 +76,7 @@ public class GameProcessTest {
                 "d3c3 g7c3 a2c2 c3f6 g3g4 c7e7 c2c4 d8c8 g2g3 f6g7 f1d1 c8f8 d1d3 g8h7 g1g2 h7g6 " +
                 "d3d1 h6h5 g4h5 g6h5 g3g4 h5g6 c4c2 f8h8 b5d3 g6f6 g2g3 e7e8 d3b5 e8e4 c2c4 e4c4 " +
                 "b3c4 f6e7 b5a4 g7e5 g3f3 h8h4 d1g1 f7f5").split(" ");
-        for(String move : moves) {
+        for (String move : moves) {
             game.makeMove(move);
         }
         Assert.assertEquals(game.getGameStatus(), GameUtilities.GameStatus.IN_PROGRESS);

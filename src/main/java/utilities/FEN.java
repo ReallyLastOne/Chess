@@ -41,7 +41,7 @@ public class FEN {
                     }
                     piecePlacement += convertPieceToSymbol(cells[j][i].getPiece());
                 } else {
-                    freeCount++;
+                    freeCount += 1;
                 }
             }
             if (freeCount != 0) {

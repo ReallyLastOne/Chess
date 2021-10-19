@@ -44,14 +44,14 @@ public abstract class Piece {
      * Method for increasing number of moves made by Piece.
      */
     public void increaseMoves() {
-        moves++;
+        moves += 1;
     }
 
     /**
      * Method for decreasing number of moves made by Piece.
      */
     public void decreaseMoves() {
-        moves--;
+        moves -= 1;
     }
 
     /**

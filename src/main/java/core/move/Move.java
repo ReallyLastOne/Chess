@@ -35,6 +35,13 @@ public class Move {
         return start.equals(move.getStart()) && end.equals(move.getEnd());
     }
 
+    public boolean equals2(Object o) {
+        if (o == this) return true;
+        if (!(o instanceof Move)) return false;
+        Move move = (Move) o;
+        return start.equals(move.getStart()) && end.equals(move.getEnd()) && info == move.getInfo();
+    }
+
     public String toString2() {
         return "Move={start=" + start + ", end=" + end + ", info=" + info + "}";
     }
