@@ -12,7 +12,7 @@ import utilities.FEN;
 
 import java.io.*;
 
-public class GeneralFEN {
+public class GeneralFENTest {
     ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
     Game game;
     Board board;
@@ -35,7 +35,6 @@ public class GeneralFEN {
          * games are separated by blank line */
 
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader("src/main/resources/FENs.txt"))) {
-            StringBuffer textBuffer = new StringBuffer();
             String line;
             int counter = 0;
             while ((line = bufferedReader.readLine()) != null) {
@@ -50,8 +49,9 @@ public class GeneralFEN {
                         game.makeMove(line);
                         counter++;
                     } else if (counter % 2 == 1) {
-                        String result = FEN.of(board);
-                        Assert.assertEquals(line, result);
+                        // line is correct fen now
+                        String realFEN = FEN.from(board);
+                        Assert.assertEquals(line, realFEN);
                         counter++;
                     }
                 }

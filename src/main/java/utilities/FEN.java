@@ -34,7 +34,7 @@ public class FEN {
         int freeCount = 0;
         for (int i = GRID_SIZE - 1; i >= 0; i--) {
             for (int j = 0; j < GRID_SIZE; j++) {
-                if (cells[j][i].getPiece() != null) {
+                if (cells[j][i].isOccupied()) {
                     if (freeCount != 0) {
                         piecePlacement += freeCount;
                         freeCount = 0;
@@ -78,14 +78,14 @@ public class FEN {
             Cell end = board.getLastMove().getEnd();
 
             if (fitInBoard(end.getX() + 1, end.getY())) {
-                if (cells[end.getX() + 1][end.getY()].getPiece() != null && cells[end.getX() + 1][end.getY()].getPiece()
+                if (cells[end.getX() + 1][end.getY()].isOccupied()&& cells[end.getX() + 1][end.getY()].getPiece()
                         instanceof Pawn && cells[end.getX() + 1][end.getY()].getPiece().isWhite() != cells[end.getX()][end.getY()].getPiece().isWhite()) {
                     int forward = ((Pawn) cells[end.getX()][end.getY()].getPiece()).getForwardCount();
                     enPassantCell = cells[end.getX()][end.getY() - forward].toAlgebraicNotation();
                 }
             }
             if (fitInBoard(end.getX() - 1, end.getY())) {
-                if (cells[end.getX() - 1][end.getY()].getPiece() != null && cells[end.getX() - 1][end.getY()].getPiece()
+                if (cells[end.getX() - 1][end.getY()].isOccupied() && cells[end.getX() - 1][end.getY()].getPiece()
                         instanceof Pawn && cells[end.getX() - 1][end.getY()].getPiece().isWhite() != cells[end.getX()][end.getY()].getPiece().isWhite()) {
                     int forward = ((Pawn) cells[end.getX()][end.getY()].getPiece()).getForwardCount();
                     enPassantCell = cells[end.getX()][end.getY() - forward].toAlgebraicNotation();
@@ -107,14 +107,14 @@ public class FEN {
         Cell[][] cells = board.getCells();
         if (!whiteKingCell.getPiece().hasMoved()) {
             /* Check white short castle availability */
-            if (cells[ROOK_KINGSIDE_COLUMN][WHITE_PIECES_ROW].getPiece() != null &&
+            if (cells[ROOK_KINGSIDE_COLUMN][WHITE_PIECES_ROW].isOccupied() &&
                     cells[ROOK_KINGSIDE_COLUMN][WHITE_PIECES_ROW].getPiece() instanceof Rook &&
                     !cells[ROOK_KINGSIDE_COLUMN][WHITE_PIECES_ROW].getPiece().hasMoved()) {
                 castlingAvailability += "K";
             }
 
             /* Check white long castle availability */
-            if (cells[ROOK_QUEENSIDE_COLUMN][WHITE_PIECES_ROW].getPiece() != null &&
+            if (cells[ROOK_QUEENSIDE_COLUMN][WHITE_PIECES_ROW].isOccupied() &&
                     cells[ROOK_QUEENSIDE_COLUMN][WHITE_PIECES_ROW].getPiece() instanceof Rook &&
                     !cells[ROOK_QUEENSIDE_COLUMN][WHITE_PIECES_ROW].getPiece().hasMoved()) {
                 castlingAvailability += "Q";
@@ -123,14 +123,14 @@ public class FEN {
 
         if (!blackKingCell.getPiece().hasMoved()) {
             /* Check black short castle availability */
-            if (cells[ROOK_KINGSIDE_COLUMN][BLACK_PIECES_ROW].getPiece() != null &&
+            if (cells[ROOK_KINGSIDE_COLUMN][BLACK_PIECES_ROW].isOccupied() &&
                     cells[ROOK_KINGSIDE_COLUMN][BLACK_PIECES_ROW].getPiece() instanceof Rook &&
                     !cells[ROOK_KINGSIDE_COLUMN][BLACK_PIECES_ROW].getPiece().hasMoved()) {
                 castlingAvailability += "k";
             }
 
             /* Check black long castle availability */
-            if (cells[ROOK_QUEENSIDE_COLUMN][BLACK_PIECES_ROW].getPiece() != null &&
+            if (cells[ROOK_QUEENSIDE_COLUMN][BLACK_PIECES_ROW].isOccupied() &&
                     cells[ROOK_QUEENSIDE_COLUMN][BLACK_PIECES_ROW].getPiece() instanceof Rook &&
                     !cells[ROOK_QUEENSIDE_COLUMN][BLACK_PIECES_ROW].getPiece().hasMoved()) {
                 castlingAvailability += "q";
@@ -188,7 +188,7 @@ public class FEN {
         if (!enPassantCell.equals("-")) {
             int x = COLUMN_TO_INT.get(enPassantCell.charAt(0));
             int y = Character.getNumericValue(enPassantCell.charAt(1)) - 1;
-            ((Pawn) cells[x][y + (calculateTurn(FEN) ? 1 : -1)].getPiece()).setEnPassant(true);
+            ((Pawn) cells[x][y + (calculateTurn(FEN) ? -1 : 1)].getPiece()).setEnPassant(true);
         }
 
         return cells;
@@ -247,7 +247,6 @@ public class FEN {
                 cells[ROOK_QUEENSIDE_COLUMN][BLACK_PIECES_ROW].getPiece().setMoves(0);
             }
         }
-
 
         return cells;
     }

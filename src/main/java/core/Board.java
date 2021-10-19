@@ -111,17 +111,18 @@ public final class Board {
     }
 
     public Move getLastMove() {
+        if(moves.size() == 0) return null;
         return moves.getLast();
     }
 
     public void updatePawnsStatus() {
         for (Cell x : aliveWhitePiecesCells) {
-            if (x.getPiece() != null && x.getPiece() instanceof Pawn) {
+            if (x.isOccupied() && x.getPiece() instanceof Pawn) {
                 ((Pawn) x.getPiece()).setEnPassant(false);
             }
         }
         for (Cell x : aliveBlackPiecesCells) {
-            if (x.getPiece() != null && x.getPiece() instanceof Pawn) {
+            if (x.isOccupied() && x.getPiece() instanceof Pawn) {
                 ((Pawn) x.getPiece()).setEnPassant(false);
             }
         }
@@ -139,10 +140,10 @@ public final class Board {
 
         Arrays.stream(cells).flatMap(Stream::of).forEach(x ->
         {
-            if (x.getPiece() != null && x.getPiece().isWhite()) {
+            if (x.isOccupied() && x.getPiece().isWhite()) {
                 aliveWhitePiecesCells.add(x);
                 if (x.getPiece() instanceof King) whiteKingCell = x;
-            } else if (x.getPiece() != null && !x.getPiece().isWhite()) {
+            } else if (x.isOccupied() && !x.getPiece().isWhite()) {
                 aliveBlackPiecesCells.add(x);
                 if (x.getPiece() instanceof King) blackKingCell = x;
             }
