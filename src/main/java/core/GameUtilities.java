@@ -2,8 +2,16 @@ package core;
 
 public class GameUtilities {
     public enum GameStatus {
-        IN_PROGRESS, DRAW, WHITE_WIN, BLACK_WIN
-    }
+        IN_PROGRESS, DRAW, WHITE_WIN, BLACK_WIN;
+
+        @Override
+        public String toString() {
+            if (this == DRAW) return "1/2-1/2";
+            else if (this == WHITE_WIN) return "1-0";
+            else if (this == BLACK_WIN) return "0-1";
+            return "*";
+        }
+        }
 
     public enum MoveInfo {
         WHITE_SHORT_CASTLE, WHITE_LONG_CASTLE,

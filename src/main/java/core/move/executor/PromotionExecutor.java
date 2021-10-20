@@ -15,23 +15,23 @@ public class PromotionExecutor implements Executor {
         Cell start = move.getStart();
         Cell end = move.getEnd();
 
-        if(move.getInfo() == KNIGHT_PROMOTION) {
+        if (move.getInfo() == KNIGHT_PROMOTION) {
             /* move */
             cells[end.getX()][end.getY()].setPiece(new Knight(start.getPiece().isWhite(), cells[start.getX()][start.getY()].getPiece().getMoves()));
             /* set starting Cell as empty */
             cells[start.getX()][start.getY()].clear();
-        } else if(move.getInfo() == BISHOP_PROMOTION) {
+        } else if (move.getInfo() == BISHOP_PROMOTION) {
             /* move */
             cells[end.getX()][end.getY()].setPiece(new Bishop(start.getPiece().isWhite(), cells[start.getX()][start.getY()].getPiece().getMoves()));
             /* set starting Cell as empty */
             cells[start.getX()][start.getY()].clear();
-        } else if(move.getInfo() == ROOK_PROMOTION) {
+        } else if (move.getInfo() == ROOK_PROMOTION) {
             /* move */
             cells[end.getX()][end.getY()].setPiece(new Rook(start.getPiece().isWhite(), cells[start.getX()][start.getY()].getPiece().getMoves()));
             cells[end.getX()][end.getY()].getPiece().increaseMoves();
             /* set starting Cell as empty */
             cells[start.getX()][start.getY()].clear();
-        } else if(move.getInfo() == QUEEN_PROMOTION) {
+        } else if (move.getInfo() == QUEEN_PROMOTION) {
             /* move */
             cells[end.getX()][end.getY()].setPiece(new Queen(start.getPiece().isWhite(), cells[start.getX()][start.getY()].getPiece().getMoves()));
             /* set starting Cell as empty */
@@ -46,18 +46,18 @@ public class PromotionExecutor implements Executor {
         Cell start = lastMove.getStart();
         Cell end = lastMove.getEnd();
 
-         if(lastMove.getInfo() == KNIGHT_PROMOTION) {
-            cells[start.getX()][start.getY()].setPiece(new Pawn(start.getPiece().isWhite(), end.getPiece().getMoves()));
+        if (lastMove.getInfo() == KNIGHT_PROMOTION) {
+            cells[start.getX()][start.getY()].setPiece(new Pawn(cells[end.getX()][end.getY()].getPiece().isWhite(), cells[end.getX()][end.getY()].getPiece().getMoves()));
             cells[end.getX()][end.getY()].setPiece(end.getPiece());
-        } else if(lastMove.getInfo() == BISHOP_PROMOTION) {
-            cells[start.getX()][start.getY()].setPiece(new Bishop(start.getPiece().isWhite(), end.getPiece().getMoves()));
+        } else if (lastMove.getInfo() == BISHOP_PROMOTION) {
+            cells[start.getX()][start.getY()].setPiece(new Pawn(cells[end.getX()][end.getY()].getPiece().isWhite(), cells[end.getX()][end.getY()].getPiece().getMoves()));
             cells[end.getX()][end.getY()].setPiece(end.getPiece());
-        } else if(lastMove.getInfo() == ROOK_PROMOTION) {
-            cells[start.getX()][start.getY()].setPiece(new Rook(start.getPiece().isWhite(), end.getPiece().getMoves()));
+        } else if (lastMove.getInfo() == ROOK_PROMOTION) {
+            cells[start.getX()][start.getY()].setPiece(new Pawn(cells[end.getX()][end.getY()].getPiece().isWhite(), cells[end.getX()][end.getY()].getPiece().getMoves()));
             cells[end.getX()][end.getY()].setPiece(end.getPiece());
-        } else if(lastMove.getInfo() == QUEEN_PROMOTION) {
-            cells[start.getX()][start.getY()].setPiece(new Queen(start.getPiece().isWhite(), end.getPiece().getMoves()));
-            cells[end.getX()][end.getY()].setPiece(end.getPiece());
+        } else if (lastMove.getInfo() == QUEEN_PROMOTION) {
+            cells[start.getX()][start.getY()].setPiece(new Pawn(cells[end.getX()][end.getY()].getPiece().isWhite(), cells[end.getX()][end.getY()].getPiece().getMoves()));
+            cells[end.getX()][end.getY()].clear();
         }
     }
 }

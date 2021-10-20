@@ -1,3 +1,5 @@
+package GameStatusTest;
+
 import core.Game;
 import org.junit.After;
 import org.junit.Before;
