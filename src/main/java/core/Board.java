@@ -286,7 +286,21 @@ public final class Board {
     }
 
     public boolean isDraw() {
-        return isInsufficientMaterial() || isFivefoldRepetition();
+        boolean ins = isInsufficientMaterial();
+        boolean five = isFivefoldRepetition();
+        boolean noMovesForKing = isKingStuck();
+        if (ins) System.out.println("insuff");
+        else if (five) System.out.println("five");
+        else if(noMovesForKing) System.out.println("king stuck");
+        //   return isInsufficientMaterial() || isFivefoldRepetition();
+        return ins || five || isKingStuck();
+    }
+
+    private boolean isKingStuck() {
+        Cell kingCell = turn ? whiteKingCell : blackKingCell;
+     //   System.out.println(kingCell.getPiece().calculatePseudoLegalMoves(this, kingCell));
+        if(getLegalMoves().size() == 0) return true;
+        return false;
     }
 
     /**
@@ -297,14 +311,32 @@ public final class Board {
      * king and bishop vs. king and bishop of the same color as the opponent's bishop.
      */
     private boolean isInsufficientMaterial() {
-        return isKingVsKing() || isBishopAndKingVsKing() || isKnightAndKingVsKing() || isKingAndBishopVsKingAndBishop();
+        boolean kvk = isKingVsKing();
+        boolean bkvsk = isBishopAndKingVsKing();
+        boolean kkvsk = isKnightAndKingVsKing();
+        boolean kbvskb = isKingAndBishopVsKingAndBishop();
+        boolean kkvskk = isKnightAndKingVsKnightAndKing();
+        if (kvk) System.out.println("king vs king");
+        if (bkvsk) System.out.println("bishop king vs king");
+        if (kkvsk) System.out.println("king knight vs king");
+        if (kbvskb) System.out.println("bishop and king vs king bishop");
+        if(kkvskk) System.out.println("knight king vs king knight");
+        //return isKingVsKing() || isBishopAndKingVsKing() || isKnightAndKingVsKing() || isKingAndBishopVsKingAndBishop();
+        return kvk || bkvsk || kkvsk || kbvskb || kkvskk;
     }
 
-    private boolean isKingAndBishopVsKingAndBishop() {
-        boolean isKingAndBishopVsKingAndBishop = (aliveBlackPiecesCells.size() == 2 && (aliveBlackPiecesCells.stream().anyMatch(x -> x.getPiece() instanceof King)
+    private boolean isKnightAndKingVsKnightAndKing() {
+        return (aliveBlackPiecesCells.size() == 2 && (aliveBlackPiecesCells.stream().anyMatch(x -> x.getPiece() instanceof King)
                 && aliveBlackPiecesCells.stream().anyMatch(x -> x.getPiece() instanceof Knight)) &&
                 aliveWhitePiecesCells.size() == 2 && (aliveWhitePiecesCells.stream().anyMatch(x -> x.getPiece() instanceof King)
                 && aliveWhitePiecesCells.stream().anyMatch(x -> x.getPiece() instanceof Knight)));
+    }
+
+    private boolean isKingAndBishopVsKingAndBishop() { // ugly
+        boolean isKingAndBishopVsKingAndBishop = (aliveBlackPiecesCells.size() == 2 && (aliveBlackPiecesCells.stream().anyMatch(x -> x.getPiece() instanceof King)
+                && aliveBlackPiecesCells.stream().anyMatch(x -> x.getPiece() instanceof Bishop)) &&
+                aliveWhitePiecesCells.size() == 2 && (aliveWhitePiecesCells.stream().anyMatch(x -> x.getPiece() instanceof King)
+                && aliveWhitePiecesCells.stream().anyMatch(x -> x.getPiece() instanceof Bishop)));
         if (!isKingAndBishopVsKingAndBishop) return false;
 
         Optional<Cell> whiteBishopCell = aliveWhitePiecesCells.stream().filter(x -> x.getPiece() instanceof Bishop).findFirst();
@@ -316,18 +348,24 @@ public final class Board {
         return false;
     }
 
-    private boolean isKnightAndKingVsKing() {
-        return (aliveBlackPiecesCells.size() == 2 && (aliveBlackPiecesCells.stream().anyMatch(x -> x.getPiece() instanceof King)
-                && aliveBlackPiecesCells.stream().anyMatch(x -> x.getPiece() instanceof Knight)) ||
-                aliveWhitePiecesCells.size() == 2 && (aliveWhitePiecesCells.stream().anyMatch(x -> x.getPiece() instanceof King)
-                        && aliveWhitePiecesCells.stream().anyMatch(x -> x.getPiece() instanceof Knight)));
+    private boolean isKnightAndKingVsKing() { // ugly
+        return (aliveBlackPiecesCells.size() == 2 && aliveBlackPiecesCells.stream().anyMatch(x -> x.getPiece() instanceof King)
+                && aliveBlackPiecesCells.stream().anyMatch(x -> x.getPiece() instanceof Knight)
+                && aliveWhitePiecesCells.size() == 1 && aliveWhitePiecesCells.stream().anyMatch(x -> x.getPiece() instanceof King))
+                ||
+                (aliveWhitePiecesCells.size() == 2 && aliveWhitePiecesCells.stream().anyMatch(x -> x.getPiece() instanceof King)
+                        && aliveWhitePiecesCells.stream().anyMatch(x -> x.getPiece() instanceof Knight) && aliveBlackPiecesCells.size() == 1 &&
+                        aliveBlackPiecesCells.stream().anyMatch(x -> x.getPiece() instanceof King));
     }
 
     private boolean isBishopAndKingVsKing() {
-        return (aliveBlackPiecesCells.size() == 2 && (aliveBlackPiecesCells.stream().anyMatch(x -> x.getPiece() instanceof King)
-                && aliveBlackPiecesCells.stream().anyMatch(x -> x.getPiece() instanceof Bishop)) ||
-                aliveWhitePiecesCells.size() == 2 && (aliveWhitePiecesCells.stream().anyMatch(x -> x.getPiece() instanceof King)
-                        && aliveWhitePiecesCells.stream().anyMatch(x -> x.getPiece() instanceof Bishop)));
+        return (aliveBlackPiecesCells.size() == 2 && aliveBlackPiecesCells.stream().anyMatch(x -> x.getPiece() instanceof King)
+                && aliveBlackPiecesCells.stream().anyMatch(x -> x.getPiece() instanceof Bishop)
+                && aliveWhitePiecesCells.size() == 1 && aliveWhitePiecesCells.stream().anyMatch(x -> x.getPiece() instanceof King))
+                ||
+                (aliveWhitePiecesCells.size() == 2 && aliveWhitePiecesCells.stream().anyMatch(x -> x.getPiece() instanceof King)
+                        && aliveWhitePiecesCells.stream().anyMatch(x -> x.getPiece() instanceof Bishop) && aliveBlackPiecesCells.size() == 1 &&
+                        aliveBlackPiecesCells.stream().anyMatch(x -> x.getPiece() instanceof King));
     }
 
     private boolean isKingVsKing() {

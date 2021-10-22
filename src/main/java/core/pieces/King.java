@@ -27,16 +27,16 @@ public class King extends Piece {
     public boolean isWhiteShortCastlingPossible(Board board, Cell start) {
         Cell[][] cells = board.getCells();
         /* short castle, white*/
-        if (white && start.getX() == KING_COLUMN && start.getY() == WHITE_PIECES_ROW && !hasMoved() && !isKingInCheck(board, true) &&
+        if (white && start.getX() == KING_COLUMN && start.getY() == WHITE_PIECES_ROW && !hasMoved()  &&
                 cells[ROOK_KINGSIDE_COLUMN][WHITE_PIECES_ROW].getPiece() instanceof Rook &&
                 !cells[ROOK_KINGSIDE_COLUMN][WHITE_PIECES_ROW].getPiece().hasMoved()) {
             for (int i = 5; i <= 6; i++) {
                 if (!isEmpty(cells[i][WHITE_PIECES_ROW])) {
                     return false;
-                } else {
+                } /*else {
                     Move move = new Move(start, cells[i][WHITE_PIECES_ROW], MoveInfo.STANDARD);
                     if (isKingInCheckAfterMove(move, board, true)) return false;
-                }
+                }*/
             }
             return true;
         }
@@ -46,17 +46,17 @@ public class King extends Piece {
     public boolean isWhiteLongCastlingPossible(Board board, Cell start) {
         Cell[][] cells = board.getCells();
         /* long castle, white */
-        if (white && start.getX() == KING_COLUMN && start.getY() == WHITE_PIECES_ROW && !hasMoved() && !isKingInCheck(board, true) &&
+        if (white && start.getX() == KING_COLUMN && start.getY() == WHITE_PIECES_ROW && !hasMoved() &&
                 cells[ROOK_QUEENSIDE_COLUMN][WHITE_PIECES_ROW].getPiece() instanceof Rook &&
                 !cells[ROOK_QUEENSIDE_COLUMN][WHITE_PIECES_ROW].getPiece().hasMoved()) {
             if (!isEmpty(cells[1][WHITE_PIECES_ROW])) return false;
             for (int i = 3; i >= 2; i--) {
                 if (!isEmpty(cells[i][WHITE_PIECES_ROW])) {
                     return false;
-                } else {
+                } /*else {
                     Move move = new Move(start, cells[i][WHITE_PIECES_ROW], MoveInfo.STANDARD);
                     if (isKingInCheckAfterMove(move, board, true)) return false;
-                }
+                }*/
             }
             return true;
         }
@@ -66,16 +66,16 @@ public class King extends Piece {
     public boolean isBlackShortCastlingPossible(Board board, Cell start) {
         Cell[][] cells = board.getCells();
         /* short castle, black */
-        if (!white && start.getX() == KING_COLUMN && start.getY() == BLACK_PIECES_ROW && !hasMoved() && !isKingInCheck(board, false) &&
+        if (!white && start.getX() == KING_COLUMN && start.getY() == BLACK_PIECES_ROW && !hasMoved() &&
                 cells[ROOK_KINGSIDE_COLUMN][BLACK_PIECES_ROW].getPiece() instanceof Rook &&
                 !cells[ROOK_KINGSIDE_COLUMN][BLACK_PIECES_ROW].getPiece().hasMoved()) {
             for (int i = 5; i <= 6; i++) {
                 if (!isEmpty(cells[i][BLACK_PIECES_ROW])) {
                     return false;
-                } else {
+                }/* else {
                     Move move = new Move(start, cells[i][BLACK_PIECES_ROW], MoveInfo.STANDARD);
                     if (isKingInCheckAfterMove(move, board, false)) return false;
-                }
+                }*/
             }
             return true;
         }
@@ -85,17 +85,17 @@ public class King extends Piece {
     public boolean isBlackLongCastlingPossible(Board board, Cell start) {
         Cell[][] cells = board.getCells();
         /* long castle, white */
-        if (!white && start.getX() == KING_COLUMN && start.getY() == BLACK_PIECES_ROW && !hasMoved() && !isKingInCheck(board, false) &&
+        if (!white && start.getX() == KING_COLUMN && start.getY() == BLACK_PIECES_ROW && !hasMoved() &&
                 cells[ROOK_QUEENSIDE_COLUMN][BLACK_PIECES_ROW].getPiece() instanceof Rook &&
                 !cells[ROOK_QUEENSIDE_COLUMN][BLACK_PIECES_ROW].getPiece().hasMoved()) {
             if (!isEmpty(cells[1][BLACK_PIECES_ROW])) return false;
             for (int i = 3; i >= 2; i--) {
                 if (!isEmpty(cells[i][BLACK_PIECES_ROW])) {
                     return false;
-                } else {
+                } /*else {
                     Move move = new Move(start, cells[i][BLACK_PIECES_ROW], MoveInfo.STANDARD);
                     if (isKingInCheckAfterMove(move, board, false)) return false;
-                }
+                }*/
             }
             return true;
         }
@@ -104,6 +104,7 @@ public class King extends Piece {
 
     @Override
     public List<Move> calculatePseudoLegalMoves(Board board, Cell start) {
+        /* Includes castling but without checking if crossing squares are attacked .*/
         if (!(start.getPiece().equals(this))) return null;
         int x = start.getX();
         int y = start.getY();

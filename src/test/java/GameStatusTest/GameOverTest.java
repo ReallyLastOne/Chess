@@ -41,7 +41,6 @@ public class GameOverTest {
                     System.out.println("Move: " + line);
                     game.makeMove(line);
                     System.out.println(board);
-                    if(line.equals("e1a1")) System.out.println(board.getBlackKingCell().getPiece().calculatePseudoLegalMoves(board, board.getBlackKingCell()));
                 }
             }
         } catch (IOException exception) {
