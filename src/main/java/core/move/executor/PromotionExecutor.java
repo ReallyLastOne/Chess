@@ -57,7 +57,7 @@ public class PromotionExecutor implements Executor {
             cells[end.getX()][end.getY()].setPiece(end.getPiece());
         } else if (lastMove.getInfo() == QUEEN_PROMOTION) {
             cells[start.getX()][start.getY()].setPiece(new Pawn(cells[end.getX()][end.getY()].getPiece().isWhite(), cells[end.getX()][end.getY()].getPiece().getMoves()));
-            cells[end.getX()][end.getY()].clear();
+            cells[end.getX()][end.getY()].setPiece(end.getPiece());
         }
     }
 }

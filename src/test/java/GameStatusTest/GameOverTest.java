@@ -28,6 +28,7 @@ public class GameOverTest {
         board = game.getBoard();
     }
 
+    // test for 50 games
     @Test
     public void gameOverTest() {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader("src/main/resources/finishedGames.txt"))) {

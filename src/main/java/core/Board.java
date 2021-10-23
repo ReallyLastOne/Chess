@@ -31,36 +31,48 @@ public final class Board {
     private final Deque<Move> moves = new ArrayDeque<>();
     private int halfmoves = 0;
     private int fullmoves = 1;
+    /**
+     * List of cells that stores cells with white pieces placed.
+     */
     private List<Cell> aliveWhitePiecesCells = new ArrayList<>();
+    /**
+     * List of cells that stores cells with black pieces placed.
+     */
     private List<Cell> aliveBlackPiecesCells = new ArrayList<>();
+    /**
+     * Map that stores occurred positions in a board. By position, we mean first four elements of FEN.
+     */
     private Map<String, Integer> positionsOccurred = new HashMap<>();
-    private boolean turn = true;
-    private List<Move> legalMoves;
+    /**
+     * Stores information about current player to move.
+     */
+    private boolean turn;
+    /**
+     * The cell where the white king is.
+     */
     private Cell whiteKingCell;
+    /**
+     * The cell where the black king is.
+     */
     private Cell blackKingCell;
 
+    /**
+     * Basic class constructor for standard position.
+     */
     public Board() {
         this(STARTING_FEN);
     }
 
+    /**
+     * Class constructor
+     */
     public Board(String FEN) {
         this.cells = utilities.FEN.calculatePiecePlacement(FEN);
         this.turn = utilities.FEN.calculateTurn(FEN);
         this.halfmoves = utilities.FEN.calculateHalfmoves(FEN);
         this.fullmoves = utilities.FEN.calculateFullmoves(FEN);
         updateAliveCells();
-        assignKingCells();
-    }
-
-    private void assignKingCells() {
-        for (Cell[] row : cells) {
-            for (Cell x : row) {
-                if (x.isOccupied() && x.getPiece() instanceof King) {
-                    if (x.getPiece().isWhite()) whiteKingCell = x;
-                    else if (!x.getPiece().isWhite()) blackKingCell = x;
-                }
-            }
-        }
+        //assignKingCells();
     }
 
     /**
@@ -108,6 +120,9 @@ public final class Board {
         }
     }
 
+    /**
+     * Decrease number of occurrences of position or removes current position.
+     */
     private void removePosition() {
         String FEN = utilities.FEN.from(this);
         String[] fenCalculated = FEN.split(" ");
@@ -142,6 +157,9 @@ public final class Board {
         return moves.getLast();
     }
 
+    /**
+     * Handling en passant availability.
+     */
     public void updatePawnsStatus() {
         for (Cell x : aliveWhitePiecesCells) {
             if (x.isOccupied() && x.getPiece() instanceof Pawn) {
@@ -160,6 +178,9 @@ public final class Board {
         }
     }
 
+    /**
+     * Updates alive cells and king cells.
+     */
     public void updateAliveCells() {
         aliveWhitePiecesCells = new ArrayList<>();
         aliveBlackPiecesCells = new ArrayList<>();
@@ -177,10 +198,8 @@ public final class Board {
     }
 
     void printAllPossibleMoves() {
-        System.out.println("white");
         for (Cell cell : aliveWhitePiecesCells)
             System.out.println(cell.getPiece().getClass() + " " + cell.getPiece().calculatePseudoLegalMoves(this, cell));
-        System.out.println("black");
         for (Cell cell : aliveBlackPiecesCells)
             System.out.println(cell.getPiece().getClass() + " " + cell.getPiece().calculatePseudoLegalMoves(this, cell));
     }
@@ -192,6 +211,11 @@ public final class Board {
         return x >= 0 && x <= GRID_SIZE - 1 && y >= 0 && y <= GRID_SIZE - 1;
     }
 
+    /**
+     * example: getCellByName("a1") returns cell with coordinates cells[0][0].
+     *
+     * @return real cell by name
+     */
     public Cell getCellByName(String name) {
         char column = name.charAt(0);
         char charRow = name.charAt(1);
@@ -199,6 +223,9 @@ public final class Board {
         return cells[COLUMN_TO_INT.get(column)][row];
     }
 
+    /**
+     * @return FEN of board
+     */
     public String getFEN() {
         return FEN.from(this);
     }
@@ -252,7 +279,7 @@ public final class Board {
     }
 
     public boolean canBeClaimedDraw() {
-        return isThreefoldRepetition() || is50MovesRule();
+        return isNfoldRepetition(3) || is50MovesRule();
     }
 
     /**
@@ -275,31 +302,28 @@ public final class Board {
     }
 
     /**
-     * Checks if the same position (with same legal moves) occurred three times during the game.
+     * Checks if the same position (with same legal moves) occurred N times during the game.
+     * n = 3: threefold repetition,
+     * n = 5: fivefold repetition.
      */
-    private boolean isThreefoldRepetition() {
-        return positionsOccurred.values().stream().anyMatch(x -> x >= 3);
+    private boolean isNfoldRepetition(int N) {
+        return positionsOccurred.values().stream().anyMatch(x -> x >= N);
     }
 
-    private boolean isFivefoldRepetition() {
-        return positionsOccurred.values().stream().anyMatch(x -> x >= 5);
-    }
-
+    /**
+     * @return if there is draw on board.
+     */
     public boolean isDraw() {
-        boolean ins = isInsufficientMaterial();
-        boolean five = isFivefoldRepetition();
-        boolean noMovesForKing = isKingStuck();
-        if (ins) System.out.println("insuff");
-        else if (five) System.out.println("five");
-        else if(noMovesForKing) System.out.println("king stuck");
-        //   return isInsufficientMaterial() || isFivefoldRepetition();
-        return ins || five || isKingStuck();
+        return isInsufficientMaterial() || isNfoldRepetition(5) || isKingStuck();
     }
 
+    /**
+     * (example of king stuck: 8/8/8/8/8/5K2/5P2/5k2 b)
+     *
+     * @return if one side can't move anywhere and king is not in check.
+     */
     private boolean isKingStuck() {
-        Cell kingCell = turn ? whiteKingCell : blackKingCell;
-     //   System.out.println(kingCell.getPiece().calculatePseudoLegalMoves(this, kingCell));
-        if(getLegalMoves().size() == 0) return true;
+        if (getLegalMoves().size() == 0) return true;
         return false;
     }
 
@@ -309,22 +333,35 @@ public final class Board {
      * king and bishop vs king,
      * king and knight vs king,
      * king and bishop vs. king and bishop of the same color as the opponent's bishop.
+     *
+     * @return if one of above situation occurs
      */
     private boolean isInsufficientMaterial() {
-        boolean kvk = isKingVsKing();
-        boolean bkvsk = isBishopAndKingVsKing();
-        boolean kkvsk = isKnightAndKingVsKing();
-        boolean kbvskb = isKingAndBishopVsKingAndBishop();
-        boolean kkvskk = isKnightAndKingVsKnightAndKing();
-        if (kvk) System.out.println("king vs king");
-        if (bkvsk) System.out.println("bishop king vs king");
-        if (kkvsk) System.out.println("king knight vs king");
-        if (kbvskb) System.out.println("bishop and king vs king bishop");
-        if(kkvskk) System.out.println("knight king vs king knight");
-        //return isKingVsKing() || isBishopAndKingVsKing() || isKnightAndKingVsKing() || isKingAndBishopVsKingAndBishop();
-        return kvk || bkvsk || kkvsk || kbvskb || kkvskk;
+        return isKingVsKing() || isBishopAndKingVsKing() || isKnightAndKingVsKing() || isKingAndBishopVsKingAndBishop()
+                || isKnightAndKingVsKnightAndKing() || isKingVsBishopsSameColor();
     }
 
+    /**
+     * Checks if there is king vs king and 2 same colored bishops.
+     */
+    private boolean isKingVsBishopsSameColor() {
+        List<Cell> whiteBishops = aliveWhitePiecesCells.stream().filter(x -> x.getPiece() instanceof Bishop).collect(Collectors.toList());
+        List<Cell> blackBishops = aliveBlackPiecesCells.stream().filter(x -> x.getPiece() instanceof Bishop).collect(Collectors.toList());
+
+        List<Cell> whiteKing = aliveWhitePiecesCells.stream().filter(x -> x.getPiece() instanceof King).collect(Collectors.toList());
+        List<Cell> blackKing = aliveWhitePiecesCells.stream().filter(x -> x.getPiece() instanceof King).collect(Collectors.toList());
+
+        if (aliveWhitePiecesCells.size() == 3 && whiteBishops.size() == 2 && whiteKing.size() == 1 && aliveBlackPiecesCells.size() == 1) {
+            return whiteBishops.get(0).isWhite() == whiteBishops.get(1).isWhite();
+        } else if (aliveBlackPiecesCells.size() == 3 && blackBishops.size() == 2 && blackKing.size() == 1 && aliveWhitePiecesCells.size() == 1) {
+            return blackBishops.get(0).isWhite() == blackBishops.get(1).isWhite();
+        }
+        return false;
+    }
+
+    /**
+     * Checks if there is knight and king on both sides. (not sure if this should be included)
+     */
     private boolean isKnightAndKingVsKnightAndKing() {
         return (aliveBlackPiecesCells.size() == 2 && (aliveBlackPiecesCells.stream().anyMatch(x -> x.getPiece() instanceof King)
                 && aliveBlackPiecesCells.stream().anyMatch(x -> x.getPiece() instanceof Knight)) &&
@@ -332,11 +369,15 @@ public final class Board {
                 && aliveWhitePiecesCells.stream().anyMatch(x -> x.getPiece() instanceof Knight)));
     }
 
+    /**
+     * Checks if there are same colored bishop and king on both sides.
+     */
     private boolean isKingAndBishopVsKingAndBishop() { // ugly
         boolean isKingAndBishopVsKingAndBishop = (aliveBlackPiecesCells.size() == 2 && (aliveBlackPiecesCells.stream().anyMatch(x -> x.getPiece() instanceof King)
                 && aliveBlackPiecesCells.stream().anyMatch(x -> x.getPiece() instanceof Bishop)) &&
                 aliveWhitePiecesCells.size() == 2 && (aliveWhitePiecesCells.stream().anyMatch(x -> x.getPiece() instanceof King)
                 && aliveWhitePiecesCells.stream().anyMatch(x -> x.getPiece() instanceof Bishop)));
+
         if (!isKingAndBishopVsKingAndBishop) return false;
 
         Optional<Cell> whiteBishopCell = aliveWhitePiecesCells.stream().filter(x -> x.getPiece() instanceof Bishop).findFirst();
@@ -348,6 +389,9 @@ public final class Board {
         return false;
     }
 
+    /**
+     * Checks if there is knight and king vs king.
+     */
     private boolean isKnightAndKingVsKing() { // ugly
         return (aliveBlackPiecesCells.size() == 2 && aliveBlackPiecesCells.stream().anyMatch(x -> x.getPiece() instanceof King)
                 && aliveBlackPiecesCells.stream().anyMatch(x -> x.getPiece() instanceof Knight)
@@ -358,6 +402,9 @@ public final class Board {
                         aliveBlackPiecesCells.stream().anyMatch(x -> x.getPiece() instanceof King));
     }
 
+    /**
+     * Checks if there is bishop and king vs king.
+     */
     private boolean isBishopAndKingVsKing() {
         return (aliveBlackPiecesCells.size() == 2 && aliveBlackPiecesCells.stream().anyMatch(x -> x.getPiece() instanceof King)
                 && aliveBlackPiecesCells.stream().anyMatch(x -> x.getPiece() instanceof Bishop)
@@ -368,6 +415,9 @@ public final class Board {
                         aliveBlackPiecesCells.stream().anyMatch(x -> x.getPiece() instanceof King));
     }
 
+    /**
+     * Checks if there is king vs king.
+     */
     private boolean isKingVsKing() {
         return aliveBlackPiecesCells.size() == 1 && aliveBlackPiecesCells.get(0).getPiece() instanceof King
                 && aliveWhitePiecesCells.size() == 1 && aliveWhitePiecesCells.get(0).getPiece() instanceof King;
