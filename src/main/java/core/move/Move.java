@@ -48,7 +48,8 @@ public class Move {
 
     @Override
     public String toString() {
-        return INT_TO_COLUMN.get(start.getX()) + "" + (start.getY() + 1) + "" + INT_TO_COLUMN.get(end.getX()) + "" + (end.getY() + 1);
+        return INT_TO_COLUMN.get(start.getX()) + "" + (start.getY() + 1) + "" + INT_TO_COLUMN.get(end.getX()) + ""
+                + (end.getY() + 1) + info.getSymbolPromotion();
     }
 
     public Move copy() {

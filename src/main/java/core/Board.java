@@ -143,7 +143,9 @@ public final class Board {
         while (itr.hasNext()) {
             Move move = itr.next();
             MoveInfo info = move.getInfo();
-            if (info == MoveInfo.CAPTURE || info == MoveInfo.PAWN_MOVE || info == MoveInfo.EN_PASSANT || info == MoveInfo.TWO_FORWARD) {
+            if (info == MoveInfo.CAPTURE || info == MoveInfo.PAWN_MOVE || info == MoveInfo.EN_PASSANT || info == MoveInfo.TWO_FORWARD ||
+                    info == MoveInfo.BISHOP_PROMOTION || info == MoveInfo.KNIGHT_PROMOTION ||
+                    info == MoveInfo.QUEEN_PROMOTION || info == MoveInfo.ROOK_PROMOTION) {
                 return halfmoves;
             } else {
                 halfmoves += 1;
@@ -257,7 +259,8 @@ public final class Board {
         for (Cell x : cells) {
             moves = x.getPiece().calculatePseudoLegalMoves(this, x);
             for (Move move : moves) {
-                if (!MoveValidator.isKingInCheckAfterMove(move, this, move.getStart().getPiece().isWhite()))
+                //if (!MoveValidator.isKingInCheckAfterMove(move, this, move.getStart().getPiece().isWhite()))
+                if (MoveValidator.isValid(move, this))
                     legal.add(move);
             }
         }
@@ -279,23 +282,29 @@ public final class Board {
     }
 
     public boolean canBeClaimedDraw() {
-        return isNfoldRepetition(3) || is50MovesRule();
+        return isNfoldRepetition(3) || isNmovesRule(50);
     }
 
     /**
      * Checks if there was no pawn move, capture or promotion in last 50 moves.
      */
-    private boolean is50MovesRule() {
-        if (fullmoves >= 50) {
-            Iterator<Move> it = moves.iterator();
+    private boolean isNmovesRule(int N) {
+        if (fullmoves >= N) {
+            Iterator<Move> it = moves.descendingIterator();
             int checkedMoves = 0;
-            while (it.hasNext() || checkedMoves == 100) {
-                MoveInfo info = it.next().getInfo();
+            while (it.hasNext()) {
+                Move temp = it.next();
+                MoveInfo info = temp.getInfo();
                 if (info == MoveInfo.CAPTURE || info == MoveInfo.PAWN_MOVE || info == MoveInfo.EN_PASSANT ||
                         info == MoveInfo.TWO_FORWARD || info == MoveInfo.BISHOP_PROMOTION || info == MoveInfo.KNIGHT_PROMOTION
                         || info == MoveInfo.QUEEN_PROMOTION || info == MoveInfo.ROOK_PROMOTION) return false;
                 checkedMoves += 1;
+                if (checkedMoves == 2 * N) {
+                    return true;
+                }
             }
+        } else {
+            return false;
         }
 
         return true;
@@ -314,7 +323,7 @@ public final class Board {
      * @return if there is draw on board.
      */
     public boolean isDraw() {
-        return isInsufficientMaterial() || isNfoldRepetition(5) || isKingStuck();
+        return isInsufficientMaterial() || isNmovesRule(75) || isNfoldRepetition(5) || isKingStuck();
     }
 
     /**
@@ -338,7 +347,7 @@ public final class Board {
      */
     private boolean isInsufficientMaterial() {
         return isKingVsKing() || isBishopAndKingVsKing() || isKnightAndKingVsKing() || isKingAndBishopVsKingAndBishop()
-                || isKnightAndKingVsKnightAndKing() || isKingVsBishopsSameColor();
+                || isKingVsBishopsSameColor();
     }
 
     /**
@@ -357,16 +366,6 @@ public final class Board {
             return blackBishops.get(0).isWhite() == blackBishops.get(1).isWhite();
         }
         return false;
-    }
-
-    /**
-     * Checks if there is knight and king on both sides. (not sure if this should be included)
-     */
-    private boolean isKnightAndKingVsKnightAndKing() {
-        return (aliveBlackPiecesCells.size() == 2 && (aliveBlackPiecesCells.stream().anyMatch(x -> x.getPiece() instanceof King)
-                && aliveBlackPiecesCells.stream().anyMatch(x -> x.getPiece() instanceof Knight)) &&
-                aliveWhitePiecesCells.size() == 2 && (aliveWhitePiecesCells.stream().anyMatch(x -> x.getPiece() instanceof King)
-                && aliveWhitePiecesCells.stream().anyMatch(x -> x.getPiece() instanceof Knight)));
     }
 
     /**

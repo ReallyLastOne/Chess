@@ -1,3 +1,5 @@
+package MovesTest;
+
 import core.Board;
 import core.Game;
 import org.junit.Assert;

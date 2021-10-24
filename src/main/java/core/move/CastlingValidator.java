@@ -21,7 +21,7 @@ public class CastlingValidator {
      * Checks if castling is available.
      *
      * @param board
-     * @param move  to check
+     * @param move to check
      * @return if castling is available
      */
     public static boolean isValid(Board board, Move move) {

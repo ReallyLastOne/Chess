@@ -39,9 +39,9 @@ public class GameOverTest {
                     game = context.getBean(Game.class);
                     board = game.getBoard();
                 } else {
-                    System.out.println("Move: " + line);
+                   // System.out.println("Move: " + line);
                     game.makeMove(line);
-                    System.out.println(board);
+                   // System.out.println(board);
                 }
             }
         } catch (IOException exception) {

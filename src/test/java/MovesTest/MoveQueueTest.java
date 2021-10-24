@@ -1,3 +1,5 @@
+package MovesTest;
+
 import core.Game;
 import core.move.Move;
 import org.junit.After;
