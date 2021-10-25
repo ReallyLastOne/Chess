@@ -6,7 +6,9 @@ import java.util.Map;
 public class Constants {
     public static final int GRID_SIZE = 8;
 
-    /** Map that stores 0-based integer equivalence of chess board column. */
+    /**
+     * Map that stores 0-based integer equivalence of chess board column.
+     */
     public static final Map<Character, Integer> COLUMN_TO_INT = new HashMap<>() {{
         put('a', 0);
         put('b', 1);
@@ -18,6 +20,9 @@ public class Constants {
         put('h', 7);
     }};
 
+    /**
+     * Reverse of {@link Constants#COLUMN_TO_INT}.
+     */
     public static final Map<Integer, Character> INT_TO_COLUMN = new HashMap<>() {{
         put(0, 'a');
         put(1, 'b');

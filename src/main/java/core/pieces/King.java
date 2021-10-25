@@ -7,11 +7,11 @@ import core.move.Move;
 import java.util.ArrayList;
 import java.util.List;
 
-import static core.Board.*;
-import static core.Cell.*;
-import static core.PositionConstants.*;
-import static core.move.MoveValidator.*;
+import static core.Board.fitInBoard;
+import static core.Cell.isEmpty;
+import static core.Cell.isOppositeColor;
 import static core.GameUtilities.MoveInfo;
+import static core.PositionConstants.*;
 
 public class King extends Piece {
 
@@ -33,10 +33,7 @@ public class King extends Piece {
             for (int i = 5; i <= 6; i++) {
                 if (!isEmpty(cells[i][WHITE_PIECES_ROW])) {
                     return false;
-                } /*else {
-                    Move move = new Move(start, cells[i][WHITE_PIECES_ROW], MoveInfo.STANDARD);
-                    if (isKingInCheckAfterMove(move, board, true)) return false;
-                }*/
+                }
             }
             return true;
         }
@@ -53,10 +50,7 @@ public class King extends Piece {
             for (int i = 3; i >= 2; i--) {
                 if (!isEmpty(cells[i][WHITE_PIECES_ROW])) {
                     return false;
-                } /*else {
-                    Move move = new Move(start, cells[i][WHITE_PIECES_ROW], MoveInfo.STANDARD);
-                    if (isKingInCheckAfterMove(move, board, true)) return false;
-                }*/
+                }
             }
             return true;
         }
@@ -72,10 +66,7 @@ public class King extends Piece {
             for (int i = 5; i <= 6; i++) {
                 if (!isEmpty(cells[i][BLACK_PIECES_ROW])) {
                     return false;
-                }/* else {
-                    Move move = new Move(start, cells[i][BLACK_PIECES_ROW], MoveInfo.STANDARD);
-                    if (isKingInCheckAfterMove(move, board, false)) return false;
-                }*/
+                }
             }
             return true;
         }
@@ -92,10 +83,7 @@ public class King extends Piece {
             for (int i = 3; i >= 2; i--) {
                 if (!isEmpty(cells[i][BLACK_PIECES_ROW])) {
                     return false;
-                } /*else {
-                    Move move = new Move(start, cells[i][BLACK_PIECES_ROW], MoveInfo.STANDARD);
-                    if (isKingInCheckAfterMove(move, board, false)) return false;
-                }*/
+                }
             }
             return true;
         }
@@ -121,7 +109,7 @@ public class King extends Piece {
         if (isBlackLongCastlingPossible(board, start))
             moves.add(new Move(start, cells[KING_LONG_COLUMN][BLACK_PIECES_ROW], MoveInfo.BLACK_LONG_CASTLE));
 
-        // refactor
+        // check all 8 moves around king
         if (fitInBoard(x + 1, y)) {
             if (isEmpty(cells[x + 1][y])) {
                 moves.add(new Move(start, cells[x + 1][y], MoveInfo.STANDARD));
@@ -204,6 +192,6 @@ public class King extends Piece {
         if (o == this) return true;
         if (!(o instanceof King)) return false;
         King king = (King) o;
-        return white == king.isWhite() && hasMoved() == king.hasMoved();
+        return white == king.white && hasMoved() == king.hasMoved();
     }
 }

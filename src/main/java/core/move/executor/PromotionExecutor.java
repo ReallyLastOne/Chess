@@ -47,16 +47,24 @@ public class PromotionExecutor implements Executor {
         Cell end = lastMove.getEnd();
 
         if (lastMove.getInfo() == KNIGHT_PROMOTION) {
+            /* set Pawn back to starting cell with correct number of moves made */
             cells[start.getX()][start.getY()].setPiece(new Pawn(cells[end.getX()][end.getY()].getPiece().isWhite(), cells[end.getX()][end.getY()].getPiece().getMoves()));
+            /* set captured Piece back */
             cells[end.getX()][end.getY()].setPiece(end.getPiece());
         } else if (lastMove.getInfo() == BISHOP_PROMOTION) {
+            /* set Pawn back to starting cell with correct number of moves made */
             cells[start.getX()][start.getY()].setPiece(new Pawn(cells[end.getX()][end.getY()].getPiece().isWhite(), cells[end.getX()][end.getY()].getPiece().getMoves()));
+            /* set captured Piece back */
             cells[end.getX()][end.getY()].setPiece(end.getPiece());
         } else if (lastMove.getInfo() == ROOK_PROMOTION) {
+            /* set Pawn back to starting cell with correct number of moves made */
             cells[start.getX()][start.getY()].setPiece(new Pawn(cells[end.getX()][end.getY()].getPiece().isWhite(), cells[end.getX()][end.getY()].getPiece().getMoves()));
+            /* set captured Piece back */
             cells[end.getX()][end.getY()].setPiece(end.getPiece());
         } else if (lastMove.getInfo() == QUEEN_PROMOTION) {
+            /* set Pawn back to starting cell with correct number of moves made */
             cells[start.getX()][start.getY()].setPiece(new Pawn(cells[end.getX()][end.getY()].getPiece().isWhite(), cells[end.getX()][end.getY()].getPiece().getMoves()));
+            /* set captured Piece back */
             cells[end.getX()][end.getY()].setPiece(end.getPiece());
         }
     }

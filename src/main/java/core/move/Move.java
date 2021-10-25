@@ -8,7 +8,7 @@ import core.GameUtilities;
 import static utilities.Constants.INT_TO_COLUMN;
 
 /**
- * Class that is responsible for creating single move. If instantiated, it is provided to be valid move in syntactically way.
+ * Class that is responsible for creating single move.
  */
 @Getter
 @Setter

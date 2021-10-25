@@ -22,14 +22,27 @@ import static core.GameUtilities.MoveInfo;
 @Scope("prototype")
 @Getter
 /**
- *  Class that is a representation of chess board.
+ *  Class that is a representation of a chess board.
  */
 public final class Board {
     public static final String STARTING_FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 ";
+
     private Cell[][] cells;
+    /**
+     * Last move made on this board.
+     */
     private Move lastMove;
+    /**
+     * Deque that stores all moves made on this board.
+     */
     private final Deque<Move> moves = new ArrayDeque<>();
+    /**
+     * Number of halfmoves. (number of moves from last pawn move, promotion or capture.)
+     */
     private int halfmoves = 0;
+    /**
+     * Number of fullmoves made in this board. Counter is increased when black has made a move.
+     */
     private int fullmoves = 1;
     /**
      * List of cells that stores cells with white pieces placed.
@@ -64,7 +77,7 @@ public final class Board {
     }
 
     /**
-     * Class constructor
+     * Class constructor when providing custom FEN.
      */
     public Board(String FEN) {
         this.cells = utilities.FEN.calculatePiecePlacement(FEN);
@@ -72,7 +85,6 @@ public final class Board {
         this.halfmoves = utilities.FEN.calculateHalfmoves(FEN);
         this.fullmoves = utilities.FEN.calculateFullmoves(FEN);
         updateAliveCells();
-        //assignKingCells();
     }
 
     /**
@@ -121,7 +133,7 @@ public final class Board {
     }
 
     /**
-     * Decrease number of occurrences of position or removes current position.
+     * Decrease number of occurrences of a position or removes current position.
      */
     private void removePosition() {
         String FEN = utilities.FEN.from(this);
@@ -199,13 +211,6 @@ public final class Board {
         });
     }
 
-    void printAllPossibleMoves() {
-        for (Cell cell : aliveWhitePiecesCells)
-            System.out.println(cell.getPiece().getClass() + " " + cell.getPiece().calculatePseudoLegalMoves(this, cell));
-        for (Cell cell : aliveBlackPiecesCells)
-            System.out.println(cell.getPiece().getClass() + " " + cell.getPiece().calculatePseudoLegalMoves(this, cell));
-    }
-
     /**
      * Checks if specified coordinates fit inside chess board.
      */
@@ -214,7 +219,7 @@ public final class Board {
     }
 
     /**
-     * example: getCellByName("a1") returns cell with coordinates cells[0][0].
+     * example: getCellByName("a1") returns cell: cells[0][0].
      *
      * @return real cell by name
      */
@@ -226,7 +231,7 @@ public final class Board {
     }
 
     /**
-     * @return FEN of board
+     * @return FEN of a board
      */
     public String getFEN() {
         return FEN.from(this);
@@ -249,7 +254,7 @@ public final class Board {
     }
 
     /**
-     * Get List of legal Moves for current state.
+     * @return List of legal moves
      */
     public List<Move> getLegalMoves() {
         List<Move> moves;
@@ -259,7 +264,6 @@ public final class Board {
         for (Cell x : cells) {
             moves = x.getPiece().calculatePseudoLegalMoves(this, x);
             for (Move move : moves) {
-                //if (!MoveValidator.isKingInCheckAfterMove(move, this, move.getStart().getPiece().isWhite()))
                 if (MoveValidator.isValid(move, this))
                     legal.add(move);
             }
@@ -270,6 +274,8 @@ public final class Board {
 
     /**
      * Get List of pseudo legal Moves for current state. (pseudo legal move = move that can leave King in check.
+     *
+     * @return List of pseudo legal moves
      */
     public List<Move> getPseudoLegalMoves() {
         List<Move> pseudoLegal = new ArrayList<>();
@@ -281,6 +287,9 @@ public final class Board {
         return pseudoLegal;
     }
 
+    /**
+     * Checks if current player can claim a draw due to threefold repetition and 50 moves rule.
+     */
     public boolean canBeClaimedDraw() {
         return isNfoldRepetition(3) || isNmovesRule(50);
     }
@@ -320,7 +329,7 @@ public final class Board {
     }
 
     /**
-     * @return if there is draw on board.
+     * @return if there is draw on a board
      */
     public boolean isDraw() {
         return isInsufficientMaterial() || isNmovesRule(75) || isNfoldRepetition(5) || isKingStuck();
@@ -329,7 +338,7 @@ public final class Board {
     /**
      * (example of king stuck: 8/8/8/8/8/5K2/5P2/5k2 b)
      *
-     * @return if one side can't move anywhere and king is not in check.
+     * @return if one side can't move anywhere and king is not in check
      */
     private boolean isKingStuck() {
         if (getLegalMoves().size() == 0) return true;
@@ -351,7 +360,7 @@ public final class Board {
     }
 
     /**
-     * Checks if there is king vs king and 2 same colored bishops.
+     * Checks if there is king vs king and 2 same colored bishops on a board.
      */
     private boolean isKingVsBishopsSameColor() {
         List<Cell> whiteBishops = aliveWhitePiecesCells.stream().filter(x -> x.getPiece() instanceof Bishop).collect(Collectors.toList());
@@ -389,7 +398,7 @@ public final class Board {
     }
 
     /**
-     * Checks if there is knight and king vs king.
+     * Checks if there is knight and king vs king on a board.
      */
     private boolean isKnightAndKingVsKing() { // ugly
         return (aliveBlackPiecesCells.size() == 2 && aliveBlackPiecesCells.stream().anyMatch(x -> x.getPiece() instanceof King)
@@ -402,7 +411,7 @@ public final class Board {
     }
 
     /**
-     * Checks if there is bishop and king vs king.
+     * Checks if there is bishop and king vs king on a board.
      */
     private boolean isBishopAndKingVsKing() {
         return (aliveBlackPiecesCells.size() == 2 && aliveBlackPiecesCells.stream().anyMatch(x -> x.getPiece() instanceof King)
@@ -415,7 +424,7 @@ public final class Board {
     }
 
     /**
-     * Checks if there is king vs king.
+     * Checks if there is king vs king on a board.
      */
     private boolean isKingVsKing() {
         return aliveBlackPiecesCells.size() == 1 && aliveBlackPiecesCells.get(0).getPiece() instanceof King

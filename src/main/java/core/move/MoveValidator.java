@@ -10,10 +10,10 @@ import java.util.Optional;
 
 public class MoveValidator {
     /**
-     * API to move verification for standard user move flow. Also links move to current board.
+     * API to move verification for standard user move flow. Also links move to given board.
      *
      * @param move  move to be verified
-     * @param board the board to
+     * @param board the board on which move has to be performed
      * @return if move is available for given board
      */
     public static boolean isValid(Move move, Board board) {
@@ -75,7 +75,6 @@ public class MoveValidator {
         List<Cell> piecesCells = turn ? board.getAliveBlackPiecesCells() : board.getAliveWhitePiecesCells();
         Cell kingCell = turn ? board.getWhiteKingCell() : board.getBlackKingCell();
         for (Cell pieceCell : piecesCells) { // For every piece, we check its possible moves. If there is a Cell that is also position of a king, return true.
-            //if (pieceCell.getPiece() instanceof King) continue;
             List<Move> moves = pieceCell.getPiece().calculatePseudoLegalMoves(board, pieceCell);
             if (moves.contains(new Move(pieceCell, kingCell))) {
                 return true;
@@ -97,8 +96,6 @@ public class MoveValidator {
                 board.getBlackKingCell().getPiece().calculatePseudoLegalMoves(board, board.getBlackKingCell());
         List<Cell> piecesCell = turn ? board.getAliveWhitePiecesCells() : board.getAliveBlackPiecesCells();
 
-        /* If king can't move and is in check: return true */
-        // if (kingMoves.isEmpty() && isKingInCheck(board, turn)) return true; what if king cant move, is in check but some piece can block?
         /* Check if king can move away from check */
         for (Move x : kingMoves) {
             if (!isKingInCheckAfterMove(x, board, board.isTurn())) return false;

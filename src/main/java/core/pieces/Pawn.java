@@ -16,8 +16,10 @@ import static core.PositionConstants.*;
 
 public class Pawn extends Piece {
     @Setter
+    /** Indicates if a pawn can be enpassanted.  */
     private boolean enPassant;
     @Getter
+    /** Number representing direction of pawn movement. */
     private final int forwardCount;
 
     public Pawn(boolean white) {
@@ -164,6 +166,9 @@ public class Pawn extends Piece {
         return white ? "P" : "p";
     }
 
+    /**
+     * Returns true if pawn can be enpassanted in current time.
+     */
     public boolean canBeEnPassanted() {
         return enPassant;
     }
@@ -178,6 +183,6 @@ public class Pawn extends Piece {
         if (o == this) return true;
         if (!(o instanceof Pawn)) return false;
         Pawn pawn = (Pawn) o;
-        return white == pawn.isWhite() && hasMoved() == pawn.hasMoved();
+        return white == pawn.white && hasMoved() == pawn.hasMoved();
     }
 }

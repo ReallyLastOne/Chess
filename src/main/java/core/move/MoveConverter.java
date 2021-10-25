@@ -10,6 +10,8 @@ public class MoveConverter {
 
     /**
      * Converts String of type "a2a4", "a7b8q" to Move able to be validated.
+     *
+     * @return Move converted from String form
      */
     public static Move convert(String move, Board board) {
         move = move.toLowerCase();
@@ -31,7 +33,7 @@ public class MoveConverter {
     }
 
     /**
-     * Returns Move linked to given Board.
+     * @return Move linked to given Board.
      */
     private static Move linkMove(Move move, Board board) {
         Cell startFromBoard = move.getStart().findCell(board.getCells());

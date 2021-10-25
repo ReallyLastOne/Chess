@@ -14,7 +14,6 @@ public class StandardExecutor implements Executor {
         Cell[][] cells = board.getCells();
         Cell start = move.getStart();
         Cell end = move.getEnd();
-        boolean white = start.getPiece().isWhite();
         if (move.getInfo() == STANDARD || move.getInfo() == PAWN_MOVE || move.getInfo() == CAPTURE) {
 
             /* move */
@@ -30,7 +29,7 @@ public class StandardExecutor implements Executor {
             cells[start.getX()][start.getY()].clear();
             cells[end.getX()][start.getY()].clear();
         } else if (move.getInfo() == TWO_FORWARD) {
-            // same as above but set pawn status to be enpassanted
+            /* same as above but set pawn status to be enpassanted */
             ((Pawn) start.getPiece()).setEnPassant(true);
             /* move */
             cells[end.getX()][end.getY()].setPiece(start.getPiece());

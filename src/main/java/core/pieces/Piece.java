@@ -3,7 +3,6 @@ package core.pieces;
 import core.Board;
 import core.Cell;
 import core.move.Move;
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,18 +11,24 @@ import java.util.List;
 @Getter
 @Setter
 public abstract class Piece {
+    /**
+     * Indicates if piece is white or black.
+     */
     boolean white;
+    /**
+     * Number of moves made by this piece.
+     */
     int moves;
 
     /**
-     * Basic constructor to initialize Piece.
+     * Basic constructor to initialize piece.
      */
     public Piece(boolean white) {
         this.white = white;
     }
 
     /**
-     * Constructor used when initializing Pieces that need to have initialized moves, e.g. in undoing promotion move.
+     * Constructor used when initializing pieces that need to have initialized moves, e.g. in undoing promotion move.
      */
     public Piece(boolean white, int moves) {
         this(white);
@@ -31,12 +36,13 @@ public abstract class Piece {
     }
 
     /**
-     * Returns list of pseudo legal Moves. (without checking checkmate yet)
+     * @return list of pseudo legal Moves. (without checking checkmate yet)
+     * @see Move
      */
     public abstract List<Move> calculatePseudoLegalMoves(Board board, Cell start);
 
     /**
-     * Returns copy of Piece.
+     * @return copy of a piece
      */
     public abstract Piece copy();
 
@@ -62,12 +68,13 @@ public abstract class Piece {
     }
 
     /**
-     * Returns 1-char String representation of a Piece.
+     * @return 1-char String representation of a Piece.
      */
     public abstract String toSymbol();
 
     /**
-     * Returns piece from given symbol.
+     * @param s symbol of a piece
+     * @return piece from given symbol
      */
     public static Piece of(String s) {
         boolean white = Character.isUpperCase(s.charAt(0));

@@ -55,10 +55,6 @@ public class Cell {
         return cell.getPiece().isWhite() != white;
     }
 
-    public boolean areInSamePosition(Cell cell) {
-        return this.getX() == cell.getX() && this.getY() == cell.getY();
-    }
-
     /**
      * Returns algebraic notation of Cell.
      */
@@ -98,7 +94,7 @@ public class Cell {
     }
 
     /**
-     * Returns true if there is a piece on Cell.
+     * Returns true if there is a piece on Cell. Similar to {@link core.Cell#isEmpty(Cell)}.
      */
     public boolean isOccupied() {
         return piece != null;

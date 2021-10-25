@@ -15,8 +15,10 @@ import static utilities.Constants.GRID_SIZE;
 import static utilities.Display.convertPieceToSymbol;
 
 /**
- * Class that provides static methods to calculate Forsyth–Edwards Notation from given Board and to construct Board
+ * Class that provides static methods to calculate Forsyth–Edwards Notation from given Board and to construct {@link Board}
  * from given String.
+ *
+ * @see <a href="https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation</a>
  */
 public class FEN {
     /**
@@ -25,7 +27,7 @@ public class FEN {
     public static final int MOVES = 10;
 
     /**
-     * Returns pieces placement from given board.
+     * @return pieces placement from given board.
      */
     public static String calculatePiecePlacement(Board board) {
         Cell[][] cells = board.getCells();
@@ -55,7 +57,7 @@ public class FEN {
     }
 
     /**
-     * Returns FEN from given board.
+     * @return FEN from given board.
      */
     public static String from(Board board) {
         String enPassantCell = calculateEnPassantCell(board);
@@ -69,7 +71,7 @@ public class FEN {
      * doesn't. (e.g. lichess.org or python chess library) I do since it is easier to test basing on these programs. */
 
     /**
-     * Returns algebraic notation of cell that can be enpassanted.
+     * @return algebraic notation of cell that can be enpassanted.
      */
     private static String calculateEnPassantCell(Board board) {
         String enPassantCell = "-";
@@ -78,7 +80,7 @@ public class FEN {
             Cell end = board.getLastMove().getEnd();
 
             if (fitInBoard(end.getX() + 1, end.getY())) {
-                if (cells[end.getX() + 1][end.getY()].isOccupied()&& cells[end.getX() + 1][end.getY()].getPiece()
+                if (cells[end.getX() + 1][end.getY()].isOccupied() && cells[end.getX() + 1][end.getY()].getPiece()
                         instanceof Pawn && cells[end.getX() + 1][end.getY()].getPiece().isWhite() != cells[end.getX()][end.getY()].getPiece().isWhite()) {
                     int forward = ((Pawn) cells[end.getX()][end.getY()].getPiece()).getForwardCount();
                     enPassantCell = cells[end.getX()][end.getY() - forward].toAlgebraicNotation();
@@ -97,7 +99,7 @@ public class FEN {
     }
 
     /**
-     * Returns castling availability for both sides.
+     * @return castling availability for both sides.
      */
     private static String modifyCastlingCells(Board board) {
         Cell whiteKingCell = board.getWhiteKingCell();
@@ -148,7 +150,7 @@ public class FEN {
     }
 
     /**
-     * Returns Cell[][] with pieces placed from given FEN.
+     * @return Cell[][] with pieces placed from given FEN.
      */
     public static Cell[][] calculatePiecePlacement(String FEN) {
         String[] elements = FEN.split(" ");
@@ -181,6 +183,8 @@ public class FEN {
 
     /**
      * If provided Cell to en passant in FEN, then set proper Pawn status.
+     *
+     * @return Cell[][] with set correct en passant status
      */
     private static Cell[][] modifyEnPassantCell(String FEN, Cell[][] cells) {
         String[] elements = FEN.split(" ");
