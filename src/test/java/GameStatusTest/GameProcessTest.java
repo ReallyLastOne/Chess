@@ -1,14 +1,14 @@
 package GameStatusTest;
 
 import core.Game;
+import core.GameUtilities;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.testng.Assert;
 import spring.AppConfig;
-import core.GameUtilities;
 
 public class GameProcessTest {
     Game game;

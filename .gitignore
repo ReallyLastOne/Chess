@@ -114,3 +114,4 @@ fabric.properties
 notes.txt
 hibernate.cfg.xml
 target/
+src/main/resources/META-INF/MANIFEST.MF
