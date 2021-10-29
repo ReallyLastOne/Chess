@@ -1,14 +1,14 @@
 package PseudoLegalMovesTest;
 
-import core.Board;
-import core.Game;
+import chess.core.Board;
+import chess.core.Game;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import spring.AppConfig;
+import chess.spring.AppConfig;
 
 import java.util.Collections;
 

@@ -1,24 +1,22 @@
 package PseudoLegalMovesTest;
 
-import core.Board;
-import core.Cell;
-import core.Game;
-import core.move.Move;
+import chess.core.Board;
+import chess.core.Game;
+import chess.core.move.Move;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import spring.AppConfig;
+import chess.spring.AppConfig;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static utilities.Constants.GRID_SIZE;
-import static utilities.Constants.INT_TO_COLUMN;
+import static chess.utilities.Constants.GRID_SIZE;
+import static chess.utilities.Constants.INT_TO_COLUMN;
 
 public class PawnTest {
     List<List<String>> validMoves = Arrays.asList(

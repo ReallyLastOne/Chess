@@ -1,14 +1,14 @@
 package GameStatusTest;
 
-import core.Game;
-import core.GameUtilities;
+import chess.core.Game;
+import chess.core.GameUtilities;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import spring.AppConfig;
+import chess.spring.AppConfig;
 
 public class GameProcessTest {
     Game game;

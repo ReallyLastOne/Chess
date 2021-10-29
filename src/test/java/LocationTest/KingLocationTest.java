@@ -1,17 +1,15 @@
 package LocationTest;
 
-import core.Board;
-import core.Game;
-import core.pieces.King;
-import core.pieces.Queen;
-import core.pieces.Rook;
+import chess.core.Board;
+import chess.core.Game;
+import chess.core.pieces.King;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import spring.AppConfig;
+import chess.spring.AppConfig;
 
 public class KingLocationTest {
     Game game;

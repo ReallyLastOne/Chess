@@ -1,14 +1,14 @@
 package MovesTest;
 
-import core.Board;
-import core.Game;
+import chess.core.Board;
+import chess.core.Game;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import spring.AppConfig;
-import utilities.FEN;
+import chess.spring.AppConfig;
+import chess.utilities.FEN;
 
 public class CastlingTest {
     ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);

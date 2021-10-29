@@ -1,14 +1,14 @@
 package MovesTest;
 
-import core.Game;
-import core.move.Move;
+import chess.core.Game;
+import chess.core.move.Move;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import spring.AppConfig;
+import chess.spring.AppConfig;
 
 /**
  * Class that checks if moves stored in Board.class are same as moves entered by user.
