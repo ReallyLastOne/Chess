@@ -8,18 +8,15 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import chess.spring.AppConfig;
 
-import static chess.core.PositionConstants.*;
+import static chess.core.PositionConstants.BLACK_PAWN_ROW;
+import static chess.core.PositionConstants.WHITE_PAWN_ROW;
 
 public class PawnLocationTest {
     Game game;
     @Before
     public void initialize() {
-        ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
-        game = context.getBean(Game.class);
+        game = new Game();
     }
 
     /* Testing pawn locations for initial board. */

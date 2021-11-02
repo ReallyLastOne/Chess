@@ -2,23 +2,18 @@ package MovesTest;
 
 import chess.core.Board;
 import chess.core.Game;
+import chess.utilities.FEN;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import chess.spring.AppConfig;
-import chess.utilities.FEN;
 
 public class CastlingTest {
-    ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
     Game game;
     Board board;
 
     @Before
     public void initialize() {
-        ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
-        game = context.getBean(Game.class);
+        game = new Game();
         board = game.getBoard();
     }
 

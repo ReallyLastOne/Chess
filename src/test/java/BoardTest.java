@@ -4,9 +4,6 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import chess.spring.AppConfig;
 
 public class BoardTest {
     public static final String basicBoardString = """
@@ -25,8 +22,7 @@ public class BoardTest {
 
     @Before
     public void initialize() {
-        ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
-        game = context.getBean(Game.class);
+        game = new Game();
         board = game.getBoard();
     }
 

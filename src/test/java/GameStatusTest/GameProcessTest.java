@@ -6,17 +6,13 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import chess.spring.AppConfig;
 
 public class GameProcessTest {
     Game game;
 
     @Before
     public void initialize() {
-        ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
-        game = context.getBean(Game.class);
+        game = new Game();
     }
 
     @Test(expected = IllegalArgumentException.class)

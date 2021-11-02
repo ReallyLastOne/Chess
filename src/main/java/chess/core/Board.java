@@ -4,22 +4,23 @@ import chess.core.move.Move;
 import chess.core.move.MoveValidator;
 import chess.core.move.executor.Executor;
 import chess.core.move.executor.ExecutorCalculator;
-import chess.core.pieces.*;
-import lombok.Getter;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
+import chess.core.pieces.Bishop;
+import chess.core.pieces.King;
+import chess.core.pieces.Knight;
+import chess.core.pieces.Pawn;
 import chess.utilities.FEN;
+import lombok.Getter;
 
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static chess.utilities.Constants.*;
-import static chess.utilities.Display.convertPieceToSymbol;
 import static chess.core.GameUtilities.MoveInfo;
+import static chess.utilities.Constants.COLUMN_TO_INT;
+import static chess.utilities.Constants.GRID_SIZE;
+import static chess.utilities.Display.convertPieceToSymbol;
 
-@Component
-@Scope("prototype")
+
 @Getter
 /**
  *  Class that is a representation of a chess board.

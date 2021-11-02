@@ -3,30 +3,27 @@ package PseudoLegalMovesTest;
 import chess.core.Board;
 import chess.core.Game;
 import chess.core.move.Move;
+import chess.utilities.FEN;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import chess.spring.AppConfig;
-import chess.utilities.FEN;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class GeneralTest {
-    ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
     Game game;
     Board board;
 
     @Before
     public void initialize() {
-        ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
-        game = null;
-        game = context.getBean(Game.class);
+        game = new Game();
         board = game.getBoard();
     }
 
@@ -50,7 +47,7 @@ public class GeneralTest {
                     counter = 0;
                     movesMade.clear();
                     System.out.println("\n");
-                    game = context.getBean(Game.class);
+                    game = new Game();
                     board = game.getBoard();
                 } else {
                     // System.out.println("Line: " + line);

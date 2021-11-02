@@ -5,23 +5,17 @@ import chess.core.Game;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import chess.spring.AppConfig;
 import chess.utilities.FEN;
 
 import java.io.*;
 
 public class FENCreatorTest {
-    ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
     Game game;
     Board board;
 
     @Before
     public void initialize() {
-        ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
-        game = null;
-        game = context.getBean(Game.class);
+        game = new Game();
         board = game.getBoard();
     }
 
@@ -42,7 +36,7 @@ public class FENCreatorTest {
                     counter = 0;
                     System.out.println("New game");
                     System.out.println("\n");
-                    game = context.getBean(Game.class);
+                    game = new Game();
                     board = game.getBoard();
                 } else {
                     if (counter % 2 == 0) {

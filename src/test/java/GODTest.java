@@ -1,13 +1,10 @@
 import chess.core.Board;
 import chess.core.Game;
 import chess.core.move.Move;
+import chess.utilities.FEN;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import chess.spring.AppConfig;
-import chess.utilities.FEN;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -19,15 +16,12 @@ import java.util.stream.Collectors;
  * Test that checks everything. It checks FEN, legal moves and result of the game. Test is executed on confirmed information from 100 games.
  */
 public class GODTest {
-    ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
     Game game;
     Board board;
 
     @Before
     public void initialize() {
-        ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
-        game = null;
-        game = context.getBean(Game.class);
+        game = new Game();
         board = game.getBoard();
     }
 
@@ -40,7 +34,7 @@ public class GODTest {
                 if (line.equals("1/2-1/2") || line.equals("1-0") || line.equals("0-1")) {
                     System.out.println("");
                     Assert.assertEquals(line, game.getGameStatus().toString());
-                    game = context.getBean(Game.class);
+                    game = new Game();
                     board = game.getBoard();
                     counter = -1;
                 } else if (counter % 3 == 0) { // line is move

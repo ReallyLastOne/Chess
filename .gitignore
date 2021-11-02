@@ -45,6 +45,7 @@
  *.iml
  *.ipr
 .idea/
+Chess.iml
 
 # CMake
 cmake-build-*/

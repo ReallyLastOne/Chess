@@ -6,9 +6,6 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import chess.spring.AppConfig;
 import chess.utilities.FEN;
 
 public class PiecePlacementTest {
@@ -17,8 +14,7 @@ public class PiecePlacementTest {
 
     @Before
     public void initialize() {
-        ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
-        game = context.getBean(Game.class);
+        game = new Game();
         board = game.getBoard();
     }
 

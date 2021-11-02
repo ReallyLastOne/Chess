@@ -4,10 +4,6 @@ import chess.core.move.Move;
 import chess.core.move.MoveConverter;
 import chess.core.move.MoveValidator;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
 import java.util.Scanner;
 
@@ -16,9 +12,7 @@ import static chess.core.GameUtilities.GameStatus;
 /**
  * Class that controls all flow of the game.
  */
-@Component
-@Scope("prototype")
-@NoArgsConstructor
+
 public final class Game {
     private final Scanner scanner = new Scanner(System.in);
 
@@ -27,10 +21,14 @@ public final class Game {
     @Getter
     private GameStatus gameStatus = GameStatus.IN_PROGRESS;
 
+
+    public Game() {
+        board = new Board();
+    }
+
     /**
      * Constructor when we don't want specific board.
      */
-    @Autowired
     public Game(Board board) {
         this.board = board;
     }
