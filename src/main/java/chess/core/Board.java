@@ -296,7 +296,7 @@ public final class Board {
      * @return if one of above situation occurs
      */
     private boolean isInsufficientMaterial() {
-        return isKingVsKing() || isBishopAndKingVsKing() || isKnightAndKingVsKing() || isKingAndBishopVsKingAndBishop()
+        return isKingVsKing() || isBishopAndKingVsKing() || isKnightAndKingVsKing() || areThereSameColoredBishopAndKingBothSides()
                 || isKingVsBishopsSameColor();
     }
 
@@ -318,24 +318,57 @@ public final class Board {
         return false;
     }
 
-    /**
-     * Checks if there are same colored bishop and king on both sides.
-     */
-    private boolean isKingAndBishopVsKingAndBishop() { // ugly
-        boolean isKingAndBishopVsKingAndBishop = (aliveBlackPiecesCells.size() == 2 && (aliveBlackPiecesCells.stream().anyMatch(x -> x.getPiece() instanceof King)
-                && aliveBlackPiecesCells.stream().anyMatch(x -> x.getPiece() instanceof Bishop)) &&
-                aliveWhitePiecesCells.size() == 2 && (aliveWhitePiecesCells.stream().anyMatch(x -> x.getPiece() instanceof King)
-                && aliveWhitePiecesCells.stream().anyMatch(x -> x.getPiece() instanceof Bishop)));
-
-        if (!isKingAndBishopVsKingAndBishop) return false;
-
-        Optional<Cell> whiteBishopCell = aliveWhitePiecesCells.stream().filter(x -> x.getPiece() instanceof Bishop).findFirst();
-        Optional<Cell> blackBishopCell = aliveBlackPiecesCells.stream().filter(x -> x.getPiece() instanceof Bishop).findFirst();
-        if (whiteBishopCell.isPresent() && blackBishopCell.isPresent()) {
-            return whiteBishopCell.get().isWhite() == blackBishopCell.get().isWhite();
+    private boolean areThereSameColoredBishopAndKingBothSides() {
+        if (!isKingAndBishopVsKingAndBishop()) {
+            return false;
         }
+        Boolean isWhiteBishopCellWhite = isCellWhite(aliveWhitePiecesCells);
+        Boolean isBlackBishopCellWhite = isCellWhite(aliveBlackPiecesCells);
+        if (isWhiteBishopCellWhite == null || isBlackBishopCellWhite == null) {
+            return false;
+        }
+        return isWhiteBishopCellWhite == isBlackBishopCellWhite;
+    }
 
-        return false;
+    private boolean isKingAndBishopVsKingAndBishop() {
+        int aliveBlackPieces = aliveBlackPiecesCells.size();
+        int aliveWhitePieces = aliveWhitePiecesCells.size();
+        boolean aliveBlackPiecesCellsAnyMatchKing = aliveBlackPiecesCells.stream()
+                .anyMatch(this::isKing);
+        boolean aliveBlackPiecesCellsAnyMatchBishop = aliveBlackPiecesCells.stream()
+                .anyMatch(this::isBishop);
+
+        boolean aliveWhitePiecesCellsAnyMatchKing = aliveWhitePiecesCells.stream()
+                .anyMatch(this::isKing);
+        boolean aliveWhitePiecesCellsAnyMatchBishop = aliveWhitePiecesCells.stream()
+                .anyMatch(this::isBishop);
+
+        return hasCorrectState(aliveBlackPieces, aliveBlackPiecesCellsAnyMatchKing, aliveBlackPiecesCellsAnyMatchBishop) &&
+                hasCorrectState(aliveWhitePieces, aliveWhitePiecesCellsAnyMatchKing, aliveWhitePiecesCellsAnyMatchBishop);
+    }
+
+    private boolean hasCorrectState(int alivePieces, boolean matchesKing, boolean matchesBishop) {
+        return alivePieces == 2 && matchesKing && matchesBishop;
+    }
+
+    private Boolean isCellWhite(List<Cell> alivePiecesCells) {
+        return alivePiecesCells.stream()
+                .filter(this::isBishop)
+                .findFirst()
+                .map(Cell::isWhite)
+                .orElse(null);
+    }
+
+    private boolean isKing(Cell x) {
+        return x.getPiece() instanceof King;
+    }
+
+    private boolean isBishop(Cell x) {
+        return x.getPiece() instanceof Bishop;
+    }
+
+    private boolean isKnight(Cell x) {
+        return x.getPiece() instanceof Knight;
     }
 
     /**
