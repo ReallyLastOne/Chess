@@ -16,9 +16,8 @@ Fully functional game of chess with checkmate detection, draw detection and prom
    java --add-opens java.base/java.lang=ALL-UNNAMED -jar Chess.jar
    ```
 or if you want to code 
-1. Initialize new repository in some folder using command ```git init```
-2. Clone this repository using command ```git clone https://github.com/ReallyLastOne/Chess```
-3. Run by your favorite IDE.
+1. Clone this repository using command ```git clone https://github.com/ReallyLastOne/Chess```
+2. Run by your favorite IDE.
 ## Usage
 - If you run application using command line, simply type moves alternately for white and black in UCI format. 
 - If you want to code yourself, here is code snippet:
