@@ -1,9 +1,6 @@
 package chess.core;
 
 public class GameUtilities {
-    /**
-     * All available statuses of a chess game.
-     */
     public enum GameStatus {
         IN_PROGRESS, DRAW, WHITE_WIN, BLACK_WIN;
 
@@ -16,9 +13,6 @@ public class GameUtilities {
         }
     }
 
-    /**
-     * Possible move information.
-     */
     public enum MoveInfo {
         WHITE_SHORT_CASTLE, WHITE_LONG_CASTLE,
         BLACK_SHORT_CASTLE, BLACK_LONG_CASTLE,
@@ -26,9 +20,6 @@ public class GameUtilities {
         BISHOP_PROMOTION, ROOK_PROMOTION, QUEEN_PROMOTION,
         PAWN_MOVE, CAPTURE, STANDARD;
 
-        /**
-         * @return additional symbol of a chess move
-         */
         public String getSymbolPromotion() {
             if (this == BISHOP_PROMOTION) return "b";
             if (this == QUEEN_PROMOTION) return "q";

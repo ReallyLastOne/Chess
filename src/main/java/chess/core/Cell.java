@@ -34,16 +34,10 @@ public class Cell {
                 Character.getNumericValue(s.charAt(1)) - 1, null);
     }
 
-    /**
-     * Returns Cell that is in same position, always present.
-     */
     public Cell findCell(Cell[][] cells) {
         return cells[x][y];
     }
 
-    /**
-     * Returns true if there is no Piece on given Cell.
-     */
     public static boolean isEmpty(Cell cell) {
         return cell.getPiece() == null;
     }
@@ -55,13 +49,9 @@ public class Cell {
         return cell.getPiece().isWhite() != white;
     }
 
-    /**
-     * Returns algebraic notation of Cell.
-     */
     public String toAlgebraicNotation() {
         return INT_TO_COLUMN.get(this.getX()) + "" + (this.getY() + 1);
     }
-
 
     @Override
     public String toString() {
@@ -76,9 +66,6 @@ public class Cell {
         return x == cell.getX() && y == cell.getY() && ((cell.piece != null && piece.equals(cell.getPiece()) || cell.getPiece() == null && piece == null));
     }
 
-    /**
-     * Returns deep copy of Cell.
-     */
     public Cell copy() {
         if (piece == null) {
             return new Cell(x, y, null);
@@ -86,23 +73,14 @@ public class Cell {
         return new Cell(x, y, piece.copy());
     }
 
-    /**
-     * Deletes current Piece occupying this Cell.
-     */
     public void clear() {
         piece = null;
     }
 
-    /**
-     * Returns true if there is a piece on Cell. Similar to {@link chess.core.Cell#isEmpty(Cell)}.
-     */
     public boolean isOccupied() {
         return piece != null;
     }
 
-    /**
-     * Returns true if Cell is white.
-     */
     public boolean isWhite() {
         return (x + 1) % 2 == (y + 1) % 2;
     }

@@ -26,16 +26,10 @@ public final class Game {
         board = new Board();
     }
 
-    /**
-     * Constructor when we don't want specific board.
-     */
     public Game(Board board) {
         this.board = board;
     }
 
-    /**
-     * Constructor for game when providing FEN.
-     */
     public Game(String FEN) {
         board = new Board(FEN);
     }
@@ -64,9 +58,6 @@ public final class Game {
 
     }
 
-    /**
-     * Updates game status.
-     */
     private void updateGameStatus() {
         if (MoveValidator.isKingInCheckmate(board, board.isTurn())) {
             gameStatus = board.isTurn() ? GameStatus.BLACK_WIN : GameStatus.WHITE_WIN;

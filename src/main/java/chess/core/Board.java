@@ -29,13 +29,7 @@ public final class Board {
     public static final String STARTING_FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 ";
 
     private Cell[][] cells;
-    /**
-     * Last move made on this board.
-     */
     private Move lastMove;
-    /**
-     * Deque that stores all moves made on this board.
-     */
     private final Deque<Move> moves = new ArrayDeque<>();
     /**
      * Number of halfmoves. (number of moves from last pawn move, promotion or capture.)
@@ -45,41 +39,20 @@ public final class Board {
      * Number of fullmoves made in this board. Counter is increased when black has made a move.
      */
     private int fullmoves = 1;
-    /**
-     * List of cells that stores cells with white pieces placed.
-     */
     private List<Cell> aliveWhitePiecesCells = new ArrayList<>();
-    /**
-     * List of cells that stores cells with black pieces placed.
-     */
     private List<Cell> aliveBlackPiecesCells = new ArrayList<>();
     /**
      * Map that stores occurred positions in a board. By position, we mean first four elements of FEN.
      */
     private Map<String, Integer> positionsOccurred = new HashMap<>();
-    /**
-     * Stores information about current player to move.
-     */
     private boolean turn;
-    /**
-     * The cell where the white king is.
-     */
     private Cell whiteKingCell;
-    /**
-     * The cell where the black king is.
-     */
     private Cell blackKingCell;
 
-    /**
-     * Basic class constructor for standard position.
-     */
     public Board() {
         this(STARTING_FEN);
     }
 
-    /**
-     * Class constructor when providing custom FEN.
-     */
     public Board(String FEN) {
         this.cells = chess.utilities.FEN.calculatePiecePlacement(FEN);
         this.turn = chess.utilities.FEN.calculateTurn(FEN);
@@ -88,9 +61,6 @@ public final class Board {
         updateAliveCells();
     }
 
-    /**
-     * Method responsible for executing valid move on board.
-     */
     public void executeMove(Move move) {
         if (!turn) fullmoves++;
         moves.add(move);
@@ -103,9 +73,6 @@ public final class Board {
         addPosition();
     }
 
-    /**
-     * Method responsible for undo last move.
-     */
     public void undoMove() {
         removePosition();
         if (turn) fullmoves--;
@@ -118,9 +85,6 @@ public final class Board {
         updatePawnsStatus();
     }
 
-    /**
-     * Add current position. Position is defined as all parts of FEN except two last ones.
-     */
     private void addPosition() {
         String FEN = chess.utilities.FEN.from(this);
         String[] fenCalculated = FEN.split(" ");
@@ -133,9 +97,6 @@ public final class Board {
         }
     }
 
-    /**
-     * Decrease number of occurrences of a position or removes current position.
-     */
     private void removePosition() {
         String FEN = chess.utilities.FEN.from(this);
         String[] fenCalculated = FEN.split(" ");
@@ -212,9 +173,6 @@ public final class Board {
         });
     }
 
-    /**
-     * Checks if specified coordinates fit inside chess board.
-     */
     public static boolean fitInBoard(int x, int y) {
         return x >= 0 && x <= GRID_SIZE - 1 && y >= 0 && y <= GRID_SIZE - 1;
     }
@@ -231,9 +189,6 @@ public final class Board {
         return cells[COLUMN_TO_INT.get(column)][row];
     }
 
-    /**
-     * @return FEN of a board
-     */
     public String getFEN() {
         return FEN.from(this);
     }
@@ -254,9 +209,6 @@ public final class Board {
         return board.toString();
     }
 
-    /**
-     * @return List of legal moves
-     */
     public List<Move> getLegalMoves() {
         List<Move> moves;
         List<Move> legal = new ArrayList<>();
@@ -274,7 +226,7 @@ public final class Board {
     }
 
     /**
-     * Get List of pseudo legal Moves for current state. (pseudo legal move = move that can leave King in check.
+     * Get List of pseudo legal Moves for current state. (pseudo legal move = move that can leave King in check)
      *
      * @return List of pseudo legal moves
      */
@@ -289,7 +241,7 @@ public final class Board {
     }
 
     /**
-     * Checks if current player can claim a draw due to threefold repetition and 50 moves rule.
+     * Checks if current player can claim a draw due to threefold repetition or 50 moves rule.
      */
     public boolean canBeClaimedDraw() {
         return isNfoldRepetition(3) || isNmovesRule(50);

@@ -26,7 +26,6 @@ public class King extends Piece {
 
     public boolean isWhiteShortCastlingPossible(Board board, Cell start) {
         Cell[][] cells = board.getCells();
-        /* short castle, white*/
         if (white && start.getX() == KING_COLUMN && start.getY() == WHITE_PIECES_ROW && !hasMoved()  &&
                 cells[ROOK_KINGSIDE_COLUMN][WHITE_PIECES_ROW].getPiece() instanceof Rook &&
                 !cells[ROOK_KINGSIDE_COLUMN][WHITE_PIECES_ROW].getPiece().hasMoved()) {
@@ -42,7 +41,6 @@ public class King extends Piece {
 
     public boolean isWhiteLongCastlingPossible(Board board, Cell start) {
         Cell[][] cells = board.getCells();
-        /* long castle, white */
         if (white && start.getX() == KING_COLUMN && start.getY() == WHITE_PIECES_ROW && !hasMoved() &&
                 cells[ROOK_QUEENSIDE_COLUMN][WHITE_PIECES_ROW].getPiece() instanceof Rook &&
                 !cells[ROOK_QUEENSIDE_COLUMN][WHITE_PIECES_ROW].getPiece().hasMoved()) {
@@ -59,7 +57,6 @@ public class King extends Piece {
 
     public boolean isBlackShortCastlingPossible(Board board, Cell start) {
         Cell[][] cells = board.getCells();
-        /* short castle, black */
         if (!white && start.getX() == KING_COLUMN && start.getY() == BLACK_PIECES_ROW && !hasMoved() &&
                 cells[ROOK_KINGSIDE_COLUMN][BLACK_PIECES_ROW].getPiece() instanceof Rook &&
                 !cells[ROOK_KINGSIDE_COLUMN][BLACK_PIECES_ROW].getPiece().hasMoved()) {
@@ -75,7 +72,6 @@ public class King extends Piece {
 
     public boolean isBlackLongCastlingPossible(Board board, Cell start) {
         Cell[][] cells = board.getCells();
-        /* long castle, white */
         if (!white && start.getX() == KING_COLUMN && start.getY() == BLACK_PIECES_ROW && !hasMoved() &&
                 cells[ROOK_QUEENSIDE_COLUMN][BLACK_PIECES_ROW].getPiece() instanceof Rook &&
                 !cells[ROOK_QUEENSIDE_COLUMN][BLACK_PIECES_ROW].getPiece().hasMoved()) {

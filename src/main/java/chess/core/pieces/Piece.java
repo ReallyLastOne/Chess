@@ -11,25 +11,16 @@ import java.util.List;
 @Getter
 @Setter
 public abstract class Piece {
-    /**
-     * Indicates if piece is white or black.
-     */
     boolean white;
     /**
      * Number of moves made by this piece.
      */
     int moves;
 
-    /**
-     * Basic constructor to initialize piece.
-     */
     public Piece(boolean white) {
         this.white = white;
     }
 
-    /**
-     * Constructor used when initializing pieces that need to have initialized moves, e.g. in undoing promotion move.
-     */
     public Piece(boolean white, int moves) {
         this(white);
         this.moves = moves;
@@ -41,28 +32,16 @@ public abstract class Piece {
      */
     public abstract List<Move> calculatePseudoLegalMoves(Board board, Cell start);
 
-    /**
-     * @return copy of a piece
-     */
     public abstract Piece copy();
 
-    /**
-     * Method for increasing number of moves made by Piece.
-     */
     public void increaseMoves() {
         moves += 1;
     }
 
-    /**
-     * Method for decreasing number of moves made by Piece.
-     */
     public void decreaseMoves() {
         moves -= 1;
     }
 
-    /**
-     * Returns true if Piece has ever moved.
-     */
     public boolean hasMoved() {
         return moves > 0;
     }

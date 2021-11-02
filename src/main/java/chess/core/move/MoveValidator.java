@@ -70,7 +70,7 @@ public class MoveValidator {
      * @param turn  which king we want to check
      * @return if king is in check for given board
      */
-    public static boolean isKingInCheck(Board board, boolean turn) { // if turn: checking if white king is in check
+    public static boolean isKingInCheck(Board board, boolean turn) {
 
         List<Cell> piecesCells = turn ? board.getAliveBlackPiecesCells() : board.getAliveWhitePiecesCells();
         Cell kingCell = turn ? board.getWhiteKingCell() : board.getBlackKingCell();
@@ -90,7 +90,7 @@ public class MoveValidator {
      * @param turn  which king we want to check
      * @return if king is in checkmate for given board
      */
-    public static boolean isKingInCheckmate(Board board, boolean turn) { // if turn: checking if white king is checkmated
+    public static boolean isKingInCheckmate(Board board, boolean turn) {
         if (!isKingInCheck(board, turn)) return false;
         List<Move> kingMoves = turn ? board.getWhiteKingCell().getPiece().calculatePseudoLegalMoves(board, board.getWhiteKingCell()) :
                 board.getBlackKingCell().getPiece().calculatePseudoLegalMoves(board, board.getBlackKingCell());

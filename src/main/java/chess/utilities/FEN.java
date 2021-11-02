@@ -26,9 +26,6 @@ public class FEN {
      */
     public static final int MOVES = 10;
 
-    /**
-     * @return pieces placement from given board.
-     */
     public static String calculatePiecePlacement(Board board) {
         Cell[][] cells = board.getCells();
 
@@ -56,9 +53,7 @@ public class FEN {
         return piecePlacement;
     }
 
-    /**
-     * @return FEN from given board.
-     */
+
     public static String from(Board board) {
         String enPassantCell = calculateEnPassantCell(board);
 
