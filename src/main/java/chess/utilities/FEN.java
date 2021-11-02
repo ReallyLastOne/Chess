@@ -2,17 +2,15 @@ package chess.utilities;
 
 import chess.core.Board;
 import chess.core.Cell;
-import chess.core.GameUtilities;
 import chess.core.pieces.King;
 import chess.core.pieces.Pawn;
 import chess.core.pieces.Piece;
 import chess.core.pieces.Rook;
 
 import static chess.core.Board.fitInBoard;
-import static chess.core.PositionConstants.*;
+import static chess.utilities.PositionConstants.*;
 import static chess.utilities.Constants.COLUMN_TO_INT;
 import static chess.utilities.Constants.GRID_SIZE;
-import static chess.utilities.Display.convertPieceToSymbol;
 
 /**
  * Class that provides static methods to calculate Forsyth–Edwards Notation from given Board and to construct {@link Board}
@@ -38,7 +36,7 @@ public class FEN {
                         piecePlacement += freeCount;
                         freeCount = 0;
                     }
-                    piecePlacement += convertPieceToSymbol(cells[j][i].getPiece());
+                    piecePlacement += Board.convertPieceToSymbol(cells[j][i].getPiece());
                 } else {
                     freeCount += 1;
                 }

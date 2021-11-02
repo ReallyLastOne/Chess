@@ -10,8 +10,8 @@ import java.util.List;
 import static chess.core.Board.fitInBoard;
 import static chess.core.Cell.isEmpty;
 import static chess.core.Cell.isOppositeColor;
-import static chess.core.GameUtilities.MoveInfo;
-import static chess.core.PositionConstants.*;
+import static chess.utilities.GameUtilities.MoveInfo;
+import static chess.utilities.PositionConstants.*;
 
 public class King extends Piece {
 

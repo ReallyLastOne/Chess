@@ -4,10 +4,10 @@ import chess.core.Board;
 import chess.core.Cell;
 import chess.core.move.Move;
 
-import static chess.core.GameUtilities.MoveInfo.*;
-import static chess.core.GameUtilities.MoveInfo.BLACK_LONG_CASTLE;
-import static chess.core.PositionConstants.*;
-import static chess.core.PositionConstants.BLACK_PIECES_ROW;
+import static chess.utilities.GameUtilities.MoveInfo.*;
+import static chess.utilities.GameUtilities.MoveInfo.BLACK_LONG_CASTLE;
+import static chess.utilities.PositionConstants.*;
+import static chess.utilities.PositionConstants.BLACK_PIECES_ROW;
 
 public class CastlingExecutor implements Executor {
     @Override

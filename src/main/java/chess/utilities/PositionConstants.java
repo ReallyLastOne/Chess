@@ -1,4 +1,4 @@
-package chess.core;
+package chess.utilities;
 
 public class PositionConstants {
     public static final int WHITE_PAWN_ROW = 1;

@@ -2,10 +2,10 @@ package chess.core.move;
 
 import chess.core.Board;
 import chess.core.Cell;
-import chess.core.GameUtilities;
+import chess.utilities.GameUtilities;
 
-import static chess.core.PositionConstants.BLACK_PIECES_ROW;
-import static chess.core.PositionConstants.WHITE_PIECES_ROW;
+import static chess.utilities.PositionConstants.BLACK_PIECES_ROW;
+import static chess.utilities.PositionConstants.WHITE_PIECES_ROW;
 import static chess.core.move.MoveValidator.isKingInCheck;
 import static chess.core.move.MoveValidator.isKingInCheckAfterMove;
 

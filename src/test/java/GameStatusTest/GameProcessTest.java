@@ -1,7 +1,7 @@
 package GameStatusTest;
 
 import chess.core.Game;
-import chess.core.GameUtilities;
+import chess.utilities.GameUtilities;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;

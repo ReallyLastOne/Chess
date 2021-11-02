@@ -2,7 +2,7 @@ package chess.core.move;
 
 import chess.core.Board;
 import chess.core.Cell;
-import chess.core.GameUtilities;
+import chess.utilities.GameUtilities;
 
 import static chess.core.Cell.*;
 

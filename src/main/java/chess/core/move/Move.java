@@ -3,7 +3,7 @@ package chess.core.move;
 import chess.core.Cell;
 import lombok.Getter;
 import lombok.Setter;
-import chess.core.GameUtilities;
+import chess.utilities.GameUtilities;
 
 import static chess.utilities.Constants.INT_TO_COLUMN;
 

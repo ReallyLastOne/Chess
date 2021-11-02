@@ -5,8 +5,8 @@ import chess.core.Cell;
 import chess.core.move.Move;
 import chess.core.pieces.Pawn;
 
-import static chess.core.GameUtilities.MoveInfo.*;
-import static chess.core.GameUtilities.MoveInfo.TWO_FORWARD;
+import static chess.utilities.GameUtilities.MoveInfo.*;
+import static chess.utilities.GameUtilities.MoveInfo.TWO_FORWARD;
 
 public class StandardExecutor implements Executor {
     @Override

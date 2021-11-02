@@ -23,7 +23,7 @@ public class GameOverTest {
     // test for 50 games
     @Test
     public void gameOverTest() {
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader("src/main/resources/finishedGames.txt"))) {
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader("src/test/resources/finishedGames.txt"))) {
             String line;
             while ((line = bufferedReader.readLine()) != null) {
                 if (line.equals("1/2-1/2") || line.equals("1-0") || line.equals("0-1")) {

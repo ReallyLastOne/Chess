@@ -36,7 +36,7 @@ public class GeneralTest {
          * Line 2: possible moves in uci format separated by space and so on...
          * games are separated by blank line */
 
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader("src/main/resources/legalMoves.txt"))) {
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader("src/test/resources/legalMoves.txt"))) {
             StringBuffer textBuffer = new StringBuffer();
             String line;
             int counter = 0;

@@ -10,7 +10,8 @@ import java.util.List;
 import static chess.core.Board.fitInBoard;
 import static chess.core.Cell.isEmpty;
 import static chess.core.Cell.isOppositeColor;
-import static chess.core.GameUtilities.MoveInfo;
+import static chess.utilities.GameUtilities.MoveInfo;
+import static chess.utilities.Constants.GRID_SIZE;
 
 interface VerticallyMovable {
     default List<Move> calculateVerticalMoves(Board board, Cell start) {
@@ -21,7 +22,7 @@ interface VerticallyMovable {
         List<Move> moves = new ArrayList<>();
 
         /* move up */
-        for (int dy = y + 1; dy <= 7; dy++) {
+        for (int dy = y + 1; dy <= GRID_SIZE - 1; dy++) {
             if (!fitInBoard(x, dy)) break;
             if (isEmpty(cells[x][dy])) {
                 moves.add(new Move(start, cells[x][dy], MoveInfo.STANDARD));

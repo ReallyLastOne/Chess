@@ -9,6 +9,8 @@ import org.junit.Test;
 
 import java.util.Collections;
 
+import static utilities.Utilities.getCellByName;
+
 public class KingTest {
     Game game;
     Board board;
@@ -22,8 +24,8 @@ public class KingTest {
     @Test
     public void kingTest() {
         /* kings in beginning don't have legal moves */
-        Assert.assertEquals(board.getCellByName("e1").getPiece().calculatePseudoLegalMoves(board, board.getCellByName("e1")), Collections.emptyList());
-        Assert.assertEquals(board.getCellByName("e8").getPiece().calculatePseudoLegalMoves(board, board.getCellByName("e8")), Collections.emptyList());
+        Assert.assertEquals(getCellByName(board, "e1").getPiece().calculatePseudoLegalMoves(board, getCellByName(board, "e1")), Collections.emptyList());
+        Assert.assertEquals(getCellByName(board, "e8").getPiece().calculatePseudoLegalMoves(board, getCellByName(board, "e8")), Collections.emptyList());
     }
 
     @After

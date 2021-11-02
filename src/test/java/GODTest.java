@@ -28,7 +28,7 @@ public class GODTest {
     @Test
     public void test() {
         int counter = 0;
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader("src/main/resources/complexGameInformation.txt"))) {
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader("src/test/resources/complexGameInformation.txt"))) {
             String line;
             while ((line = bufferedReader.readLine()) != null) {
                 if (line.equals("1/2-1/2") || line.equals("1-0") || line.equals("0-1")) {
@@ -38,14 +38,12 @@ public class GODTest {
                     board = game.getBoard();
                     counter = -1;
                 } else if (counter % 3 == 0) { // line is move
-                    //System.out.println("Move: " + line);
                     game.makeMove(line);
-                    //System.out.println(board);
                 } else if (counter % 3 == 1) { // line is FEN
                     Assert.assertEquals(line, FEN.from(board));
                 } else if (counter % 3 == 2) { // line contains legal moves separated by space
 
-                    /* get correct  legal moves from file */
+                    /* get correct legal moves from file */
                     List<String> legalMoves = new ArrayList<>();
                     if (!line.trim().equals("")) {
                         legalMoves = Arrays.asList(line.split(" "));

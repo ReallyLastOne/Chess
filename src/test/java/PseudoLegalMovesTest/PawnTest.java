@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 
 import static chess.utilities.Constants.GRID_SIZE;
 import static chess.utilities.Constants.INT_TO_COLUMN;
+import static utilities.Utilities.getCellByName;
 
 public class PawnTest {
     List<List<String>> validMoves = Arrays.asList(
@@ -43,8 +44,8 @@ public class PawnTest {
         List<String> valid;
         for(int i = 0; i < GRID_SIZE; i++) {
             valid = validMoves.get(i);
-            moves = board.getCellByName(INT_TO_COLUMN.get(i) + "2").getPiece().
-                    calculatePseudoLegalMoves(board, board.getCellByName(INT_TO_COLUMN.get(i) + "2")).
+            moves = getCellByName(board, INT_TO_COLUMN.get(i) + "2").getPiece().
+                    calculatePseudoLegalMoves(board, getCellByName(board, INT_TO_COLUMN.get(i) + "2")).
                     stream().map(Move::toString).collect(Collectors.toList());
             Assert.assertTrue(moves.containsAll(valid) && valid.containsAll(moves));
         }

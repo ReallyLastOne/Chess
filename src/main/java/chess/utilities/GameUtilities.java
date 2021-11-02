@@ -1,4 +1,4 @@
-package chess.core;
+package chess.utilities;
 
 public class GameUtilities {
     public enum GameStatus {

@@ -3,7 +3,7 @@ package chess.core.move;
 import chess.core.Board;
 import chess.core.Cell;
 import chess.core.pieces.King;
-import chess.core.GameUtilities;
+import chess.utilities.GameUtilities;
 
 import java.util.List;
 import java.util.Optional;

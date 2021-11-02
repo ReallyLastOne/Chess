@@ -28,7 +28,7 @@ public class FENCreatorTest {
          * Line 2: move made...
          * games are separated by blank line */
 
-        try (BufferedReader bufferedReader = new BufferedReader(new FileReader("src/main/resources/FENs.txt"))) {
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader("src/test/resources/FENs.txt"))) {
             String line;
             int counter = 0;
             while ((line = bufferedReader.readLine()) != null) {

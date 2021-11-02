@@ -5,8 +5,8 @@ import chess.core.Cell;
 import chess.core.move.Move;
 import chess.core.pieces.*;
 
-import static chess.core.GameUtilities.MoveInfo.*;
-import static chess.core.GameUtilities.MoveInfo.QUEEN_PROMOTION;
+import static chess.utilities.GameUtilities.MoveInfo.*;
+import static chess.utilities.GameUtilities.MoveInfo.QUEEN_PROMOTION;
 
 public class PromotionExecutor implements Executor {
     @Override

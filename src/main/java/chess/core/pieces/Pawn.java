@@ -9,10 +9,11 @@ import lombok.Setter;
 import java.util.ArrayList;
 import java.util.List;
 
-import static chess.core.GameUtilities.MoveInfo;
+import static chess.utilities.GameUtilities.MoveInfo;
 
 import static chess.core.Cell.*;
-import static chess.core.PositionConstants.*;
+import static chess.utilities.PositionConstants.*;
+import static chess.utilities.Constants.GRID_SIZE;
 
 public class Pawn extends Piece {
     @Setter
@@ -82,7 +83,7 @@ public class Pawn extends Piece {
             }
         }
         /* if stands at H rank then can only capture towards A rank */
-        else if (x == 7) {
+        else if (x == GRID_SIZE - 1) {
             if (!isEmpty(cells[x - 1][y + forwardCount]) && isOppositeColor(cells[x - 1][y + forwardCount], start.getPiece().isWhite())) {
                 if ((white && y + forwardCount == BLACK_PIECES_ROW) || (!white && y + forwardCount == WHITE_PIECES_ROW)) {
                     moves.add(new Move(start, cells[x - 1][y + forwardCount], MoveInfo.KNIGHT_PROMOTION));

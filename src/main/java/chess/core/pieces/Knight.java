@@ -9,7 +9,7 @@ import java.util.List;
 
 import static chess.core.Cell.*;
 import static chess.core.Board.fitInBoard;
-import static chess.core.GameUtilities.*;
+import static chess.utilities.GameUtilities.*;
 
 public class Knight extends Piece {
     private static final int LEFT_SHORT = -1;

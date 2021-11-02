@@ -8,7 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Collections;
-
+import static utilities.Utilities.getCellByName;
 public class BishopTest {
     Game game;
     Board board;
@@ -22,10 +22,10 @@ public class BishopTest {
     @Test
     public void bishopTest() {
         /* bishops in beginning don't have legal moves */
-        Assert.assertEquals(board.getCellByName("c1").getPiece().calculatePseudoLegalMoves(board, board.getCellByName("c1")), Collections.emptyList());
-        Assert.assertEquals(board.getCellByName("f1").getPiece().calculatePseudoLegalMoves(board, board.getCellByName("f1")), Collections.emptyList());
-        Assert.assertEquals(board.getCellByName("c8").getPiece().calculatePseudoLegalMoves(board, board.getCellByName("c8")), Collections.emptyList());
-        Assert.assertEquals(board.getCellByName("f8").getPiece().calculatePseudoLegalMoves(board, board.getCellByName("f8")), Collections.emptyList());
+        Assert.assertEquals(getCellByName(board, "c1").getPiece().calculatePseudoLegalMoves(board, getCellByName(board, "c1")), Collections.emptyList());
+        Assert.assertEquals(getCellByName(board, "f1").getPiece().calculatePseudoLegalMoves(board, getCellByName(board, "f1")), Collections.emptyList());
+        Assert.assertEquals(getCellByName(board, "c8").getPiece().calculatePseudoLegalMoves(board, getCellByName(board, "c8")), Collections.emptyList());
+        Assert.assertEquals(getCellByName(board, "f8").getPiece().calculatePseudoLegalMoves(board, getCellByName(board, "f8")), Collections.emptyList());
     }
 
     @After

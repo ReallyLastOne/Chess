@@ -7,7 +7,7 @@ import lombok.Getter;
 
 import java.util.Scanner;
 
-import static chess.core.GameUtilities.GameStatus;
+import static chess.utilities.GameUtilities.GameStatus;
 
 /**
  * Class that controls all flow of the game.
@@ -32,10 +32,6 @@ public final class Game {
 
     public Game(String FEN) {
         board = new Board(FEN);
-    }
-
-    public void displayBoard() {
-        System.out.println(board);
     }
 
     /**

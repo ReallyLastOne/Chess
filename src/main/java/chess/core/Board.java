@@ -4,10 +4,7 @@ import chess.core.move.Move;
 import chess.core.move.MoveValidator;
 import chess.core.move.executor.Executor;
 import chess.core.move.executor.ExecutorCalculator;
-import chess.core.pieces.Bishop;
-import chess.core.pieces.King;
-import chess.core.pieces.Knight;
-import chess.core.pieces.Pawn;
+import chess.core.pieces.*;
 import chess.utilities.FEN;
 import lombok.Getter;
 
@@ -15,10 +12,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static chess.core.GameUtilities.MoveInfo;
-import static chess.utilities.Constants.COLUMN_TO_INT;
 import static chess.utilities.Constants.GRID_SIZE;
-import static chess.utilities.Display.convertPieceToSymbol;
+import static chess.utilities.GameUtilities.MoveInfo;
 
 
 @Getter
@@ -177,18 +172,6 @@ public final class Board {
         return x >= 0 && x <= GRID_SIZE - 1 && y >= 0 && y <= GRID_SIZE - 1;
     }
 
-    /**
-     * example: getCellByName("a1") returns cell: cells[0][0].
-     *
-     * @return real cell by name
-     */
-    public Cell getCellByName(String name) {
-        char column = name.charAt(0);
-        char charRow = name.charAt(1);
-        int row = Character.getNumericValue(charRow) - 1;
-        return cells[COLUMN_TO_INT.get(column)][row];
-    }
-
     public String getFEN() {
         return FEN.from(this);
     }
@@ -196,10 +179,10 @@ public final class Board {
     @Override
     public String toString() {
         StringBuilder board = new StringBuilder();
-        for (int i = 7; i >= 0; i--) {
+        for (int i = GRID_SIZE - 1; i >= 0; i--) {
             board.append("| ");
-            for (int j = 0; j < 8; j++) {
-                board.append((convertPieceToSymbol(cells[j][i].getPiece())));
+            for (int j = 0; j < GRID_SIZE; j++) {
+                board.append((Board.convertPieceToSymbol(cells[j][i].getPiece())));
                 board.append(" | ");
             }
             board.append(i + 1).append("\n");
@@ -207,6 +190,11 @@ public final class Board {
         board.append(("  A   B   C   D   E   F   G   H   "));
 
         return board.toString();
+    }
+
+    public static String convertPieceToSymbol(Piece piece) {
+        if (piece == null) return " ";
+        return piece.toSymbol();
     }
 
     public List<Move> getLegalMoves() {
