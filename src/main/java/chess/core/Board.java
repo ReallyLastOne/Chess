@@ -6,10 +6,10 @@ import chess.core.move.executor.Executor;
 import chess.core.move.executor.ExecutorCalculator;
 import chess.core.pieces.*;
 import chess.utilities.FEN;
+import chess.utilities.GameUtilities;
 import lombok.Getter;
 
 import java.util.*;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static chess.utilities.Constants.GRID_SIZE;
@@ -22,6 +22,9 @@ import static chess.utilities.GameUtilities.MoveInfo;
  */
 public final class Board {
     public static final String STARTING_FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1 ";
+    private static final List<GameUtilities.MoveInfo> infosResetingHalfmovesClock = Arrays.asList(GameUtilities.MoveInfo.CAPTURE,
+            MoveInfo.PAWN_MOVE, MoveInfo.EN_PASSANT, MoveInfo.TWO_FORWARD, MoveInfo.BISHOP_PROMOTION, MoveInfo.BISHOP_PROMOTION,
+            MoveInfo.KNIGHT_PROMOTION, MoveInfo.ROOK_PROMOTION, MoveInfo.QUEEN_PROMOTION);
 
     private Cell[][] cells;
     private Move lastMove;
@@ -48,11 +51,11 @@ public final class Board {
         this(STARTING_FEN);
     }
 
-    public Board(String FEN) {
-        this.cells = chess.utilities.FEN.calculatePiecePlacement(FEN);
-        this.turn = chess.utilities.FEN.calculateTurn(FEN);
-        this.halfmoves = chess.utilities.FEN.calculateHalfmoves(FEN);
-        this.fullmoves = chess.utilities.FEN.calculateFullmoves(FEN);
+    public Board(String fen) {
+        this.cells = FEN.calculatePiecePlacement(fen);
+        this.turn = FEN.calculateTurn(fen);
+        this.halfmoves = FEN.calculateHalfmoves(fen);
+        this.fullmoves = FEN.calculateFullmoves(fen);
         updateAliveCells();
     }
 
@@ -112,9 +115,7 @@ public final class Board {
         while (itr.hasNext()) {
             Move move = itr.next();
             MoveInfo info = move.getInfo();
-            if (info == MoveInfo.CAPTURE || info == MoveInfo.PAWN_MOVE || info == MoveInfo.EN_PASSANT || info == MoveInfo.TWO_FORWARD ||
-                    info == MoveInfo.BISHOP_PROMOTION || info == MoveInfo.KNIGHT_PROMOTION ||
-                    info == MoveInfo.QUEEN_PROMOTION || info == MoveInfo.ROOK_PROMOTION) {
+            if (infosResetingHalfmovesClock.contains(info)) {
                 return halfmoves;
             } else {
                 halfmoves += 1;
@@ -245,9 +246,7 @@ public final class Board {
             while (it.hasNext()) {
                 Move temp = it.next();
                 MoveInfo info = temp.getInfo();
-                if (info == MoveInfo.CAPTURE || info == MoveInfo.PAWN_MOVE || info == MoveInfo.EN_PASSANT ||
-                        info == MoveInfo.TWO_FORWARD || info == MoveInfo.BISHOP_PROMOTION || info == MoveInfo.KNIGHT_PROMOTION
-                        || info == MoveInfo.QUEEN_PROMOTION || info == MoveInfo.ROOK_PROMOTION) return false;
+                if (infosResetingHalfmovesClock.contains(info)) return false;
                 checkedMoves += 1;
                 if (checkedMoves == 2 * N) {
                     return true;
@@ -304,26 +303,37 @@ public final class Board {
      * Checks if there is king vs king and 2 same colored bishops on a board.
      */
     private boolean isKingVsBishopsSameColor() {
-        List<Cell> whiteBishops = aliveWhitePiecesCells.stream().filter(x -> x.getPiece() instanceof Bishop).collect(Collectors.toList());
-        List<Cell> blackBishops = aliveBlackPiecesCells.stream().filter(x -> x.getPiece() instanceof Bishop).collect(Collectors.toList());
+        int aliveBlackPieces = aliveBlackPiecesCells.size();
+        int aliveWhitePieces = aliveWhitePiecesCells.size();
 
-        List<Cell> whiteKing = aliveWhitePiecesCells.stream().filter(x -> x.getPiece() instanceof King).collect(Collectors.toList());
-        List<Cell> blackKing = aliveWhitePiecesCells.stream().filter(x -> x.getPiece() instanceof King).collect(Collectors.toList());
+        boolean aliveBlackPiecesCellsAnyMatchKing = aliveBlackPiecesCells.stream()
+                .anyMatch(this::isKing);
+        boolean aliveBlackPiecesCellsMatchesTwoSameColorBishops = aliveBlackPiecesCells.stream()
+                .filter(this::isBishop).filter(Cell::isWhite).count() == 2;
 
-        if (aliveWhitePiecesCells.size() == 3 && whiteBishops.size() == 2 && whiteKing.size() == 1 && aliveBlackPiecesCells.size() == 1) {
-            return whiteBishops.get(0).isWhite() == whiteBishops.get(1).isWhite();
-        } else if (aliveBlackPiecesCells.size() == 3 && blackBishops.size() == 2 && blackKing.size() == 1 && aliveWhitePiecesCells.size() == 1) {
-            return blackBishops.get(0).isWhite() == blackBishops.get(1).isWhite();
+        boolean aliveWhitePiecesCellsAnyMatchKing = aliveWhitePiecesCells.stream()
+                .anyMatch(this::isKing);
+        boolean aliveWhitePiecesCellsMatchesTwoSameColorBishops = aliveWhitePiecesCells.stream()
+                .filter(this::isBishop).filter(Cell::isWhite).count() == 2;
+
+
+        if (isKingAndTwoPieces(aliveBlackPieces, aliveBlackPiecesCellsAnyMatchKing, aliveBlackPiecesCellsMatchesTwoSameColorBishops) &&
+                isAloneKing(aliveWhitePieces, aliveWhitePiecesCellsAnyMatchKing)) {
+            return true;
         }
-        return false;
+        return isKingAndTwoPieces(aliveWhitePieces, aliveWhitePiecesCellsAnyMatchKing, aliveWhitePiecesCellsMatchesTwoSameColorBishops) &&
+                isAloneKing(aliveBlackPieces, aliveBlackPiecesCellsAnyMatchKing);
     }
 
+    /**
+     * Checks if there is bishop and king vs bishop and king and both bishops stands on same colored cell.
+     */
     private boolean areThereSameColoredBishopAndKingBothSides() {
         if (!isKingAndBishopVsKingAndBishop()) {
             return false;
         }
-        Boolean isWhiteBishopCellWhite = isCellWhite(aliveWhitePiecesCells);
-        Boolean isBlackBishopCellWhite = isCellWhite(aliveBlackPiecesCells);
+        Boolean isWhiteBishopCellWhite = isFirstBishopsCellWhite(aliveWhitePiecesCells);
+        Boolean isBlackBishopCellWhite = isFirstBishopsCellWhite(aliveBlackPiecesCells);
         if (isWhiteBishopCellWhite == null || isBlackBishopCellWhite == null) {
             return false;
         }
@@ -343,15 +353,80 @@ public final class Board {
         boolean aliveWhitePiecesCellsAnyMatchBishop = aliveWhitePiecesCells.stream()
                 .anyMatch(this::isBishop);
 
-        return hasCorrectState(aliveBlackPieces, aliveBlackPiecesCellsAnyMatchKing, aliveBlackPiecesCellsAnyMatchBishop) &&
-                hasCorrectState(aliveWhitePieces, aliveWhitePiecesCellsAnyMatchKing, aliveWhitePiecesCellsAnyMatchBishop);
+        return isKingAndPiece(aliveBlackPieces, aliveBlackPiecesCellsAnyMatchKing, aliveBlackPiecesCellsAnyMatchBishop) &&
+                isKingAndPiece(aliveWhitePieces, aliveWhitePiecesCellsAnyMatchKing, aliveWhitePiecesCellsAnyMatchBishop);
     }
 
-    private boolean hasCorrectState(int alivePieces, boolean matchesKing, boolean matchesBishop) {
-        return alivePieces == 2 && matchesKing && matchesBishop;
+    /**
+     * Checks if there is a knight and king vs king on a board.
+     */
+    private boolean isKnightAndKingVsKing() { // very similar to isBishopAndKingVsKing()
+        int aliveBlackPieces = aliveBlackPiecesCells.size();
+        int aliveWhitePieces = aliveWhitePiecesCells.size();
+        boolean aliveBlackPiecesCellsAnyMatchKing = aliveBlackPiecesCells.stream()
+                .anyMatch(this::isKing);
+        boolean aliveBlackPiecesCellsAnyMatchKnight = aliveBlackPiecesCells.stream()
+                .anyMatch(this::isKnight);
+
+        boolean aliveWhitePiecesCellsAnyMatchKing = aliveWhitePiecesCells.stream()
+                .anyMatch(this::isKing);
+        boolean aliveWhitePiecesCellsAnyMatchKnight = aliveWhitePiecesCells.stream()
+                .anyMatch(this::isKnight);
+
+        return (isKingAndPiece(aliveWhitePieces, aliveWhitePiecesCellsAnyMatchKing, aliveWhitePiecesCellsAnyMatchKnight)
+                && isAloneKing(aliveBlackPieces, aliveBlackPiecesCellsAnyMatchKing)) ||
+                (isKingAndPiece(aliveBlackPieces, aliveBlackPiecesCellsAnyMatchKing, aliveBlackPiecesCellsAnyMatchKnight)
+                        && isAloneKing(aliveWhitePieces, aliveWhitePiecesCellsAnyMatchKing));
     }
 
-    private Boolean isCellWhite(List<Cell> alivePiecesCells) {
+    /**
+     * Checks if there is a bishop and king vs king on a board.
+     */
+    private boolean isBishopAndKingVsKing() { // very similar to isKnightAndKingVsKing()
+        int aliveBlackPieces = aliveBlackPiecesCells.size();
+        int aliveWhitePieces = aliveWhitePiecesCells.size();
+        boolean aliveBlackPiecesCellsAnyMatchKing = aliveBlackPiecesCells.stream()
+                .anyMatch(this::isKing);
+        boolean aliveBlackPiecesCellsAnyMatchBishop = aliveBlackPiecesCells.stream()
+                .anyMatch(this::isBishop);
+
+        boolean aliveWhitePiecesCellsAnyMatchKing = aliveWhitePiecesCells.stream()
+                .anyMatch(this::isKing);
+        boolean aliveWhitePiecesCellsAnyMatchBishop = aliveWhitePiecesCells.stream()
+                .anyMatch(this::isBishop);
+
+        return (isKingAndPiece(aliveWhitePieces, aliveWhitePiecesCellsAnyMatchKing, aliveWhitePiecesCellsAnyMatchBishop)
+                && isAloneKing(aliveBlackPieces, aliveBlackPiecesCellsAnyMatchKing)) ||
+                (isKingAndPiece(aliveBlackPieces, aliveBlackPiecesCellsAnyMatchKing, aliveBlackPiecesCellsAnyMatchBishop)
+                        && isAloneKing(aliveWhitePieces, aliveWhitePiecesCellsAnyMatchKing));
+    }
+
+    /**
+     * Checks if there is king vs king on a board.
+     */
+    private boolean isKingVsKing() {
+        int aliveBlackPieces = aliveBlackPiecesCells.size();
+        int aliveWhitePieces = aliveWhitePiecesCells.size();
+        boolean aliveBlackPiecesCellsAnyMatchKing = aliveBlackPiecesCells.stream()
+                .anyMatch(this::isKing);
+        boolean aliveWhitePiecesCellsAnyMatchKing = aliveWhitePiecesCells.stream()
+                .anyMatch(this::isKing);
+        return isAloneKing(aliveBlackPieces, aliveBlackPiecesCellsAnyMatchKing) && isAloneKing(aliveWhitePieces, aliveWhitePiecesCellsAnyMatchKing);
+    }
+
+    private boolean isAloneKing(int alivePieces, boolean matchesKing) {
+        return alivePieces == 1 && matchesKing;
+    }
+
+    private boolean isKingAndPiece(int alivePieces, boolean matchesKing, boolean matchesPiece) {
+        return alivePieces == 2 && matchesKing && matchesPiece;
+    }
+
+    private boolean isKingAndTwoPieces(int alivePieces, boolean matchesKing, boolean matchesTwoPieces) {
+        return alivePieces == 3 && matchesKing && matchesTwoPieces;
+    }
+
+    private Boolean isFirstBishopsCellWhite(List<Cell> alivePiecesCells) {
         return alivePiecesCells.stream()
                 .filter(this::isBishop)
                 .findFirst()
@@ -369,39 +444,5 @@ public final class Board {
 
     private boolean isKnight(Cell x) {
         return x.getPiece() instanceof Knight;
-    }
-
-    /**
-     * Checks if there is knight and king vs king on a board.
-     */
-    private boolean isKnightAndKingVsKing() { // ugly
-        return (aliveBlackPiecesCells.size() == 2 && aliveBlackPiecesCells.stream().anyMatch(x -> x.getPiece() instanceof King)
-                && aliveBlackPiecesCells.stream().anyMatch(x -> x.getPiece() instanceof Knight)
-                && aliveWhitePiecesCells.size() == 1 && aliveWhitePiecesCells.stream().anyMatch(x -> x.getPiece() instanceof King))
-                ||
-                (aliveWhitePiecesCells.size() == 2 && aliveWhitePiecesCells.stream().anyMatch(x -> x.getPiece() instanceof King)
-                        && aliveWhitePiecesCells.stream().anyMatch(x -> x.getPiece() instanceof Knight) && aliveBlackPiecesCells.size() == 1 &&
-                        aliveBlackPiecesCells.stream().anyMatch(x -> x.getPiece() instanceof King));
-    }
-
-    /**
-     * Checks if there is bishop and king vs king on a board.
-     */
-    private boolean isBishopAndKingVsKing() {
-        return (aliveBlackPiecesCells.size() == 2 && aliveBlackPiecesCells.stream().anyMatch(x -> x.getPiece() instanceof King)
-                && aliveBlackPiecesCells.stream().anyMatch(x -> x.getPiece() instanceof Bishop)
-                && aliveWhitePiecesCells.size() == 1 && aliveWhitePiecesCells.stream().anyMatch(x -> x.getPiece() instanceof King))
-                ||
-                (aliveWhitePiecesCells.size() == 2 && aliveWhitePiecesCells.stream().anyMatch(x -> x.getPiece() instanceof King)
-                        && aliveWhitePiecesCells.stream().anyMatch(x -> x.getPiece() instanceof Bishop) && aliveBlackPiecesCells.size() == 1 &&
-                        aliveBlackPiecesCells.stream().anyMatch(x -> x.getPiece() instanceof King));
-    }
-
-    /**
-     * Checks if there is king vs king on a board.
-     */
-    private boolean isKingVsKing() {
-        return aliveBlackPiecesCells.size() == 1 && aliveBlackPiecesCells.get(0).getPiece() instanceof King
-                && aliveWhitePiecesCells.size() == 1 && aliveWhitePiecesCells.get(0).getPiece() instanceof King;
     }
 }
