@@ -3,9 +3,12 @@ package utilities;
 import chess.core.Board;
 import chess.core.Cell;
 
+import java.util.List;
+
 import static chess.utilities.Constants.COLUMN_TO_INT;
 
 public class Utilities {
+    public static List<String> possibleOutcomes = List.of("1/2-1/2", "1-0", "0-1");
 
     /**
      * example: getCellByName("a1") returns cell: cells[0][0].

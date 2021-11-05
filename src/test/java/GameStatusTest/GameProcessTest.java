@@ -2,47 +2,52 @@ package GameStatusTest;
 
 import chess.core.Game;
 import chess.utilities.GameUtilities;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class GameProcessTest {
     Game game;
 
-    @Before
+    @BeforeEach
     public void initialize() {
         game = new Game();
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void shouldThrowIllegalArgumentException() {
-        String[] moves = new String[]{"d2d4", "c7c5", "d4c5", "d8a5", "b1c3", "h7h5", "e1d2", "a5c5", "d2d3", "c5c4", "d3d4"}; // illegal move, white king is in check after C5 C4
+        String[] moves = new String[]{"d2d4", "c7c5", "d4c5", "d8a5", "b1c3", "h7h5", "e1d2", "a5c5", "d2d3", "c5c4"}; // illegal move, white king is in check after C5 C4
+
         for (String move : moves) {
             game.makeMove(move);
         }
+        IllegalArgumentException thrown = Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            game.makeMove("d3d4");
+        });
+
+        Assertions.assertEquals("Wrong move", thrown.getMessage());
     }
 
     @Test
     public void shouldBeWinForWhite() {
         String[] moves = new String[]{"e2e4", "e7e5", "d1f3", "b8a6", "f1c4", "b7b6", "f3f7"};
         for (String move : moves) {
-            Assert.assertNotEquals(game.getGameStatus(), GameUtilities.GameStatus.WHITE_WIN);
-            Assert.assertNotEquals(game.getGameStatus(), GameUtilities.GameStatus.BLACK_WIN);
+            Assertions.assertNotEquals(game.getGameStatus(), GameUtilities.GameStatus.WHITE_WIN);
+            Assertions.assertNotEquals(game.getGameStatus(), GameUtilities.GameStatus.BLACK_WIN);
             game.makeMove(move);
         }
-        Assert.assertEquals(game.getGameStatus(), GameUtilities.GameStatus.WHITE_WIN);
+        Assertions.assertEquals(game.getGameStatus(), GameUtilities.GameStatus.WHITE_WIN);
     }
 
     @Test
     public void shouldBeWinForBlack() {
         String[] moves = new String[]{"f2f4", "e7e5", "g2g4", "d8h4"};
         for (String move : moves) {
-            Assert.assertNotEquals(game.getGameStatus(), GameUtilities.GameStatus.WHITE_WIN);
-            Assert.assertNotEquals(game.getGameStatus(), GameUtilities.GameStatus.BLACK_WIN);
+            Assertions.assertNotEquals(game.getGameStatus(), GameUtilities.GameStatus.WHITE_WIN);
+            Assertions.assertNotEquals(game.getGameStatus(), GameUtilities.GameStatus.BLACK_WIN);
             game.makeMove(move);
         }
-        Assert.assertEquals(game.getGameStatus(), GameUtilities.GameStatus.BLACK_WIN);
+        Assertions.assertEquals(game.getGameStatus(), GameUtilities.GameStatus.BLACK_WIN);
     }
 
     @Test
@@ -51,10 +56,10 @@ public class GameProcessTest {
                 "f6g8", "g1f3", "g8f6", "f3g1", "f6g8", "g1f3"};
         for (String move : moves) {
             game.makeMove(move);
-            Assert.assertNotEquals(game.getGameStatus(), GameUtilities.GameStatus.WHITE_WIN);
-            Assert.assertNotEquals(game.getGameStatus(), GameUtilities.GameStatus.BLACK_WIN);
+            Assertions.assertNotEquals(game.getGameStatus(), GameUtilities.GameStatus.WHITE_WIN);
+            Assertions.assertNotEquals(game.getGameStatus(), GameUtilities.GameStatus.BLACK_WIN);
         }
-        Assert.assertEquals(game.getGameStatus(), GameUtilities.GameStatus.DRAW);
+        Assertions.assertEquals(game.getGameStatus(), GameUtilities.GameStatus.DRAW);
     }
 
     @Test
@@ -63,7 +68,7 @@ public class GameProcessTest {
         for (String move : moves) {
             game.makeMove(move);
         }
-        Assert.assertEquals(game.getGameStatus(), GameUtilities.GameStatus.IN_PROGRESS);
+        Assertions.assertEquals(game.getGameStatus(), GameUtilities.GameStatus.IN_PROGRESS);
     }
 
     @Test
@@ -77,11 +82,6 @@ public class GameProcessTest {
         for (String move : moves) {
             game.makeMove(move);
         }
-        Assert.assertEquals(game.getGameStatus(), GameUtilities.GameStatus.IN_PROGRESS);
-    }
-
-    @After
-    public void after() {
-        game = null;
+        Assertions.assertEquals(game.getGameStatus(), GameUtilities.GameStatus.IN_PROGRESS);
     }
 }

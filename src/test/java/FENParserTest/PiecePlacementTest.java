@@ -2,17 +2,16 @@ package FENParserTest;
 
 import chess.core.Board;
 import chess.core.Game;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
 import chess.utilities.FEN;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class PiecePlacementTest {
     Game game;
     Board board;
 
-    @Before
+    @BeforeEach
     public void initialize() {
         game = new Game();
         board = game.getBoard();
@@ -20,11 +19,6 @@ public class PiecePlacementTest {
 
     @Test
     public void basicPiecePlacementTest() {
-        Assert.assertEquals(FEN.calculatePiecePlacement(board), "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
-    }
-
-    @After
-    public void after() {
-        game = null;
+        Assertions.assertEquals(FEN.calculatePiecePlacement(board), "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
     }
 }

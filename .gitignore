@@ -44,7 +44,7 @@
  .idea/modules
  *.iml
  *.ipr
-.idea/
+.idea/*
 Chess.iml
 
 # CMake

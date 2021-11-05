@@ -2,10 +2,10 @@ package MovesTest;
 
 import chess.core.Game;
 import chess.core.move.Move;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 
 /**
  * Class that checks if moves stored in Board.class are same as moves entered by user.
@@ -13,7 +13,7 @@ import org.junit.Test;
 public class MoveQueueTest {
     Game game;
 
-    @Before
+    @BeforeEach
     public void initialize() {
         game = new Game();
     }
@@ -24,7 +24,7 @@ public class MoveQueueTest {
         for (String move : moves) {
             game.makeMove(move);
         }
-        Assert.assertEquals(game.getBoard().getMoves().stream().map(Move::toString).toArray(), moves);
+        Assertions.assertArrayEquals(game.getBoard().getMoves().stream().map(Move::toString).toArray(), moves);
     }
 
     @Test
@@ -33,7 +33,7 @@ public class MoveQueueTest {
         for (String move : moves) {
             game.makeMove(move);
         }
-        Assert.assertEquals(game.getBoard().getMoves().stream().map(Move::toString).toArray(), moves);
+        Assertions.assertArrayEquals(game.getBoard().getMoves().stream().map(Move::toString).toArray(), moves);
     }
 
     @Test
@@ -43,11 +43,6 @@ public class MoveQueueTest {
             game.makeMove(move);
         }
 
-        Assert.assertEquals(game.getBoard().getMoves().stream().map(Move::toString).toArray(), moves);
-    }
-
-    @After
-    public void after() {
-        game = null;
+        Assertions.assertArrayEquals(game.getBoard().getMoves().stream().map(Move::toString).toArray(), moves);
     }
 }

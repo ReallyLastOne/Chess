@@ -3,10 +3,9 @@ package PseudoLegalMovesTest;
 import chess.core.Board;
 import chess.core.Game;
 import chess.core.move.Move;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.List;
@@ -32,7 +31,7 @@ public class PawnTest {
     Game game;
     Board board;
 
-    @Before
+    @BeforeEach
     public void initialize() {
         game = new Game();
         board = game.getBoard();
@@ -42,17 +41,12 @@ public class PawnTest {
     public void pawnTest() {
         List<String> moves;
         List<String> valid;
-        for(int i = 0; i < GRID_SIZE; i++) {
+        for (int i = 0; i < GRID_SIZE; i++) {
             valid = validMoves.get(i);
             moves = getCellByName(board, INT_TO_COLUMN.get(i) + "2").getPiece().
                     calculatePseudoLegalMoves(board, getCellByName(board, INT_TO_COLUMN.get(i) + "2")).
                     stream().map(Move::toString).collect(Collectors.toList());
-            Assert.assertTrue(moves.containsAll(valid) && valid.containsAll(moves));
+            Assertions.assertTrue(moves.containsAll(valid) && valid.containsAll(moves));
         }
-    }
-
-    @After
-    public void after() {
-        game = null;
     }
 }
