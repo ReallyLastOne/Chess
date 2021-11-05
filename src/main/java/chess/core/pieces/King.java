@@ -190,4 +190,9 @@ public class King extends Piece {
         King king = (King) o;
         return white == king.white && hasMoved() == king.hasMoved();
     }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode() * (hasMoved() ? 7 : 11);
+    }
 }

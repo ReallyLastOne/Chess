@@ -3,6 +3,10 @@ package chess.core.move.executor;
 import chess.core.move.Move;
 
 public class ExecutorCalculator { // factory pattern?
+    private ExecutorCalculator() {
+        throw new AssertionError();
+    }
+
     /**
      * Method responsible for calculating correct {@link Executor} for given {@link Move}.
      *

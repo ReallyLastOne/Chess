@@ -9,6 +9,10 @@ import java.util.List;
 import java.util.Optional;
 
 public class MoveValidator {
+    private MoveValidator() {
+        throw new AssertionError();
+    }
+
     /**
      * API to move verification for standard user move flow. Also links move to given board.
      *

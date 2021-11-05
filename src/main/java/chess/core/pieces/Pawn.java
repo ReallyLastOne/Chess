@@ -167,9 +167,6 @@ public class Pawn extends Piece {
         return white ? "P" : "p";
     }
 
-    /**
-     * Returns true if pawn can be enpassanted in current time.
-     */
     public boolean canBeEnPassanted() {
         return enPassant;
     }
@@ -185,5 +182,10 @@ public class Pawn extends Piece {
         if (!(o instanceof Pawn)) return false;
         Pawn pawn = (Pawn) o;
         return white == pawn.white && hasMoved() == pawn.hasMoved();
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode() * (hasMoved() ? 13 : 17);
     }
 }

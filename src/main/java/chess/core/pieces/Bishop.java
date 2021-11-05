@@ -37,4 +37,9 @@ public class Bishop extends Piece implements DiagonallyMovable {
         Bishop bishop = (Bishop) o;
         return white == bishop.isWhite();
     }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode() * 3;
+    }
 }

@@ -46,4 +46,9 @@ public class Queen extends Piece implements HorizontallyMovable, VerticallyMovab
         Queen queen = (Queen) o;
         return white == queen.isWhite();
     }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode() * (hasMoved() ? 7 : 11);
+    }
 }

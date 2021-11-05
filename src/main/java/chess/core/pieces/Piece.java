@@ -67,4 +67,9 @@ public abstract class Piece {
             default -> null;
         };
     }
+
+    @Override
+    public int hashCode() {
+        return white ? 2 : 1;
+    }
 }

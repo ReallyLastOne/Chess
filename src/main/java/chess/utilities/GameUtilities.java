@@ -1,6 +1,10 @@
 package chess.utilities;
 
 public class GameUtilities {
+    private GameUtilities() {
+        throw new AssertionError();
+    }
+
     public enum GameStatus {
         IN_PROGRESS, DRAW, WHITE_WIN, BLACK_WIN;
 

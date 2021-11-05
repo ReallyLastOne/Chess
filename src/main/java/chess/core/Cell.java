@@ -66,6 +66,13 @@ public class Cell {
         return x == cell.getX() && y == cell.getY() && ((cell.piece != null && piece.equals(cell.getPiece()) || cell.getPiece() == null && piece == null));
     }
 
+    @Override
+    public int hashCode() {
+        int hash = piece != null ? piece.hashCode() : 0;
+        hash = hash + (x * 29 + y * 31);
+        return hash;
+    }
+
     public Cell copy() {
         if (piece == null) {
             return new Cell(x, y, null);

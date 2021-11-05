@@ -46,4 +46,9 @@ public class Rook extends Piece implements HorizontallyMovable, VerticallyMovabl
         Rook rook = (Rook) o;
         return white == rook.isWhite() && hasMoved() == rook.hasMoved();
     }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode() * (hasMoved() ? 19 : 23);
+    }
 }

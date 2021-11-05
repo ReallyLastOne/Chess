@@ -24,6 +24,10 @@ public class FEN {
      */
     public static final int MOVES = 10;
 
+    private FEN() {
+        throw new AssertionError();
+    }
+
     public static String calculatePiecePlacement(Board board) {
         Cell[][] cells = board.getCells();
 

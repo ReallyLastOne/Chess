@@ -115,7 +115,11 @@ public class Knight extends Piece {
         if (o == this) return true;
         if (!(o instanceof Knight)) return false;
         Knight knight = (Knight) o;
-        return white == knight.isWhite() && this.hasMoved() == knight.hasMoved();
+        return white == knight.isWhite();
     }
 
+    @Override
+    public int hashCode() {
+        return super.hashCode() * 5;
+    }
 }

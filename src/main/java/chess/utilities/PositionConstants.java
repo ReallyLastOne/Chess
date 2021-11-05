@@ -1,6 +1,10 @@
 package chess.utilities;
 
 public class PositionConstants {
+    private PositionConstants() {
+        throw new AssertionError();
+    }
+
     public static final int WHITE_PAWN_ROW = 1;
     public static final int WHITE_PIECES_ROW = 0;
     public static final int BLACK_PAWN_ROW = 6;

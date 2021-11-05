@@ -5,9 +5,6 @@ import chess.core.Cell;
 import chess.core.move.Move;
 import chess.core.pieces.*;
 
-import static chess.utilities.GameUtilities.MoveInfo.*;
-import static chess.utilities.GameUtilities.MoveInfo.QUEEN_PROMOTION;
-
 public class PromotionExecutor implements Executor {
     @Override
     public void executeMove(Board board, Move move) {
@@ -15,19 +12,24 @@ public class PromotionExecutor implements Executor {
         Cell start = move.getStart();
         Cell end = move.getEnd();
 
-        if (move.getInfo() == KNIGHT_PROMOTION) {
-            cells[end.getX()][end.getY()].setPiece(new Knight(start.getPiece().isWhite(), cells[start.getX()][start.getY()].getPiece().getMoves()));
-            cells[start.getX()][start.getY()].clear();
-        } else if (move.getInfo() == BISHOP_PROMOTION) {
-            cells[end.getX()][end.getY()].setPiece(new Bishop(start.getPiece().isWhite(), cells[start.getX()][start.getY()].getPiece().getMoves()));
-            cells[start.getX()][start.getY()].clear();
-        } else if (move.getInfo() == ROOK_PROMOTION) {
-            cells[end.getX()][end.getY()].setPiece(new Rook(start.getPiece().isWhite(), cells[start.getX()][start.getY()].getPiece().getMoves()));
-            cells[end.getX()][end.getY()].getPiece().increaseMoves();
-            cells[start.getX()][start.getY()].clear();
-        } else if (move.getInfo() == QUEEN_PROMOTION) {
-            cells[end.getX()][end.getY()].setPiece(new Queen(start.getPiece().isWhite(), cells[start.getX()][start.getY()].getPiece().getMoves()));
-            cells[start.getX()][start.getY()].clear();
+        switch (move.getInfo()) {
+            case KNIGHT_PROMOTION -> {
+                cells[end.getX()][end.getY()].setPiece(new Knight(start.getPiece().isWhite(), cells[start.getX()][start.getY()].getPiece().getMoves()));
+                cells[start.getX()][start.getY()].clear();
+            }
+            case BISHOP_PROMOTION -> {
+                cells[end.getX()][end.getY()].setPiece(new Bishop(start.getPiece().isWhite(), cells[start.getX()][start.getY()].getPiece().getMoves()));
+                cells[start.getX()][start.getY()].clear();
+            }
+            case ROOK_PROMOTION -> {
+                cells[end.getX()][end.getY()].setPiece(new Rook(start.getPiece().isWhite(), cells[start.getX()][start.getY()].getPiece().getMoves()));
+                cells[end.getX()][end.getY()].getPiece().increaseMoves();
+                cells[start.getX()][start.getY()].clear();
+            }
+            case QUEEN_PROMOTION -> {
+                cells[end.getX()][end.getY()].setPiece(new Queen(start.getPiece().isWhite(), cells[start.getX()][start.getY()].getPiece().getMoves()));
+                cells[start.getX()][start.getY()].clear();
+            }
         }
     }
 
@@ -38,18 +40,11 @@ public class PromotionExecutor implements Executor {
         Cell start = lastMove.getStart();
         Cell end = lastMove.getEnd();
 
-        if (lastMove.getInfo() == KNIGHT_PROMOTION) {
-            cells[start.getX()][start.getY()].setPiece(new Pawn(cells[end.getX()][end.getY()].getPiece().isWhite(), cells[end.getX()][end.getY()].getPiece().getMoves()));
-            cells[end.getX()][end.getY()].setPiece(end.getPiece());
-        } else if (lastMove.getInfo() == BISHOP_PROMOTION) {
-            cells[start.getX()][start.getY()].setPiece(new Pawn(cells[end.getX()][end.getY()].getPiece().isWhite(), cells[end.getX()][end.getY()].getPiece().getMoves()));
-            cells[end.getX()][end.getY()].setPiece(end.getPiece());
-        } else if (lastMove.getInfo() == ROOK_PROMOTION) {
-            cells[start.getX()][start.getY()].setPiece(new Pawn(cells[end.getX()][end.getY()].getPiece().isWhite(), cells[end.getX()][end.getY()].getPiece().getMoves()));
-            cells[end.getX()][end.getY()].setPiece(end.getPiece());
-        } else if (lastMove.getInfo() == QUEEN_PROMOTION) {
-            cells[start.getX()][start.getY()].setPiece(new Pawn(cells[end.getX()][end.getY()].getPiece().isWhite(), cells[end.getX()][end.getY()].getPiece().getMoves()));
-            cells[end.getX()][end.getY()].setPiece(end.getPiece());
+        switch (lastMove.getInfo()) {
+            case KNIGHT_PROMOTION, BISHOP_PROMOTION, ROOK_PROMOTION, QUEEN_PROMOTION -> {
+                cells[start.getX()][start.getY()].setPiece(new Pawn(cells[end.getX()][end.getY()].getPiece().isWhite(), cells[end.getX()][end.getY()].getPiece().getMoves()));
+                cells[end.getX()][end.getY()].setPiece(end.getPiece());
+            }
         }
     }
 }

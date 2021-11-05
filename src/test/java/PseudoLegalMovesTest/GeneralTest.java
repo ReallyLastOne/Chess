@@ -77,7 +77,7 @@ public class GeneralTest {
                         System.out.println("Move: " + line.trim());
                         game.makeMove(line);
                         System.out.println(board);
-                        piecesPlacements.add(new FEN().calculatePiecePlacement(board));
+                        piecesPlacements.add(FEN.calculatePiecePlacement(board));
                         movesMade.add(line);
                         counter += 1;
                     }

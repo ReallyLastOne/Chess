@@ -7,6 +7,9 @@ import chess.utilities.GameUtilities;
 import static chess.core.Cell.*;
 
 public class MoveConverter {
+    private MoveConverter() {
+        throw new AssertionError();
+    }
 
     /**
      * Converts String of type "a2a4", "a7b8q" to Move able to be validated.

@@ -38,6 +38,11 @@ public class Move {
                 + (end.getY() + 1) + info.getSymbolPromotion();
     }
 
+    @Override
+    public int hashCode() {
+        return 37 * start.hashCode() + 41 * end.hashCode();
+    }
+
     public Move copy() {
         return new Move(start.copy(), end.copy(), info);
     }
