@@ -9,6 +9,12 @@ import java.util.List;
 import java.util.Optional;
 
 public class MoveValidator {
+    private static final List<GameUtilities.MoveInfo> castlings = List.of(GameUtilities.MoveInfo.WHITE_SHORT_CASTLE,
+            GameUtilities.MoveInfo.WHITE_LONG_CASTLE, GameUtilities.MoveInfo.BLACK_SHORT_CASTLE, GameUtilities.MoveInfo.BLACK_LONG_CASTLE);
+
+    private static final List<GameUtilities.MoveInfo> promotions = List.of(GameUtilities.MoveInfo.BISHOP_PROMOTION,
+            GameUtilities.MoveInfo.KNIGHT_PROMOTION, GameUtilities.MoveInfo.ROOK_PROMOTION, GameUtilities.MoveInfo.QUEEN_PROMOTION);
+
     private MoveValidator() {
         throw new AssertionError();
     }
@@ -30,16 +36,13 @@ public class MoveValidator {
 
             if (legal) { // link move to move with description
                 Move correspondingMove = moves.get(moves.indexOf(move));
-                // if move is promotion, then set new info
-                if (((correspondingMove.getInfo() != GameUtilities.MoveInfo.ROOK_PROMOTION)
-                        && (correspondingMove.getInfo() != GameUtilities.MoveInfo.BISHOP_PROMOTION) && (correspondingMove.getInfo() != GameUtilities.MoveInfo.QUEEN_PROMOTION)
-                        && (correspondingMove.getInfo() != GameUtilities.MoveInfo.KNIGHT_PROMOTION))) {
+                // if move is not promotion, then set new info
+                if (!promotions.contains(correspondingMove.getInfo())) {
                     move.setInfo(moves.get(moves.indexOf(move)).getInfo());
                 }
 
                 // if move is castle, check all between squares
-                if (move.getInfo() == GameUtilities.MoveInfo.WHITE_LONG_CASTLE || move.getInfo() == GameUtilities.MoveInfo.WHITE_SHORT_CASTLE
-                        || move.getInfo() == GameUtilities.MoveInfo.BLACK_LONG_CASTLE || move.getInfo() == GameUtilities.MoveInfo.BLACK_SHORT_CASTLE) {
+                if (castlings.contains(move.getInfo())) {
                     return CastlingValidator.isValid(board, move);
                 }
 
@@ -75,7 +78,6 @@ public class MoveValidator {
      * @return if king is in check for given board
      */
     public static boolean isKingInCheck(Board board, boolean turn) {
-
         List<Cell> piecesCells = turn ? board.getAliveBlackPiecesCells() : board.getAliveWhitePiecesCells();
         Cell kingCell = turn ? board.getWhiteKingCell() : board.getBlackKingCell();
         for (Cell pieceCell : piecesCells) { // For every piece, we check its possible moves. If there is a Cell that is also position of a king, return true.

@@ -4,10 +4,9 @@ import chess.core.Board;
 import chess.core.Cell;
 import chess.utilities.GameUtilities;
 
-import static chess.utilities.PositionConstants.BLACK_PIECES_ROW;
-import static chess.utilities.PositionConstants.WHITE_PIECES_ROW;
 import static chess.core.move.MoveValidator.isKingInCheck;
 import static chess.core.move.MoveValidator.isKingInCheckAfterMove;
+import static chess.utilities.PositionConstants.*;
 
 /**
  * Class that is responsible for validating castling moves.
@@ -30,7 +29,7 @@ public class CastlingValidator {
         switch (move.getInfo()) {
             case WHITE_SHORT_CASTLE -> {
                 if (isKingInCheck(board, true)) return false;
-                for (int i = 5; i <= 6; i++) {
+                for (int i = 5; i <= KING_SHORT_COLUMN; i++) {
                     Move betweenMove = new Move(start, cells[i][WHITE_PIECES_ROW], GameUtilities.MoveInfo.STANDARD);
                     if (isKingInCheckAfterMove(betweenMove, board, true)) return false;
                 }
@@ -38,7 +37,7 @@ public class CastlingValidator {
             }
             case WHITE_LONG_CASTLE -> {
                 if (isKingInCheck(board, true)) return false;
-                for (int i = 3; i >= 2; i--) {
+                for (int i = 3; i >= KING_LONG_COLUMN; i--) {
                     Move betweenMove = new Move(start, cells[i][WHITE_PIECES_ROW], GameUtilities.MoveInfo.STANDARD);
                     if (isKingInCheckAfterMove(betweenMove, board, true)) return false;
                 }
@@ -46,7 +45,7 @@ public class CastlingValidator {
             }
             case BLACK_SHORT_CASTLE -> {
                 if (isKingInCheck(board, false)) return false;
-                for (int i = 5; i <= 6; i++) {
+                for (int i = 5; i <= KING_SHORT_COLUMN; i++) {
                     Move betweenMove = new Move(start, cells[i][BLACK_PIECES_ROW], GameUtilities.MoveInfo.STANDARD);
                     if (isKingInCheckAfterMove(betweenMove, board, false)) return false;
 
@@ -55,7 +54,7 @@ public class CastlingValidator {
             }
             case BLACK_LONG_CASTLE -> {
                 if (isKingInCheck(board, false)) return false;
-                for (int i = 3; i >= 2; i--) {
+                for (int i = 3; i >= KING_LONG_COLUMN; i--) {
                     Move betweenMove = new Move(start, cells[i][BLACK_PIECES_ROW], GameUtilities.MoveInfo.STANDARD);
                     if (isKingInCheckAfterMove(betweenMove, board, false)) return false;
                 }

@@ -4,6 +4,7 @@ import chess.core.Board;
 import chess.core.Cell;
 import chess.core.move.Move;
 import chess.core.pieces.*;
+import chess.utilities.GameUtilities;
 
 public class PromotionExecutor implements Executor {
     @Override
@@ -11,23 +12,12 @@ public class PromotionExecutor implements Executor {
         Cell[][] cells = board.getCells();
         Cell start = move.getStart();
         Cell end = move.getEnd();
+        GameUtilities.MoveInfo info = move.getInfo();
 
-        switch (move.getInfo()) {
-            case KNIGHT_PROMOTION -> {
-                cells[end.getX()][end.getY()].setPiece(new Knight(start.getPiece().isWhite(), cells[start.getX()][start.getY()].getPiece().getMoves()));
-                cells[start.getX()][start.getY()].clear();
-            }
-            case BISHOP_PROMOTION -> {
-                cells[end.getX()][end.getY()].setPiece(new Bishop(start.getPiece().isWhite(), cells[start.getX()][start.getY()].getPiece().getMoves()));
-                cells[start.getX()][start.getY()].clear();
-            }
-            case ROOK_PROMOTION -> {
-                cells[end.getX()][end.getY()].setPiece(new Rook(start.getPiece().isWhite(), cells[start.getX()][start.getY()].getPiece().getMoves()));
+        switch (info) {
+            case KNIGHT_PROMOTION, ROOK_PROMOTION, QUEEN_PROMOTION, BISHOP_PROMOTION -> {
+                cells[end.getX()][end.getY()].setPiece(pieceOf(info, start.getPiece().isWhite(), start.getPiece().getMoves()));
                 cells[end.getX()][end.getY()].getPiece().increaseMoves();
-                cells[start.getX()][start.getY()].clear();
-            }
-            case QUEEN_PROMOTION -> {
-                cells[end.getX()][end.getY()].setPiece(new Queen(start.getPiece().isWhite(), cells[start.getX()][start.getY()].getPiece().getMoves()));
                 cells[start.getX()][start.getY()].clear();
             }
         }
@@ -42,9 +32,28 @@ public class PromotionExecutor implements Executor {
 
         switch (lastMove.getInfo()) {
             case KNIGHT_PROMOTION, BISHOP_PROMOTION, ROOK_PROMOTION, QUEEN_PROMOTION -> {
-                cells[start.getX()][start.getY()].setPiece(new Pawn(cells[end.getX()][end.getY()].getPiece().isWhite(), cells[end.getX()][end.getY()].getPiece().getMoves()));
+                cells[start.getX()][start.getY()].setPiece(new Pawn(start.getPiece().isWhite(),
+                        start.getPiece().getMoves() - 1));
                 cells[end.getX()][end.getY()].setPiece(end.getPiece());
             }
         }
+    }
+
+    private Piece pieceOf(GameUtilities.MoveInfo info, boolean white, int moves) {
+        switch (info) {
+            case KNIGHT_PROMOTION -> {
+                return new Knight(white, moves);
+            }
+            case BISHOP_PROMOTION -> {
+                return new Bishop(white, moves);
+            }
+            case ROOK_PROMOTION -> {
+                return new Rook(white, moves);
+            }
+            case QUEEN_PROMOTION -> {
+                return new Queen(white, moves);
+            }
+        }
+        return null;
     }
 }

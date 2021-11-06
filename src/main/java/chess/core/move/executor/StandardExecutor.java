@@ -4,6 +4,7 @@ import chess.core.Board;
 import chess.core.Cell;
 import chess.core.move.Move;
 import chess.core.pieces.Pawn;
+import chess.core.pieces.Piece;
 
 public class StandardExecutor implements Executor {
     @Override
@@ -13,20 +14,17 @@ public class StandardExecutor implements Executor {
         Cell end = move.getEnd();
         switch (move.getInfo()) {
             case STANDARD, PAWN_MOVE, CAPTURE -> {
-                cells[end.getX()][end.getY()].setPiece(start.getPiece());
-                cells[end.getX()][end.getY()].getPiece().increaseMoves();
+                putPieceOnDestinationCell(cells, start.getPiece(), end, true);
                 cells[start.getX()][start.getY()].clear();
             }
             case EN_PASSANT -> {
-                cells[end.getX()][end.getY()].setPiece(cells[start.getX()][start.getY()].getPiece());
-                cells[end.getX()][end.getY()].getPiece().increaseMoves();
+                putPieceOnDestinationCell(cells, start.getPiece(), end, true);
                 cells[start.getX()][start.getY()].clear();
                 cells[end.getX()][start.getY()].clear();
             }
             case TWO_FORWARD -> {
                 ((Pawn) start.getPiece()).setEnPassant(true);
-                cells[end.getX()][end.getY()].setPiece(start.getPiece());
-                cells[end.getX()][end.getY()].getPiece().increaseMoves();
+                putPieceOnDestinationCell(cells, start.getPiece(), end, true);
                 cells[start.getX()][start.getY()].clear();
             }
         }
@@ -41,23 +39,29 @@ public class StandardExecutor implements Executor {
 
         switch (lastMove.getInfo()) {
             case STANDARD, PAWN_MOVE, CAPTURE -> {
-                cells[start.getX()][start.getY()].setPiece(start.getPiece());
-                cells[start.getX()][start.getY()].getPiece().decreaseMoves();
+                putPieceOnDestinationCell(cells, start.getPiece(), start, false);
                 cells[end.getX()][end.getY()].setPiece(end.getPiece());
             }
             case EN_PASSANT -> {
-                cells[start.getX()][start.getY()].setPiece(cells[end.getX()][end.getY()].getPiece());
-                cells[start.getX()][start.getY()].getPiece().decreaseMoves();
-                cells[end.getX()][start.getY()].setPiece(new Pawn(!cells[start.getX()][start.getY()].getPiece().isWhite()));
+                putPieceOnDestinationCell(cells, start.getPiece(), start, false);
+                cells[end.getX()][start.getY()].setPiece(new Pawn(!start.getPiece().isWhite()));
                 ((Pawn) cells[end.getX()][start.getY()].getPiece()).setEnPassant(true);
                 cells[end.getX()][end.getY()].clear();
             }
             case TWO_FORWARD -> {
-                cells[start.getX()][start.getY()].setPiece(cells[end.getX()][end.getY()].getPiece());
-                cells[start.getX()][start.getY()].getPiece().decreaseMoves();
+                putPieceOnDestinationCell(cells, start.getPiece(), start, false);
                 ((Pawn) cells[start.getX()][start.getY()].getPiece()).setEnPassant(false);
                 cells[end.getX()][end.getY()].clear();
             }
+        }
+    }
+
+    private void putPieceOnDestinationCell(Cell[][] cells, Piece piece, Cell destination, boolean incrementation) {
+        cells[destination.getX()][destination.getY()].setPiece(piece);
+        if (incrementation) {
+            cells[destination.getX()][destination.getY()].getPiece().increaseMoves();
+        } else {
+            cells[destination.getX()][destination.getY()].getPiece().decreaseMoves();
         }
     }
 }
