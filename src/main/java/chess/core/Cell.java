@@ -4,6 +4,8 @@ import chess.core.pieces.Piece;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Optional;
+
 import static chess.utilities.Constants.*;
 
 @Getter
@@ -38,15 +40,8 @@ public class Cell {
         return cells[x][y];
     }
 
-    public static boolean isEmpty(Cell cell) {
-        return cell.getPiece() == null;
-    }
-
-    /**
-     * Returns true if there is opposite colored piece on given Cell with order to given color.
-     */
-    public static boolean isOppositeColor(Cell cell, boolean white) {
-        return cell.getPiece().isWhite() != white;
+    public boolean isOppositeColor(boolean white) {
+        return Optional.ofNullable(piece).filter(c -> c.isWhite() != white).isPresent();
     }
 
     public String toAlgebraicNotation() {

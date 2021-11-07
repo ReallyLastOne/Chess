@@ -2,14 +2,13 @@ package chess.core.pieces;
 
 import chess.core.Board;
 import chess.core.Cell;
-import chess.utilities.GameUtilities;
 import chess.core.move.Move;
+import chess.utilities.GameUtilities;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static chess.core.Cell.*;
-import static chess.core.Board.*;
+import static chess.core.Board.fitInBoard;
 import static chess.utilities.Constants.GRID_SIZE;
 
 interface DiagonallyMovable {
@@ -36,9 +35,9 @@ interface DiagonallyMovable {
             newY = newY + dy;
 
             if (fitInBoard(newX, newY)) {
-                if (isEmpty(cells[newX][newY])) {
+                if (!cells[newX][newY].isOccupied()) {
                     moves.add(new Move(start, cells[newX][newY], GameUtilities.MoveInfo.STANDARD));
-                } else if (!isEmpty(cells[newX][newY]) && isOppositeColor(cells[newX][newY], start.getPiece().isWhite())) {
+                } else if (cells[newX][newY].isOccupied() && cells[newX][newY].isOppositeColor(start.getPiece().isWhite())) {
                     moves.add(new Move(start, cells[newX][newY], GameUtilities.MoveInfo.CAPTURE));
                     break;
                 } else {

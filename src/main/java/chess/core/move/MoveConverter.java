@@ -4,8 +4,6 @@ import chess.core.Board;
 import chess.core.Cell;
 import chess.utilities.GameUtilities;
 
-import static chess.core.Cell.*;
-
 public class MoveConverter {
     private MoveConverter() {
         throw new AssertionError();
@@ -41,14 +39,14 @@ public class MoveConverter {
     private static Move linkMove(Move move, Board board) {
         Cell startFromBoard = move.getStart().findCell(board.getCells());
 
-        if (!isEmpty(startFromBoard)) {
+        if (startFromBoard.isOccupied()) {
             move.getStart().setPiece(startFromBoard.getPiece().copy());
         } else {
             move.getStart().clear();
         }
 
         Cell endFromBoard = move.getEnd().findCell(board.getCells());
-        if (!isEmpty(endFromBoard)) {
+        if (endFromBoard.isOccupied()) {
             move.getEnd().setPiece(endFromBoard.getPiece().copy());
         } else {
             move.getEnd().clear();
