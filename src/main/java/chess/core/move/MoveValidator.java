@@ -7,12 +7,11 @@ import chess.utilities.GameUtilities;
 import java.util.List;
 import java.util.Optional;
 
+import static chess.utilities.Constants.promotions;
+
 public class MoveValidator {
     private static final List<GameUtilities.MoveInfo> castlings = List.of(GameUtilities.MoveInfo.WHITE_SHORT_CASTLE,
             GameUtilities.MoveInfo.WHITE_LONG_CASTLE, GameUtilities.MoveInfo.BLACK_SHORT_CASTLE, GameUtilities.MoveInfo.BLACK_LONG_CASTLE);
-
-    private static final List<GameUtilities.MoveInfo> promotions = List.of(GameUtilities.MoveInfo.BISHOP_PROMOTION,
-            GameUtilities.MoveInfo.KNIGHT_PROMOTION, GameUtilities.MoveInfo.ROOK_PROMOTION, GameUtilities.MoveInfo.QUEEN_PROMOTION);
 
     private MoveValidator() {
         throw new AssertionError();

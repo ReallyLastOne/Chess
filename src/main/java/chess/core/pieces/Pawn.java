@@ -10,10 +10,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static chess.utilities.Constants.GRID_SIZE;
+import static chess.utilities.Constants.promotions;
 import static chess.utilities.GameUtilities.MoveInfo;
 import static chess.utilities.PositionConstants.*;
 
 public class Pawn extends Piece {
+    private static final int[] dx = {-1, 0, 1};
+
+
     @Setter
     /** Indicates if a pawn can be enpassanted.  */
     private boolean enPassant;
@@ -34,121 +38,129 @@ public class Pawn extends Piece {
     @Override
     public List<Move> calculatePseudoLegalMoves(Board board, Cell start) {
         if (!(start.getPiece().equals(this))) return null;
+        Cell[][] cells = board.getCells();
+
+        // implementations can be done better
+        List<Move> moves = new ArrayList<>(calculateTwoForward(start, cells));
+        moves.addAll(calculateCaptures(start, cells));
+        moves.addAll(calculateOneForward(start, cells));
+
+        return moves;
+    }
+
+    private List<Move> calculateCaptures(Cell start, Cell[][] cells) {
+        List<Move> moves = new ArrayList<>();
 
         int x = start.getX();
         int y = start.getY();
 
-        Cell[][] cells = board.getCells();
-        List<Move> moves = new ArrayList<>();
-
-        if (white) {
-            /* if pawn is white and at 2nd rank, 2 cells forward */
-            if (y == WHITE_PAWN_ROW) {
-                if (!cells[x][y + forwardCount].isOccupied() && !cells[x][y + 2 * forwardCount].isOccupied()) {
-                    moves.add(new Move(start, cells[x][y + 2 * forwardCount], MoveInfo.TWO_FORWARD));
-                }
-            }
-        }
-
-        if (!white) {
-            /* if pawn is black and is at 6th rank, 2 cell forward */
-            if (y == BLACK_PAWN_ROW) {
-                if (!cells[x][y + forwardCount].isOccupied() && !cells[x][y + 2 * forwardCount].isOccupied()) {
-                    moves.add(new Move(start, cells[x][y + 2 * forwardCount], MoveInfo.TWO_FORWARD));
-                }
-            }
-        }
-
         /* if stands at A rank then can only capture towards H rank */
+        int destinationY = y + forwardCount;
         if (x == 0) {
-            if (cells[x + 1][y + forwardCount].isOccupied() && cells[x + 1][y + forwardCount].isOppositeColor(start.getPiece().isWhite())) {
+            if (cells[x + 1][destinationY].isOccupied() && cells[x + 1][destinationY].isOppositeColor(start.getPiece().isWhite())) {
                 /* add promotion to legal moves */
-                if ((white && y + forwardCount == BLACK_PIECES_ROW) || (!white && y + forwardCount == WHITE_PIECES_ROW)) {
-                    moves.add(new Move(start, cells[x + 1][y + forwardCount], MoveInfo.KNIGHT_PROMOTION));
-                    moves.add(new Move(start, cells[x + 1][y + forwardCount], MoveInfo.BISHOP_PROMOTION));
-                    moves.add(new Move(start, cells[x + 1][y + forwardCount], MoveInfo.ROOK_PROMOTION));
-                    moves.add(new Move(start, cells[x + 1][y + forwardCount], MoveInfo.QUEEN_PROMOTION));
+                if ((white && destinationY == BLACK_PIECES_ROW) || (!white && destinationY == WHITE_PIECES_ROW)) {
+                    promotions.forEach(info -> moves.add(new Move(start, cells[x + 1][destinationY], info)));
                 } else { /* simply capture */
-                    moves.add(new Move(start, cells[x + 1][y + forwardCount], MoveInfo.CAPTURE));
+                    moves.add(new Move(start, cells[x + 1][destinationY], MoveInfo.CAPTURE));
                 }
             }
             /* en passant */
             if ((white && y == 4) || (!white && y == 3)) {
-                if (!cells[x + 1][y + forwardCount].isOccupied() && cells[x + 1][y].isPawn() &&
+                if (!cells[x + 1][destinationY].isOccupied() && cells[x + 1][y].isPawn() &&
                         ((Pawn) cells[x + 1][y].getPiece()).canBeEnPassanted()) {
-                    moves.add(new Move(start, cells[x + 1][y + forwardCount], MoveInfo.EN_PASSANT));
+                    moves.add(new Move(start, cells[x + 1][destinationY], MoveInfo.EN_PASSANT));
                 }
             }
         }
         /* if stands at H rank then can only capture towards A rank */
         else if (x == GRID_SIZE - 1) {
-            if (cells[x - 1][y + forwardCount].isOccupied() && cells[x - 1][y + forwardCount].isOppositeColor(start.getPiece().isWhite())) {
-                if ((white && y + forwardCount == BLACK_PIECES_ROW) || (!white && y + forwardCount == WHITE_PIECES_ROW)) {
-                    moves.add(new Move(start, cells[x - 1][y + forwardCount], MoveInfo.KNIGHT_PROMOTION));
-                    moves.add(new Move(start, cells[x - 1][y + forwardCount], MoveInfo.BISHOP_PROMOTION));
-                    moves.add(new Move(start, cells[x - 1][y + forwardCount], MoveInfo.ROOK_PROMOTION));
-                    moves.add(new Move(start, cells[x - 1][y + forwardCount], MoveInfo.QUEEN_PROMOTION));
+            if (cells[x - 1][destinationY].isOccupied() && cells[x - 1][destinationY].isOppositeColor(start.getPiece().isWhite())) {
+                if ((white && destinationY == BLACK_PIECES_ROW) || (!white && destinationY == WHITE_PIECES_ROW)) {
+                    promotions.forEach(info -> moves.add(new Move(start, cells[x - 1][destinationY], info)));
                 } else { /* simply capture */
-                    moves.add(new Move(start, cells[x - 1][y + forwardCount], MoveInfo.CAPTURE));
+                    moves.add(new Move(start, cells[x - 1][destinationY], MoveInfo.CAPTURE));
                 }
             }
             /* en passant */
             if ((white && y == 4) || (!white && y == 3)) {
-                if (!cells[x - 1][y + forwardCount].isOccupied() && cells[x - 1][y].isPawn() &&
+                if (!cells[x - 1][destinationY].isOccupied() && cells[x - 1][y].isPawn() &&
                         ((Pawn) cells[x - 1][y].getPiece()).canBeEnPassanted()) {
-                    moves.add(new Move(start, cells[x - 1][y + forwardCount], MoveInfo.EN_PASSANT));
-                }
-            }
-        }
-        /* common moves for black and white pawns */
-        else {
-            /* capture to the right */
-            if (cells[x + 1][y + forwardCount].isOccupied() && cells[x + 1][y + forwardCount].isOppositeColor(start.getPiece().isWhite())) {
-                if ((white && y + forwardCount == BLACK_PIECES_ROW) || (!white && y + forwardCount == WHITE_PIECES_ROW)) {
-                    moves.add(new Move(start, cells[x + 1][y + forwardCount], MoveInfo.KNIGHT_PROMOTION));
-                    moves.add(new Move(start, cells[x + 1][y + forwardCount], MoveInfo.BISHOP_PROMOTION));
-                    moves.add(new Move(start, cells[x + 1][y + forwardCount], MoveInfo.ROOK_PROMOTION));
-                    moves.add(new Move(start, cells[x + 1][y + forwardCount], MoveInfo.QUEEN_PROMOTION));
-                } else { /* simply capture */
-                    moves.add(new Move(start, cells[x + 1][y + forwardCount], MoveInfo.CAPTURE));
-                }
-            }
-            /* capture to the left */
-            if (cells[x - 1][y + forwardCount].isOccupied() && cells[x - 1][y + forwardCount].isOppositeColor(start.getPiece().isWhite())) {
-                if ((white && y + forwardCount == BLACK_PIECES_ROW) || (!white && y + forwardCount == WHITE_PIECES_ROW)) {
-                    moves.add(new Move(start, cells[x - 1][y + forwardCount], MoveInfo.KNIGHT_PROMOTION));
-                    moves.add(new Move(start, cells[x - 1][y + forwardCount], MoveInfo.BISHOP_PROMOTION));
-                    moves.add(new Move(start, cells[x - 1][y + forwardCount], MoveInfo.ROOK_PROMOTION));
-                    moves.add(new Move(start, cells[x - 1][y + forwardCount], MoveInfo.QUEEN_PROMOTION));
-                } else { /* simply capture */
-                    moves.add(new Move(start, cells[x - 1][y + forwardCount], MoveInfo.CAPTURE));
-                }
-            }
-            /* en passant to left */
-            if ((white && y == 4) || (!white && y == 3)) {
-                if (!cells[x - 1][y + forwardCount].isOccupied() && cells[x - 1][y].isPawn() &&
-                        ((Pawn) cells[x - 1][y].getPiece()).canBeEnPassanted()) {
-                    moves.add(new Move(start, cells[x - 1][y + forwardCount], MoveInfo.EN_PASSANT));
-                }
-            }
-            /* en passant to right */
-            if ((white && y == 4) || (!white && y == 3)) {
-                if (!cells[x + 1][y + forwardCount].isOccupied() && cells[x + 1][y].isPawn() &&
-                        ((Pawn) cells[x + 1][y].getPiece()).canBeEnPassanted()) {
-                    moves.add(new Move(start, cells[x + 1][y + forwardCount], MoveInfo.EN_PASSANT));
+                    moves.add(new Move(start, cells[x - 1][destinationY], MoveInfo.EN_PASSANT));
                 }
             }
         }
 
-        /* one cell forward */
-        if (!cells[x][y + forwardCount].isOccupied()) {
-            if ((white && y + forwardCount == BLACK_PIECES_ROW) || (!white && y + forwardCount == WHITE_PIECES_ROW)) {
-                moves.add(new Move(start, cells[x][y + forwardCount], MoveInfo.KNIGHT_PROMOTION));
-                moves.add(new Move(start, cells[x][y + forwardCount], MoveInfo.BISHOP_PROMOTION));
-                moves.add(new Move(start, cells[x][y + forwardCount], MoveInfo.ROOK_PROMOTION));
-                moves.add(new Move(start, cells[x][y + forwardCount], MoveInfo.QUEEN_PROMOTION));
+        /* common moves for black and white pawns */
+        else {
+            /* capture to the right */
+            if (cells[x + 1][destinationY].isOccupied() && cells[x + 1][destinationY].isOppositeColor(start.getPiece().isWhite())) {
+                if ((white && destinationY == BLACK_PIECES_ROW) || (!white && destinationY == WHITE_PIECES_ROW)) {
+                    promotions.forEach(info -> moves.add(new Move(start, cells[x + 1][destinationY], info)));
+                } else { /* simply capture */
+                    moves.add(new Move(start, cells[x + 1][destinationY], MoveInfo.CAPTURE));
+                }
+            }
+            /* capture to the left */
+            if (cells[x - 1][destinationY].isOccupied() && cells[x - 1][destinationY].isOppositeColor(start.getPiece().isWhite())) {
+                if ((white && destinationY == BLACK_PIECES_ROW) || (!white && destinationY == WHITE_PIECES_ROW)) {
+                    promotions.forEach(info -> moves.add(new Move(start, cells[x - 1][destinationY], info)));
+                } else { /* simply capture */
+                    moves.add(new Move(start, cells[x - 1][destinationY], MoveInfo.CAPTURE));
+                }
+            }
+            /* en passant to left */
+            if ((white && y == 4) || (!white && y == 3)) {
+                if (!cells[x - 1][destinationY].isOccupied() && cells[x - 1][y].isPawn() &&
+                        ((Pawn) cells[x - 1][y].getPiece()).canBeEnPassanted()) {
+                    moves.add(new Move(start, cells[x - 1][destinationY], MoveInfo.EN_PASSANT));
+                }
+            }
+            /* en passant to right */
+            if ((white && y == 4) || (!white && y == 3)) {
+                if (!cells[x + 1][destinationY].isOccupied() && cells[x + 1][y].isPawn() &&
+                        ((Pawn) cells[x + 1][y].getPiece()).canBeEnPassanted()) {
+                    moves.add(new Move(start, cells[x + 1][destinationY], MoveInfo.EN_PASSANT));
+                }
+            }
+        }
+        return moves;
+    }
+
+    private List<Move> calculateOneForward(Cell start, Cell[][] cells) {
+        List<Move> moves = new ArrayList<>();
+        int x = start.getX();
+        int y = start.getY();
+
+        int destinationY = y + forwardCount;
+        if (!cells[x][destinationY].isOccupied()) {
+            if ((white && destinationY == BLACK_PIECES_ROW) || (!white && destinationY == WHITE_PIECES_ROW)) {
+                promotions.forEach(info -> moves.add(new Move(start, cells[x][destinationY], info)));
             } else { /* simply one forward */
-                moves.add(new Move(start, cells[x][y + forwardCount], MoveInfo.PAWN_MOVE));
+                moves.add(new Move(start, cells[x][destinationY], MoveInfo.PAWN_MOVE));
+            }
+        }
+        return moves;
+    }
+
+    private List<Move> calculateTwoForward(Cell start, Cell[][] cells) {
+        List<Move> moves = new ArrayList<>();
+
+        int x = start.getX();
+        int y = start.getY();
+
+        int destinationY = y + 2 * forwardCount;
+        int betweenY = y + forwardCount;
+        /* if pawn is white and at 2nd rank, 2 cells forward */
+        if (y == WHITE_PAWN_ROW && white) {
+            if (!cells[x][betweenY].isOccupied() && !cells[x][destinationY].isOccupied()) {
+                moves.add(new Move(start, cells[x][destinationY], MoveInfo.TWO_FORWARD));
+            }
+        }
+        /* if pawn is black and is at 6th rank, 2 cells forward */
+        else if (y == BLACK_PAWN_ROW && !white) {
+            if (!cells[x][betweenY].isOccupied() && !cells[x][destinationY].isOccupied()) {
+                moves.add(new Move(start, cells[x][destinationY], MoveInfo.TWO_FORWARD));
             }
         }
 

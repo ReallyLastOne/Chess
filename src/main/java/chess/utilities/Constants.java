@@ -1,10 +1,13 @@
 package chess.utilities;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Constants {
     public static final int GRID_SIZE = 8;
+    public static final List<GameUtilities.MoveInfo> promotions = List.of(GameUtilities.MoveInfo.BISHOP_PROMOTION,
+            GameUtilities.MoveInfo.KNIGHT_PROMOTION, GameUtilities.MoveInfo.ROOK_PROMOTION, GameUtilities.MoveInfo.QUEEN_PROMOTION);
 
     private Constants() {
         throw new AssertionError();

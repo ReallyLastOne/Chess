@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import chess.utilities.GameUtilities;
 
+import static chess.core.Board.fitInBoard;
 import static chess.utilities.Constants.INT_TO_COLUMN;
 
 @Getter
@@ -45,5 +46,16 @@ public class Move {
 
     public Move copy() {
         return new Move(start.copy(), end.copy(), info);
+    }
+
+    public static Move generateCaptureOrStandard(int x, int y, Cell start, Cell[][] cells, boolean white) {
+        if (fitInBoard(x, y)) {
+            if (!cells[x][y].isOccupied()) {
+                return new Move(start, cells[x][y], GameUtilities.MoveInfo.STANDARD);
+            } else if (cells[x][y].isOppositeColor(white)) {
+                return new Move(start, cells[x][y], GameUtilities.MoveInfo.CAPTURE);
+            }
+        }
+        return null;
     }
 }

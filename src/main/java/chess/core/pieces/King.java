@@ -7,11 +7,12 @@ import chess.core.move.Move;
 import java.util.ArrayList;
 import java.util.List;
 
-import static chess.core.Board.fitInBoard;
+import static chess.core.move.Move.generateCaptureOrStandard;
 import static chess.utilities.GameUtilities.MoveInfo;
 import static chess.utilities.PositionConstants.*;
 
 public class King extends Piece {
+    private static final int[] DELTA = {1, -1, 0};
 
     public King(boolean white) {
         super(white);
@@ -103,68 +104,15 @@ public class King extends Piece {
         if (isBlackLongCastlingPossible(board, start))
             moves.add(new Move(start, cells[KING_LONG_COLUMN][BLACK_PIECES_ROW], MoveInfo.BLACK_LONG_CASTLE));
 
-        // check all 8 moves around king
-        if (fitInBoard(x + 1, y)) {
-            if (!cells[x + 1][y].isOccupied()) {
-                moves.add(new Move(start, cells[x + 1][y], MoveInfo.STANDARD));
-            } else if (cells[x + 1][y].isOccupied() && cells[x + 1][y].isOppositeColor(start.getPiece().isWhite())) {
-                moves.add(new Move(start, cells[x + 1][y], MoveInfo.CAPTURE));
-            }
-        }
+        for (int first : DELTA) {
+            for (int second : DELTA) {
+                if (first != 0 || second != 0) {
+                    Move firstMove = generateCaptureOrStandard(x + first, y + second, start, cells, white);
+                    Move secondMove = generateCaptureOrStandard(x + second, y + first, start, cells, white);
 
-        if (fitInBoard(x - 1, y)) {
-            if (!cells[x - 1][y].isOccupied()) {
-                moves.add(new Move(start, cells[x - 1][y], MoveInfo.STANDARD));
-            } else if (cells[x - 1][y].isOccupied() && cells[x - 1][y].isOppositeColor(start.getPiece().isWhite())) {
-                moves.add(new Move(start, cells[x - 1][y], MoveInfo.CAPTURE));
-            }
-        }
-
-        if (fitInBoard(x + 1, y + 1)) {
-            if (!cells[x + 1][y + 1].isOccupied()) {
-                moves.add(new Move(start, cells[x + 1][y + 1], MoveInfo.STANDARD));
-            } else if (cells[x + 1][y + 1].isOccupied() && cells[x + 1][y + 1].isOppositeColor(start.getPiece().isWhite())) {
-                moves.add(new Move(start, cells[x + 1][y + 1], MoveInfo.CAPTURE));
-            }
-        }
-
-        if (fitInBoard(x - 1, y + 1)) {
-            if (!cells[x - 1][y + 1].isOccupied()) {
-                moves.add(new Move(start, cells[x - 1][y + 1], MoveInfo.STANDARD));
-            } else if (cells[x - 1][y + 1].isOccupied() && cells[x - 1][y + 1].isOppositeColor(start.getPiece().isWhite())) {
-                moves.add(new Move(start, cells[x - 1][y + 1], MoveInfo.CAPTURE));
-            }
-        }
-
-        if (fitInBoard(x, y + 1)) {
-            if (!cells[x][y + 1].isOccupied()) {
-                moves.add(new Move(start, cells[x][y + 1], MoveInfo.STANDARD));
-            } else if (cells[x][y + 1].isOccupied() && cells[x][y + 1].isOppositeColor(start.getPiece().isWhite())) {
-                moves.add(new Move(start, cells[x][y + 1], MoveInfo.CAPTURE));
-            }
-        }
-
-        if (fitInBoard(x + 1, y - 1)) {
-            if (!cells[x + 1][y - 1].isOccupied()) {
-                moves.add(new Move(start, cells[x + 1][y - 1], MoveInfo.STANDARD));
-            } else if (cells[x + 1][y - 1].isOccupied() && cells[x + 1][y - 1].isOppositeColor(start.getPiece().isWhite())) {
-                moves.add(new Move(start, cells[x + 1][y - 1], MoveInfo.CAPTURE));
-            }
-        }
-
-        if (fitInBoard(x - 1, y - 1)) {
-            if (!cells[x - 1][y - 1].isOccupied()) {
-                moves.add(new Move(start, cells[x - 1][y - 1], MoveInfo.STANDARD));
-            } else if (cells[x - 1][y - 1].isOccupied() && cells[x - 1][y - 1].isOppositeColor(start.getPiece().isWhite())) {
-                moves.add(new Move(start, cells[x - 1][y - 1], MoveInfo.CAPTURE));
-            }
-        }
-
-        if (fitInBoard(x, y - 1)) {
-            if (!cells[x][y - 1].isOccupied()) {
-                moves.add(new Move(start, cells[x][y - 1], MoveInfo.STANDARD));
-            } else if (cells[x][y - 1].isOccupied() && cells[x][y - 1].isOppositeColor(start.getPiece().isWhite())) {
-                moves.add(new Move(start, cells[x][y - 1], MoveInfo.CAPTURE));
+                    if (firstMove != null) moves.add(firstMove);
+                    if (secondMove != null) moves.add(secondMove);
+                }
             }
         }
 
