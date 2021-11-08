@@ -37,7 +37,7 @@ interface DiagonallyMovable {
             if (fitInBoard(newX, newY)) {
                 if (!cells[newX][newY].isOccupied()) {
                     moves.add(new Move(start, cells[newX][newY], GameUtilities.MoveInfo.STANDARD));
-                } else if (cells[newX][newY].isOccupied() && cells[newX][newY].isOppositeColor(start.getPiece().isWhite())) {
+                } else if (cells[newX][newY].isOppositeColor(start.getPiece().isWhite())) {
                     moves.add(new Move(start, cells[newX][newY], GameUtilities.MoveInfo.CAPTURE));
                     break;
                 } else {

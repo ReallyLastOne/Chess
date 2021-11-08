@@ -1,6 +1,6 @@
 package chess.core;
 
-import chess.core.pieces.Piece;
+import chess.core.pieces.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -85,5 +85,29 @@ public class Cell {
 
     public boolean isWhite() {
         return (x + 1) % 2 == (y + 1) % 2;
+    }
+
+    public boolean isPawn() {
+        return piece instanceof Pawn;
+    }
+
+    public boolean isBishop() {
+        return piece instanceof Bishop;
+    }
+
+    public boolean isKnight() {
+        return piece instanceof Knight;
+    }
+
+    public boolean isRook() {
+        return piece instanceof Rook;
+    }
+
+    public boolean isQueen() {
+        return piece instanceof Queen;
+    }
+
+    public boolean isKing() {
+        return piece instanceof King;
     }
 }

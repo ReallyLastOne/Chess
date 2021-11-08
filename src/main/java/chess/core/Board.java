@@ -133,16 +133,14 @@ public final class Board {
      * Handling en passant availability.
      */
     public void updatePawnsStatus() {
-        for (Cell x : aliveWhitePiecesCells) {
-            if (x.isOccupied() && x.getPiece() instanceof Pawn) {
-                ((Pawn) x.getPiece()).setEnPassant(false);
-            }
-        }
-        for (Cell x : aliveBlackPiecesCells) {
-            if (x.isOccupied() && x.getPiece() instanceof Pawn) {
-                ((Pawn) x.getPiece()).setEnPassant(false);
-            }
-        }
+        aliveWhitePiecesCells.forEach(x -> {
+            if (x.isPawn()) ((Pawn) x.getPiece()).setEnPassant(false);
+        });
+
+        aliveBlackPiecesCells.forEach(x -> {
+            if (x.isPawn()) ((Pawn) x.getPiece()).setEnPassant(false);
+        });
+
         if (moves.size() > 0) {
             if (moves.getLast().getInfo() == MoveInfo.TWO_FORWARD) {
                 ((Pawn) cells[moves.getLast().getEnd().getX()][moves.getLast().getEnd().getY()].getPiece()).setEnPassant(true);
@@ -161,10 +159,10 @@ public final class Board {
         {
             if (x.isOccupied() && x.getPiece().isWhite()) {
                 aliveWhitePiecesCells.add(x);
-                if (x.getPiece() instanceof King) whiteKingCell = x;
+                if (x.isKing()) whiteKingCell = x;
             } else if (x.isOccupied() && !x.getPiece().isWhite()) {
                 aliveBlackPiecesCells.add(x);
-                if (x.getPiece() instanceof King) blackKingCell = x;
+                if (x.isKing()) blackKingCell = x;
             }
         });
     }
@@ -281,8 +279,7 @@ public final class Board {
      * @return if one side can't move anywhere and king is not in check
      */
     private boolean isKingStuck() {
-        if (getLegalMoves().size() == 0) return true;
-        return false;
+        return getLegalMoves().size() == 0;
     }
 
     /**
@@ -307,14 +304,14 @@ public final class Board {
         int aliveWhitePieces = aliveWhitePiecesCells.size();
 
         boolean aliveBlackPiecesCellsAnyMatchKing = aliveBlackPiecesCells.stream()
-                .anyMatch(this::isKing);
+                .anyMatch(Cell::isKing);
         boolean aliveBlackPiecesCellsMatchesTwoSameColorBishops = aliveBlackPiecesCells.stream()
-                .filter(this::isBishop).filter(Cell::isWhite).count() == 2;
+                .filter(Cell::isBishop).filter(Cell::isWhite).count() == 2;
 
         boolean aliveWhitePiecesCellsAnyMatchKing = aliveWhitePiecesCells.stream()
-                .anyMatch(this::isKing);
+                .anyMatch(Cell::isKing);
         boolean aliveWhitePiecesCellsMatchesTwoSameColorBishops = aliveWhitePiecesCells.stream()
-                .filter(this::isBishop).filter(Cell::isWhite).count() == 2;
+                .filter(Cell::isBishop).filter(Cell::isWhite).count() == 2;
 
 
         if (isKingAndTwoPieces(aliveBlackPieces, aliveBlackPiecesCellsAnyMatchKing, aliveBlackPiecesCellsMatchesTwoSameColorBishops) &&
@@ -344,14 +341,14 @@ public final class Board {
         int aliveBlackPieces = aliveBlackPiecesCells.size();
         int aliveWhitePieces = aliveWhitePiecesCells.size();
         boolean aliveBlackPiecesCellsAnyMatchKing = aliveBlackPiecesCells.stream()
-                .anyMatch(this::isKing);
+                .anyMatch(Cell::isKing);
         boolean aliveBlackPiecesCellsAnyMatchBishop = aliveBlackPiecesCells.stream()
-                .anyMatch(this::isBishop);
+                .anyMatch(Cell::isBishop);
 
         boolean aliveWhitePiecesCellsAnyMatchKing = aliveWhitePiecesCells.stream()
-                .anyMatch(this::isKing);
+                .anyMatch(Cell::isKing);
         boolean aliveWhitePiecesCellsAnyMatchBishop = aliveWhitePiecesCells.stream()
-                .anyMatch(this::isBishop);
+                .anyMatch(Cell::isBishop);
 
         return isKingAndPiece(aliveBlackPieces, aliveBlackPiecesCellsAnyMatchKing, aliveBlackPiecesCellsAnyMatchBishop) &&
                 isKingAndPiece(aliveWhitePieces, aliveWhitePiecesCellsAnyMatchKing, aliveWhitePiecesCellsAnyMatchBishop);
@@ -364,14 +361,14 @@ public final class Board {
         int aliveBlackPieces = aliveBlackPiecesCells.size();
         int aliveWhitePieces = aliveWhitePiecesCells.size();
         boolean aliveBlackPiecesCellsAnyMatchKing = aliveBlackPiecesCells.stream()
-                .anyMatch(this::isKing);
+                .anyMatch(Cell::isKing);
         boolean aliveBlackPiecesCellsAnyMatchKnight = aliveBlackPiecesCells.stream()
-                .anyMatch(this::isKnight);
+                .anyMatch(Cell::isKnight);
 
         boolean aliveWhitePiecesCellsAnyMatchKing = aliveWhitePiecesCells.stream()
-                .anyMatch(this::isKing);
+                .anyMatch(Cell::isKing);
         boolean aliveWhitePiecesCellsAnyMatchKnight = aliveWhitePiecesCells.stream()
-                .anyMatch(this::isKnight);
+                .anyMatch(Cell::isKnight);
 
         return (isKingAndPiece(aliveWhitePieces, aliveWhitePiecesCellsAnyMatchKing, aliveWhitePiecesCellsAnyMatchKnight)
                 && isAloneKing(aliveBlackPieces, aliveBlackPiecesCellsAnyMatchKing)) ||
@@ -386,14 +383,14 @@ public final class Board {
         int aliveBlackPieces = aliveBlackPiecesCells.size();
         int aliveWhitePieces = aliveWhitePiecesCells.size();
         boolean aliveBlackPiecesCellsAnyMatchKing = aliveBlackPiecesCells.stream()
-                .anyMatch(this::isKing);
+                .anyMatch(Cell::isKing);
         boolean aliveBlackPiecesCellsAnyMatchBishop = aliveBlackPiecesCells.stream()
-                .anyMatch(this::isBishop);
+                .anyMatch(Cell::isBishop);
 
         boolean aliveWhitePiecesCellsAnyMatchKing = aliveWhitePiecesCells.stream()
-                .anyMatch(this::isKing);
+                .anyMatch(Cell::isKing);
         boolean aliveWhitePiecesCellsAnyMatchBishop = aliveWhitePiecesCells.stream()
-                .anyMatch(this::isBishop);
+                .anyMatch(Cell::isBishop);
 
         return (isKingAndPiece(aliveWhitePieces, aliveWhitePiecesCellsAnyMatchKing, aliveWhitePiecesCellsAnyMatchBishop)
                 && isAloneKing(aliveBlackPieces, aliveBlackPiecesCellsAnyMatchKing)) ||
@@ -408,9 +405,9 @@ public final class Board {
         int aliveBlackPieces = aliveBlackPiecesCells.size();
         int aliveWhitePieces = aliveWhitePiecesCells.size();
         boolean aliveBlackPiecesCellsAnyMatchKing = aliveBlackPiecesCells.stream()
-                .anyMatch(this::isKing);
+                .anyMatch(Cell::isKing);
         boolean aliveWhitePiecesCellsAnyMatchKing = aliveWhitePiecesCells.stream()
-                .anyMatch(this::isKing);
+                .anyMatch(Cell::isKing);
         return isAloneKing(aliveBlackPieces, aliveBlackPiecesCellsAnyMatchKing) && isAloneKing(aliveWhitePieces, aliveWhitePiecesCellsAnyMatchKing);
     }
 
@@ -428,21 +425,9 @@ public final class Board {
 
     private Boolean isFirstBishopsCellWhite(List<Cell> alivePiecesCells) {
         return alivePiecesCells.stream()
-                .filter(this::isBishop)
+                .filter(Cell::isBishop)
                 .findFirst()
                 .map(Cell::isWhite)
                 .orElse(null);
-    }
-
-    private boolean isKing(Cell x) {
-        return x.getPiece() instanceof King;
-    }
-
-    private boolean isBishop(Cell x) {
-        return x.getPiece() instanceof Bishop;
-    }
-
-    private boolean isKnight(Cell x) {
-        return x.getPiece() instanceof Knight;
     }
 }

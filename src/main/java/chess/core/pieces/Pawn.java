@@ -74,7 +74,7 @@ public class Pawn extends Piece {
             }
             /* en passant */
             if ((white && y == 4) || (!white && y == 3)) {
-                if (!cells[x + 1][y + forwardCount].isOccupied() && cells[x + 1][y].getPiece() instanceof Pawn &&
+                if (!cells[x + 1][y + forwardCount].isOccupied() && cells[x + 1][y].isPawn() &&
                         ((Pawn) cells[x + 1][y].getPiece()).canBeEnPassanted()) {
                     moves.add(new Move(start, cells[x + 1][y + forwardCount], MoveInfo.EN_PASSANT));
                 }
@@ -94,7 +94,7 @@ public class Pawn extends Piece {
             }
             /* en passant */
             if ((white && y == 4) || (!white && y == 3)) {
-                if (!cells[x - 1][y + forwardCount].isOccupied() && cells[x - 1][y].getPiece() instanceof Pawn &&
+                if (!cells[x - 1][y + forwardCount].isOccupied() && cells[x - 1][y].isPawn() &&
                         ((Pawn) cells[x - 1][y].getPiece()).canBeEnPassanted()) {
                     moves.add(new Move(start, cells[x - 1][y + forwardCount], MoveInfo.EN_PASSANT));
                 }
@@ -114,8 +114,7 @@ public class Pawn extends Piece {
                 }
             }
             /* capture to the left */
-            if (cells[x - 1][y + forwardCount].isOccupied() && cells[x - 1][y + forwardCount].isOppositeColor(start.getPiece().isWhite()))
-            {
+            if (cells[x - 1][y + forwardCount].isOccupied() && cells[x - 1][y + forwardCount].isOppositeColor(start.getPiece().isWhite())) {
                 if ((white && y + forwardCount == BLACK_PIECES_ROW) || (!white && y + forwardCount == WHITE_PIECES_ROW)) {
                     moves.add(new Move(start, cells[x - 1][y + forwardCount], MoveInfo.KNIGHT_PROMOTION));
                     moves.add(new Move(start, cells[x - 1][y + forwardCount], MoveInfo.BISHOP_PROMOTION));
@@ -127,14 +126,14 @@ public class Pawn extends Piece {
             }
             /* en passant to left */
             if ((white && y == 4) || (!white && y == 3)) {
-                if (!cells[x - 1][y + forwardCount].isOccupied() && cells[x - 1][y].getPiece() instanceof Pawn &&
+                if (!cells[x - 1][y + forwardCount].isOccupied() && cells[x - 1][y].isPawn() &&
                         ((Pawn) cells[x - 1][y].getPiece()).canBeEnPassanted()) {
                     moves.add(new Move(start, cells[x - 1][y + forwardCount], MoveInfo.EN_PASSANT));
                 }
             }
             /* en passant to right */
             if ((white && y == 4) || (!white && y == 3)) {
-                if (!cells[x + 1][y + forwardCount].isOccupied() && cells[x + 1][y].getPiece() instanceof Pawn &&
+                if (!cells[x + 1][y + forwardCount].isOccupied() && cells[x + 1][y].isPawn() &&
                         ((Pawn) cells[x + 1][y].getPiece()).canBeEnPassanted()) {
                     moves.add(new Move(start, cells[x + 1][y + forwardCount], MoveInfo.EN_PASSANT));
                 }

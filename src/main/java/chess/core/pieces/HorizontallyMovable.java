@@ -24,7 +24,7 @@ interface HorizontallyMovable {
             if (!fitInBoard(dx, y)) break;
             if (!cells[dx][y].isOccupied()) {
                 moves.add(new Move(start, cells[dx][y], GameUtilities.MoveInfo.STANDARD));
-            } else if (cells[dx][y].isOccupied() && cells[dx][y].isOppositeColor(start.getPiece().isWhite())) {
+            } else if (cells[dx][y].isOppositeColor(start.getPiece().isWhite())) {
                 moves.add(new Move(start, cells[dx][y], GameUtilities.MoveInfo.CAPTURE));
                 break;
             } else {
@@ -37,7 +37,7 @@ interface HorizontallyMovable {
             if (!fitInBoard(dx, y)) break;
             if (!cells[dx][y].isOccupied()) {
                 moves.add(new Move(start, cells[dx][y], GameUtilities.MoveInfo.STANDARD));
-            } else if (cells[dx][y].isOccupied() && cells[dx][y].isOppositeColor(start.getPiece().isWhite())) {
+            } else if (cells[dx][y].isOppositeColor(start.getPiece().isWhite())) {
                 moves.add(new Move(start, cells[dx][y], GameUtilities.MoveInfo.CAPTURE));
                 break;
             } else {

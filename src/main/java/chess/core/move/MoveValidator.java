@@ -2,7 +2,6 @@ package chess.core.move;
 
 import chess.core.Board;
 import chess.core.Cell;
-import chess.core.pieces.King;
 import chess.utilities.GameUtilities;
 
 import java.util.List;
@@ -109,7 +108,7 @@ public class MoveValidator {
 
         /* Check if any piece can block out check */
         for (Cell cell : piecesCell) {
-            if (cell.getPiece() instanceof King) continue;
+            if (cell.isKing()) continue;
             List<Move> moves = cell.getPiece().calculatePseudoLegalMoves(board, cell);
             for (Move move : moves) {
                 if (!isKingInCheckAfterMove(move, board, turn)) return false;

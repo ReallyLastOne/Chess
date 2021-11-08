@@ -2,6 +2,7 @@ import chess.core.Board;
 import chess.core.Game;
 import chess.core.move.Move;
 import chess.utilities.FEN;
+import chess.utilities.GameUtilities;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,17 +35,16 @@ public class GODTest {
         String line;
         while ((line = bufferedReader.readLine()) != null) {
             if (possibleOutcomes.contains(line)) {
-                System.out.println("");
                 Assertions.assertEquals(line, game.getGameStatus().toString());
                 game = new Game();
                 board = game.getBoard();
                 counter = -1;
             } else if (counter % 3 == 0) { // line is move
+                Assertions.assertEquals(GameUtilities.GameStatus.IN_PROGRESS, game.getGameStatus());
                 game.makeMove(line);
             } else if (counter % 3 == 1) { // line is FEN
                 Assertions.assertEquals(line, FEN.from(board));
             } else if (counter % 3 == 2) { // line contains legal moves separated by space
-
                 /* get correct legal moves from file */
                 List<String> legalMoves = new ArrayList<>();
                 if (!line.trim().equals("")) {

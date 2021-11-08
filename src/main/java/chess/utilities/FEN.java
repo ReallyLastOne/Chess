@@ -2,15 +2,13 @@ package chess.utilities;
 
 import chess.core.Board;
 import chess.core.Cell;
-import chess.core.pieces.King;
 import chess.core.pieces.Pawn;
 import chess.core.pieces.Piece;
-import chess.core.pieces.Rook;
 
 import static chess.core.Board.fitInBoard;
-import static chess.utilities.PositionConstants.*;
 import static chess.utilities.Constants.COLUMN_TO_INT;
 import static chess.utilities.Constants.GRID_SIZE;
+import static chess.utilities.PositionConstants.*;
 
 /**
  * Class that provides static methods to calculate Forsyth–Edwards Notation from given Board and to construct {@link Board}
@@ -77,15 +75,15 @@ public class FEN {
             Cell end = board.getLastMove().getEnd();
 
             if (fitInBoard(end.getX() + 1, end.getY())) {
-                if (cells[end.getX() + 1][end.getY()].isOccupied() && cells[end.getX() + 1][end.getY()].getPiece()
-                        instanceof Pawn && cells[end.getX() + 1][end.getY()].getPiece().isWhite() != cells[end.getX()][end.getY()].getPiece().isWhite()) {
+                if (cells[end.getX() + 1][end.getY()].isPawn() &&
+                        cells[end.getX() + 1][end.getY()].getPiece().isWhite() != cells[end.getX()][end.getY()].getPiece().isWhite()) {
                     int forward = ((Pawn) cells[end.getX()][end.getY()].getPiece()).getForwardCount();
                     enPassantCell = cells[end.getX()][end.getY() - forward].toAlgebraicNotation();
                 }
             }
             if (fitInBoard(end.getX() - 1, end.getY())) {
-                if (cells[end.getX() - 1][end.getY()].isOccupied() && cells[end.getX() - 1][end.getY()].getPiece()
-                        instanceof Pawn && cells[end.getX() - 1][end.getY()].getPiece().isWhite() != cells[end.getX()][end.getY()].getPiece().isWhite()) {
+                if (cells[end.getX() - 1][end.getY()].isPawn() &&
+                        cells[end.getX() - 1][end.getY()].getPiece().isWhite() != cells[end.getX()][end.getY()].getPiece().isWhite()) {
                     int forward = ((Pawn) cells[end.getX()][end.getY()].getPiece()).getForwardCount();
                     enPassantCell = cells[end.getX()][end.getY() - forward].toAlgebraicNotation();
                 }
@@ -106,15 +104,13 @@ public class FEN {
         Cell[][] cells = board.getCells();
         if (!whiteKingCell.getPiece().hasMoved()) {
             /* Check white short castle availability */
-            if (cells[ROOK_KINGSIDE_COLUMN][WHITE_PIECES_ROW].isOccupied() &&
-                    cells[ROOK_KINGSIDE_COLUMN][WHITE_PIECES_ROW].getPiece() instanceof Rook &&
+            if (cells[ROOK_KINGSIDE_COLUMN][WHITE_PIECES_ROW].isRook() &&
                     !cells[ROOK_KINGSIDE_COLUMN][WHITE_PIECES_ROW].getPiece().hasMoved()) {
                 castlingAvailability += "K";
             }
 
             /* Check white long castle availability */
-            if (cells[ROOK_QUEENSIDE_COLUMN][WHITE_PIECES_ROW].isOccupied() &&
-                    cells[ROOK_QUEENSIDE_COLUMN][WHITE_PIECES_ROW].getPiece() instanceof Rook &&
+            if (cells[ROOK_QUEENSIDE_COLUMN][WHITE_PIECES_ROW].isRook() &&
                     !cells[ROOK_QUEENSIDE_COLUMN][WHITE_PIECES_ROW].getPiece().hasMoved()) {
                 castlingAvailability += "Q";
             }
@@ -122,15 +118,13 @@ public class FEN {
 
         if (!blackKingCell.getPiece().hasMoved()) {
             /* Check black short castle availability */
-            if (cells[ROOK_KINGSIDE_COLUMN][BLACK_PIECES_ROW].isOccupied() &&
-                    cells[ROOK_KINGSIDE_COLUMN][BLACK_PIECES_ROW].getPiece() instanceof Rook &&
+            if (cells[ROOK_KINGSIDE_COLUMN][BLACK_PIECES_ROW].isRook() &&
                     !cells[ROOK_KINGSIDE_COLUMN][BLACK_PIECES_ROW].getPiece().hasMoved()) {
                 castlingAvailability += "k";
             }
 
             /* Check black long castle availability */
-            if (cells[ROOK_QUEENSIDE_COLUMN][BLACK_PIECES_ROW].isOccupied() &&
-                    cells[ROOK_QUEENSIDE_COLUMN][BLACK_PIECES_ROW].getPiece() instanceof Rook &&
+            if (cells[ROOK_QUEENSIDE_COLUMN][BLACK_PIECES_ROW].isRook() &&
                     !cells[ROOK_QUEENSIDE_COLUMN][BLACK_PIECES_ROW].getPiece().hasMoved()) {
                 castlingAvailability += "q";
             }
@@ -217,7 +211,7 @@ public class FEN {
             // if there is no king, there is no reason to modify his moves since number of his moves will increase if
             // he moves so castling won't be available.
             // same for rook: no reason to change number of moves for Rook since King's number of moves will decide.
-            if (kingCell.isOccupied() && kingCell.getPiece() instanceof King && kingCell.getPiece().isWhite()) {
+            if (kingCell.isKing() && kingCell.getPiece().isWhite()) {
                 cells[KING_COLUMN][WHITE_PIECES_ROW].getPiece().setMoves(MOVES);
             }
         } else {
@@ -235,7 +229,7 @@ public class FEN {
         if (!castling.contains("k") && !castling.contains("q")) {
             Cell kingCell = cells[KING_COLUMN][BLACK_PIECES_ROW];
             // explanation in white case
-            if (kingCell.isOccupied() && kingCell.getPiece() instanceof King && !kingCell.getPiece().isWhite()) {
+            if (kingCell.isKing() && !kingCell.getPiece().isWhite()) {
                 cells[KING_COLUMN][BLACK_PIECES_ROW].getPiece().setMoves(MOVES);
             }
         } else {

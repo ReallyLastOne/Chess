@@ -24,7 +24,7 @@ interface VerticallyMovable {
             if (!fitInBoard(x, dy)) break;
             if (!cells[x][dy].isOccupied()) {
                 moves.add(new Move(start, cells[x][dy], MoveInfo.STANDARD));
-            } else if (cells[x][dy].isOccupied() && cells[x][dy].isOppositeColor(start.getPiece().isWhite())) {
+            } else if (cells[x][dy].isOppositeColor(start.getPiece().isWhite())) {
                 moves.add(new Move(start, cells[x][dy], MoveInfo.CAPTURE));
                 break;
             } else {
@@ -37,7 +37,7 @@ interface VerticallyMovable {
             if (!fitInBoard(x, dy)) break;
             if (!cells[x][dy].isOccupied()) {
                 moves.add(new Move(start, cells[x][dy], MoveInfo.STANDARD));
-            } else if (cells[x][dy].isOccupied() && cells[x][dy].isOppositeColor(start.getPiece().isWhite())) {
+            } else if (cells[x][dy].isOppositeColor(start.getPiece().isWhite())) {
                 moves.add(new Move(start, cells[x][dy], MoveInfo.CAPTURE));
                 break;
             } else {

@@ -35,7 +35,6 @@ public class GeneralFENTest {
             if (line.isBlank()) {
                 counter = 0;
                 System.out.println("New game");
-                System.out.println("\n");
                 game = new Game();
                 board = game.getBoard();
             } else {

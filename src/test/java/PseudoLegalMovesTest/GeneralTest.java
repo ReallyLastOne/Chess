@@ -71,11 +71,7 @@ public class GeneralTest {
                     counter += 1;
                 } else if (counter % 2 == 1) {
                     /* make move (it is provided that it is legal) */
-                    System.out.println("_____________________");
-                    System.out.println(board);
-                    System.out.println("Move: " + line.trim());
                     game.makeMove(line);
-                    System.out.println(board);
                     piecesPlacements.add(FEN.calculatePiecePlacement(board));
                     movesMade.add(line);
                     counter += 1;

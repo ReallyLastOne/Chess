@@ -25,7 +25,7 @@ public class King extends Piece {
     public boolean isWhiteShortCastlingPossible(Board board, Cell start) {
         Cell[][] cells = board.getCells();
         if (white && start.getX() == KING_COLUMN && start.getY() == WHITE_PIECES_ROW && !hasMoved() &&
-                cells[ROOK_KINGSIDE_COLUMN][WHITE_PIECES_ROW].getPiece() instanceof Rook &&
+                cells[ROOK_KINGSIDE_COLUMN][WHITE_PIECES_ROW].isRook() &&
                 !cells[ROOK_KINGSIDE_COLUMN][WHITE_PIECES_ROW].getPiece().hasMoved()) {
             for (int i = 5; i <= 6; i++) {
                 if (cells[i][WHITE_PIECES_ROW].isOccupied()) {
@@ -40,7 +40,7 @@ public class King extends Piece {
     public boolean isWhiteLongCastlingPossible(Board board, Cell start) {
         Cell[][] cells = board.getCells();
         if (white && start.getX() == KING_COLUMN && start.getY() == WHITE_PIECES_ROW && !hasMoved() &&
-                cells[ROOK_QUEENSIDE_COLUMN][WHITE_PIECES_ROW].getPiece() instanceof Rook &&
+                cells[ROOK_QUEENSIDE_COLUMN][WHITE_PIECES_ROW].isRook() &&
                 !cells[ROOK_QUEENSIDE_COLUMN][WHITE_PIECES_ROW].getPiece().hasMoved()) {
             if (cells[1][WHITE_PIECES_ROW].isOccupied()) return false;
             for (int i = 3; i >= 2; i--) {
@@ -56,7 +56,7 @@ public class King extends Piece {
     public boolean isBlackShortCastlingPossible(Board board, Cell start) {
         Cell[][] cells = board.getCells();
         if (!white && start.getX() == KING_COLUMN && start.getY() == BLACK_PIECES_ROW && !hasMoved() &&
-                cells[ROOK_KINGSIDE_COLUMN][BLACK_PIECES_ROW].getPiece() instanceof Rook &&
+                cells[ROOK_KINGSIDE_COLUMN][BLACK_PIECES_ROW].isRook() &&
                 !cells[ROOK_KINGSIDE_COLUMN][BLACK_PIECES_ROW].getPiece().hasMoved()) {
             for (int i = 5; i <= 6; i++) {
                 if (cells[i][BLACK_PIECES_ROW].isOccupied()) {
@@ -71,7 +71,7 @@ public class King extends Piece {
     public boolean isBlackLongCastlingPossible(Board board, Cell start) {
         Cell[][] cells = board.getCells();
         if (!white && start.getX() == KING_COLUMN && start.getY() == BLACK_PIECES_ROW && !hasMoved() &&
-                cells[ROOK_QUEENSIDE_COLUMN][BLACK_PIECES_ROW].getPiece() instanceof Rook &&
+                cells[ROOK_QUEENSIDE_COLUMN][BLACK_PIECES_ROW].isRook() &&
                 !cells[ROOK_QUEENSIDE_COLUMN][BLACK_PIECES_ROW].getPiece().hasMoved()) {
             if (cells[1][BLACK_PIECES_ROW].isOccupied()) return false;
             for (int i = 3; i >= 2; i--) {
