@@ -48,7 +48,7 @@ public class Move {
         return new Move(start.copy(), end.copy(), info);
     }
 
-    public static Move generateCaptureOrStandard(int x, int y, Cell start, Cell[][] cells, boolean white) {
+    public static Move generateCaptureOrStandard(Cell[][] cells, int x, int y, Cell start, boolean white) {
         if (fitInBoard(x, y)) {
             if (!cells[x][y].isOccupied()) {
                 return new Move(start, cells[x][y], GameUtilities.MoveInfo.STANDARD);

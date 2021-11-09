@@ -18,11 +18,10 @@ public class GameUtilities {
     }
 
     public enum MoveInfo {
-        WHITE_SHORT_CASTLE, WHITE_LONG_CASTLE,
-        BLACK_SHORT_CASTLE, BLACK_LONG_CASTLE,
         EN_PASSANT, TWO_FORWARD, KNIGHT_PROMOTION,
         BISHOP_PROMOTION, ROOK_PROMOTION, QUEEN_PROMOTION,
-        PAWN_MOVE, CAPTURE, STANDARD;
+        PAWN_MOVE, CAPTURE, STANDARD, LONG_CASTLE, SHORT_CASTLE;
+
 
         public String getSymbolPromotion() {
             if (this == BISHOP_PROMOTION) return "b";

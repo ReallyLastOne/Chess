@@ -26,39 +26,24 @@ public class CastlingValidator {
     public static boolean isValid(Board board, Move move) {
         Cell start = move.getStart();
         Cell[][] cells = board.getCells();
+        boolean whiteness = move.getStart().getPiece().isWhite();;
+        int row = getPiecesRow(whiteness);
+
         switch (move.getInfo()) {
-            case WHITE_SHORT_CASTLE -> {
-                if (isKingInCheck(board, true)) return false;
+            case SHORT_CASTLE -> {
+                if (isKingInCheck(board, whiteness)) return false;
                 for (int i = 5; i <= KING_SHORT_COLUMN; i++) {
-                    Move betweenMove = new Move(start, cells[i][WHITE_PIECES_ROW], GameUtilities.MoveInfo.STANDARD);
-                    if (isKingInCheckAfterMove(betweenMove, board, true)) return false;
+                    Move betweenMove = new Move(start, cells[i][row], GameUtilities.MoveInfo.STANDARD);
+                    if (isKingInCheckAfterMove(betweenMove, board, whiteness)) return false;
                 }
                 return true;
             }
-            case WHITE_LONG_CASTLE -> {
-                if (isKingInCheck(board, true)) return false;
+            case LONG_CASTLE -> {
+                if (isKingInCheck(board, whiteness)) return false;
                 for (int i = 3; i >= KING_LONG_COLUMN; i--) {
-                    Move betweenMove = new Move(start, cells[i][WHITE_PIECES_ROW], GameUtilities.MoveInfo.STANDARD);
-                    if (isKingInCheckAfterMove(betweenMove, board, true)) return false;
+                    Move betweenMove = new Move(start, cells[i][row], GameUtilities.MoveInfo.STANDARD);
+                    if (isKingInCheckAfterMove(betweenMove, board, whiteness)) return false;
                 }
-                return true;
-            }
-            case BLACK_SHORT_CASTLE -> {
-                if (isKingInCheck(board, false)) return false;
-                for (int i = 5; i <= KING_SHORT_COLUMN; i++) {
-                    Move betweenMove = new Move(start, cells[i][BLACK_PIECES_ROW], GameUtilities.MoveInfo.STANDARD);
-                    if (isKingInCheckAfterMove(betweenMove, board, false)) return false;
-
-                }
-                return true;
-            }
-            case BLACK_LONG_CASTLE -> {
-                if (isKingInCheck(board, false)) return false;
-                for (int i = 3; i >= KING_LONG_COLUMN; i--) {
-                    Move betweenMove = new Move(start, cells[i][BLACK_PIECES_ROW], GameUtilities.MoveInfo.STANDARD);
-                    if (isKingInCheckAfterMove(betweenMove, board, false)) return false;
-                }
-
                 return true;
             }
         }

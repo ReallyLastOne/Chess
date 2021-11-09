@@ -31,8 +31,8 @@ public class Knight extends Piece {
 
         for (int first : SHORT) {
             for (int second : LONG) {
-                Move firstMove = generateCaptureOrStandard(x + first, y + second, start, cells, white);
-                Move secondMove = generateCaptureOrStandard(x + second, y + first, start, cells, white);
+                Move firstMove = generateCaptureOrStandard(cells, x + first, y + second, start, white);
+                Move secondMove = generateCaptureOrStandard(cells, x + second, y + first, start, white);
 
                 if (firstMove != null) moves.add(firstMove);
                 if (secondMove != null) moves.add(secondMove);

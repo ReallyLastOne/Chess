@@ -12,26 +12,18 @@ public class CastlingExecutor implements Executor {
     @Override
     public void executeMove(Board board, Move move) {
         Cell[][] cells = board.getCells();
+        boolean whiteness = move.getStart().getPiece().isWhite();
+        int row = getPiecesRow(whiteness);
         switch (move.getInfo()) {
-            case WHITE_SHORT_CASTLE -> {
-                changeKingAndRookMovesBy(cells, ROOK_KINGSIDE_COLUMN, WHITE_PIECES_ROW, true);
-                putKingAndRookOn(cells, KING_SHORT_COLUMN, ROOK_SHORT_COLUMN, KING_COLUMN, ROOK_KINGSIDE_COLUMN, WHITE_PIECES_ROW);
-                clearKingAndRookCells(cells, KING_COLUMN, ROOK_KINGSIDE_COLUMN, WHITE_PIECES_ROW);
+            case SHORT_CASTLE -> {
+                changeKingAndRookMovesBy(cells, ROOK_KINGSIDE_COLUMN, row, true);
+                putKingAndRookOn(cells, KING_SHORT_COLUMN, ROOK_SHORT_COLUMN, KING_COLUMN, ROOK_KINGSIDE_COLUMN, row);
+                clearKingAndRookCells(cells, KING_COLUMN, ROOK_KINGSIDE_COLUMN, row);
             }
-            case WHITE_LONG_CASTLE -> {
-                changeKingAndRookMovesBy(cells, ROOK_QUEENSIDE_COLUMN, WHITE_PIECES_ROW, true);
-                putKingAndRookOn(cells, KING_LONG_COLUMN, ROOK_LONG_COLUMN, KING_COLUMN, ROOK_QUEENSIDE_COLUMN, WHITE_PIECES_ROW);
-                clearKingAndRookCells(cells, KING_COLUMN, ROOK_QUEENSIDE_COLUMN, WHITE_PIECES_ROW);
-            }
-            case BLACK_SHORT_CASTLE -> {
-                changeKingAndRookMovesBy(cells, ROOK_KINGSIDE_COLUMN, BLACK_PIECES_ROW, true);
-                putKingAndRookOn(cells, KING_SHORT_COLUMN, ROOK_SHORT_COLUMN, KING_COLUMN, ROOK_KINGSIDE_COLUMN, BLACK_PIECES_ROW);
-                clearKingAndRookCells(cells, KING_COLUMN, ROOK_KINGSIDE_COLUMN, BLACK_PIECES_ROW);
-            }
-            case BLACK_LONG_CASTLE -> {
-                changeKingAndRookMovesBy(cells, ROOK_QUEENSIDE_COLUMN, BLACK_PIECES_ROW, true);
-                putKingAndRookOn(cells, KING_LONG_COLUMN, ROOK_LONG_COLUMN, KING_COLUMN, ROOK_QUEENSIDE_COLUMN, BLACK_PIECES_ROW);
-                clearKingAndRookCells(cells, KING_COLUMN, ROOK_QUEENSIDE_COLUMN, BLACK_PIECES_ROW);
+            case LONG_CASTLE -> {
+                changeKingAndRookMovesBy(cells, ROOK_QUEENSIDE_COLUMN, row, true);
+                putKingAndRookOn(cells, KING_LONG_COLUMN, ROOK_LONG_COLUMN, KING_COLUMN, ROOK_QUEENSIDE_COLUMN, row);
+                clearKingAndRookCells(cells, KING_COLUMN, ROOK_QUEENSIDE_COLUMN, row);
             }
         }
     }
@@ -40,26 +32,19 @@ public class CastlingExecutor implements Executor {
     public void undoMove(Board board) {
         Cell[][] cells = board.getCells();
         Move lastMove = board.getLastMove();
+        boolean whiteness = lastMove.getStart().getPiece().isWhite();
+        int row = getPiecesRow(whiteness);
+
         switch (Objects.requireNonNull(lastMove).getInfo()) {
-            case WHITE_SHORT_CASTLE -> {
-                putKingAndRookOn(cells, KING_COLUMN, ROOK_KINGSIDE_COLUMN, KING_SHORT_COLUMN, ROOK_SHORT_COLUMN, WHITE_PIECES_ROW);
-                changeKingAndRookMovesBy(cells, ROOK_KINGSIDE_COLUMN, WHITE_PIECES_ROW, false);
-                clearKingAndRookCells(cells, KING_SHORT_COLUMN, ROOK_SHORT_COLUMN, WHITE_PIECES_ROW);
+            case SHORT_CASTLE -> {
+                putKingAndRookOn(cells, KING_COLUMN, ROOK_KINGSIDE_COLUMN, KING_SHORT_COLUMN, ROOK_SHORT_COLUMN, row);
+                changeKingAndRookMovesBy(cells, ROOK_KINGSIDE_COLUMN, row, false);
+                clearKingAndRookCells(cells, KING_SHORT_COLUMN, ROOK_SHORT_COLUMN, row);
             }
-            case WHITE_LONG_CASTLE -> {
-                putKingAndRookOn(cells, KING_COLUMN, ROOK_QUEENSIDE_COLUMN, KING_LONG_COLUMN, ROOK_LONG_COLUMN, WHITE_PIECES_ROW);
-                changeKingAndRookMovesBy(cells, ROOK_QUEENSIDE_COLUMN, WHITE_PIECES_ROW, false);
-                clearKingAndRookCells(cells, KING_LONG_COLUMN, ROOK_LONG_COLUMN, WHITE_PIECES_ROW);
-            }
-            case BLACK_SHORT_CASTLE -> {
-                putKingAndRookOn(cells, KING_COLUMN, ROOK_KINGSIDE_COLUMN, KING_SHORT_COLUMN, ROOK_SHORT_COLUMN, BLACK_PIECES_ROW);
-                changeKingAndRookMovesBy(cells, ROOK_KINGSIDE_COLUMN, BLACK_PIECES_ROW, false);
-                clearKingAndRookCells(cells, KING_SHORT_COLUMN, ROOK_SHORT_COLUMN, BLACK_PIECES_ROW);
-            }
-            case BLACK_LONG_CASTLE -> {
-                putKingAndRookOn(cells, KING_COLUMN, ROOK_QUEENSIDE_COLUMN, KING_LONG_COLUMN, ROOK_LONG_COLUMN, BLACK_PIECES_ROW);
-                changeKingAndRookMovesBy(cells, ROOK_QUEENSIDE_COLUMN, BLACK_PIECES_ROW, false);
-                clearKingAndRookCells(cells, KING_LONG_COLUMN, ROOK_LONG_COLUMN, BLACK_PIECES_ROW);
+            case LONG_CASTLE -> {
+                putKingAndRookOn(cells, KING_COLUMN, ROOK_QUEENSIDE_COLUMN, KING_LONG_COLUMN, ROOK_LONG_COLUMN, row);
+                changeKingAndRookMovesBy(cells, ROOK_QUEENSIDE_COLUMN, row, false);
+                clearKingAndRookCells(cells, KING_LONG_COLUMN, ROOK_LONG_COLUMN, row);
             }
         }
     }

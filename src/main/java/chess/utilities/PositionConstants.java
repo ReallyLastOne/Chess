@@ -16,4 +16,9 @@ public class PositionConstants {
     public static final int KING_LONG_COLUMN = 2;
     public static final int ROOK_SHORT_COLUMN = 5;
     public static final int ROOK_LONG_COLUMN = 3;
+
+    public static int getPiecesRow(boolean white) {
+        if(white) return WHITE_PIECES_ROW;
+        return BLACK_PIECES_ROW;
+    }
 }
