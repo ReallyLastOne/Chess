@@ -1,5 +1,7 @@
 package chess.utilities;
 
+import chess.core.move.Move;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,4 +42,8 @@ public class Constants {
         put(6, 'g');
         put(7, 'h');
     }};
+
+    public static void addAllNotNull(List<Move> moves, Move... possible) {
+        for(Move move : possible) if(move != null) moves.add(move);
+    }
 }

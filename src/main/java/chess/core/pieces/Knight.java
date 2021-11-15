@@ -3,6 +3,7 @@ package chess.core.pieces;
 import chess.core.Board;
 import chess.core.Cell;
 import chess.core.move.Move;
+import chess.utilities.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,8 +35,7 @@ public class Knight extends Piece {
                 Move firstMove = generateCaptureOrStandard(cells, x + first, y + second, start, white);
                 Move secondMove = generateCaptureOrStandard(cells, x + second, y + first, start, white);
 
-                if (firstMove != null) moves.add(firstMove);
-                if (secondMove != null) moves.add(secondMove);
+                Constants.addAllNotNull(moves, firstMove, secondMove);
             }
         }
 

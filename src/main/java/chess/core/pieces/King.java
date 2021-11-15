@@ -3,6 +3,7 @@ package chess.core.pieces;
 import chess.core.Board;
 import chess.core.Cell;
 import chess.core.move.Move;
+import chess.utilities.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,8 +66,7 @@ public class King extends Piece {
 
         Move shortCastle = generateShortCastling(cells, start);
         Move longCastle = generateLongCastling(cells, start);
-        if (shortCastle != null) moves.add(shortCastle);
-        if (longCastle != null) moves.add(longCastle);
+        Constants.addAllNotNull(moves, shortCastle, longCastle);
 
         for (int first : DELTA) {
             for (int second : DELTA) {
@@ -74,8 +74,7 @@ public class King extends Piece {
                     Move firstMove = generateCaptureOrStandard(cells, x + first, y + second, start, white);
                     Move secondMove = generateCaptureOrStandard(cells, x + second, y + first, start, white);
 
-                    if (firstMove != null) moves.add(firstMove);
-                    if (secondMove != null) moves.add(secondMove);
+                    Constants.addAllNotNull(moves, firstMove, secondMove);
                 }
             }
         }
