@@ -64,4 +64,9 @@ public class Knight extends Piece {
     public int hashCode() {
         return super.hashCode() * 5;
     }
+
+    @Override
+    public int getEvaluation() {
+        return white ? 3 : -3;
+    }
 }

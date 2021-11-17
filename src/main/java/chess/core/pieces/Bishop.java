@@ -42,4 +42,9 @@ public class Bishop extends Piece implements DiagonallyMovable {
     public int hashCode() {
         return super.hashCode() * 3;
     }
+
+    @Override
+    public int getEvaluation() {
+        return white ? 3 : -3;
+    }
 }

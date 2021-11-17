@@ -430,4 +430,10 @@ public final class Board {
                 .map(Cell::isWhite)
                 .orElse(null);
     }
+
+    public void undoLastNMoves(int n) {
+        for (int i = 0; i < n; i++) {
+            moves.removeLast();
+        }
+    }
 }

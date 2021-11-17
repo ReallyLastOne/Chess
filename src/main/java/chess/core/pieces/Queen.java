@@ -51,4 +51,9 @@ public class Queen extends Piece implements HorizontallyMovable, VerticallyMovab
     public int hashCode() {
         return super.hashCode() * (hasMoved() ? 7 : 11);
     }
+
+    @Override
+    public int getEvaluation() {
+        return white ? 9 : -9;
+    }
 }

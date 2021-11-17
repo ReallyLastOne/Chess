@@ -72,9 +72,8 @@ public class King extends Piece {
             for (int second : DELTA) {
                 if (first != 0 || second != 0) {
                     Move firstMove = generateCaptureOrStandard(cells, x + first, y + second, start, white);
-                    Move secondMove = generateCaptureOrStandard(cells, x + second, y + first, start, white);
 
-                    Constants.addAllNotNull(moves, firstMove, secondMove);
+                    Constants.addAllNotNull(moves, firstMove);
                 }
             }
         }
@@ -110,5 +109,10 @@ public class King extends Piece {
     @Override
     public int hashCode() {
         return super.hashCode() * (hasMoved() ? 7 : 11);
+    }
+
+    @Override
+    public int getEvaluation() {
+        return white ? 100 : -100;
     }
 }

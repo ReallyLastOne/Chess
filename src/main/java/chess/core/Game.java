@@ -54,13 +54,20 @@ public final class Game {
 
     }
 
+    public void undoMove() {
+        board.undoMove();
+        updateGameStatus();
+    }
+
     private void updateGameStatus() {
         if (MoveValidator.isKingInCheckmate(board, board.isTurn())) {
             gameStatus = board.isTurn() ? GameStatus.BLACK_WIN : GameStatus.WHITE_WIN;
-            System.out.println("CHECKMATED, status: " + gameStatus);
+            //System.out.println("CHECKMATED, status: " + gameStatus);
         } else if (board.isDraw()) {
             gameStatus = GameStatus.DRAW;
-            System.out.println("Game drawn.");
+            //System.out.println("Game drawn.");
+        } else {
+            gameStatus = GameStatus.IN_PROGRESS;
         }
     }
 

@@ -51,4 +51,9 @@ public class Rook extends Piece implements HorizontallyMovable, VerticallyMovabl
     public int hashCode() {
         return super.hashCode() * (hasMoved() ? 19 : 23);
     }
+
+    @Override
+    public int getEvaluation() {
+        return white ? 5 : -5;
+    }
 }

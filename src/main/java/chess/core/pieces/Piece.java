@@ -72,4 +72,6 @@ public abstract class Piece {
     public int hashCode() {
         return white ? 2 : 1;
     }
+
+    public abstract int getEvaluation();
 }

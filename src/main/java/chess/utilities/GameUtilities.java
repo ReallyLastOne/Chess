@@ -15,6 +15,13 @@ public class GameUtilities {
             else if (this == BLACK_WIN) return "0-1";
             return "*";
         }
+
+        public Integer getEvaluation() {
+            if (this == DRAW) return 0;
+            else if (this == WHITE_WIN) return 100;
+            else if (this == BLACK_WIN) return -100;
+            return null;
+        }
     }
 
     public enum MoveInfo {

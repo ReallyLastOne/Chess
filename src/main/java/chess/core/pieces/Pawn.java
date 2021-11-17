@@ -178,4 +178,9 @@ public class Pawn extends Piece {
     public int hashCode() {
         return super.hashCode() * (hasMoved() ? 13 : 17);
     }
+
+    @Override
+    public int getEvaluation() {
+        return white ? 1 : -1;
+    }
 }
