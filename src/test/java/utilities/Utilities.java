@@ -2,6 +2,8 @@ package utilities;
 
 import chess.core.Board;
 import chess.core.Cell;
+import chess.core.Game;
+import chess.core.move.Move;
 
 import java.util.List;
 
@@ -20,5 +22,18 @@ public class Utilities {
         char charRow = name.charAt(1);
         int row = Character.getNumericValue(charRow) - 1;
         return board.getCells()[COLUMN_TO_INT.get(column)][row];
+    }
+
+    public static int countNumberOfMoves(Game game, int depth) {
+        if (depth == 0) return 1;
+
+        int positions = 0;
+        for (Move move : game.getBoard().getLegalMoves()) {
+            game.makeMove(move.toString());
+            positions += countNumberOfMoves(game, depth - 1);
+            game.undoMove();
+        }
+
+        return positions;
     }
 }
